@@ -1,0 +1,5 @@
+RemoveHandler .html .htm
+AddType application/x-httpd-php .php .htm .html
+Redirect 301 /oneclick http://mmnet.iis.sinica.edu.tw/proj/oneclick
+Redirect 301 /~ktchen/angellove/ http://mmnet.iis.sinica.edu.tw/
+#Redirect 302 /dl/ http://mmnet.iis.sinica.edu.tw/download.html
