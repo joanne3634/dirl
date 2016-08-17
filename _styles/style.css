@@ -6319,10 +6319,14 @@ z-index: 9999;
 }
 @media (max-width: 500px) { 
   .header-top-dropdown {
-    position: fixed;
-    top: 6px;
-    right: 15px;
-} /*move to top-right*/}
+    position: absolute;
+    top: -6em;
+    right: 0;
+  }
+  #logo_img{
+    height: 4.5em;
+  }
+}
 /*Dark Dropdowns
 ---------------------------------- */
 .dark.btn-group .dropdown-menu {

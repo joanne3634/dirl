@@ -137,49 +137,19 @@ if($con){
         text-align: center;
     }
     .search-img{
-        width: 12em;
-        margin: 10px 5px;
-        /*height: 5.8em;*/
+        width: 9em;
+        margin: 1em 1em;
         display: inline-block;
-       /* background-image: url("_images/element/search1.svg");*/
-        background-size: 6em;
-        background-position: center top;
-        background-repeat: no-repeat;
     }
-/*    .search-img:nth-child(1) {
-        background-image: url("_images/element/search1.svg");
-    }
-    .search-img:nth-child(2) {
-        background-image: url("_images/element/search2.svg");
-    }
-    .search-img:nth-child(3) {
-        background-image: url("_images/element/search3.svg");
-    }
-    .search-img:nth-child(4) {
-        background-image: url("_images/element/search4.svg");
-    }
-    .search-img:nth-child(5) {
-        background-image: url("_images/element/search5.svg");
-    }
-    .search-img:nth-child(6) {
-        background-image: url("_images/element/search6.svg");
-    }*/
     .search-img span{
         display: inline-block;
-        /*vertical-align: middle;*/
+        padding-top: .5em;
+        vertical-align: middle;
+        font-weight: bold;
     }
     .search-img img {
         display: inline-block;
-        vertical-align: middle;
-        width: 8em;
-    }
-    .inline-top{
-        display: inline-block;
-        vertical-align: top;
-    }
-    .inline{
-        display: inline-block;
-        vertical-align: top;
+        width: 6em;
     }
 </style>
                     <!-- block 2 -->
@@ -195,8 +165,8 @@ if($con){
                                         if($res_item == '') { continue; }
                                 ?>                     
                                 <div class="search-img <?php if($lang == 'EN'){ echo 'english';}?>">
-                                    <div class="inline-top"><img src="_images/element/search<?= $count?>.svg"></div>
-                                    <div class="inline"><span><?=$res_item ?></span></div>
+                                    <img src="_images/element/search<?= $count?>.svg">
+                                   <span><?=$res_item ?></span>
                                 </div>
                                 <?
                                     $count ++;
