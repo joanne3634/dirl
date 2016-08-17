@@ -292,13 +292,15 @@ $dba = new Accessor();
                                                         if ( !empty($member['research']) && !$manager )
                                                         { 
                                                     ?>
-                                                    <i class="fa fa-flask pr-5 text-default"></i> Research Interests
+                                                    <i class="fa fa-flask pr-5 text-default"></i> Specialities
                                                 <ul class="rslist">
                                                     <? 
                                                     //$count = 0;
                                                     foreach( $member['research'] as $research ) { 
                                                        // if( $count > 1){ continue;}
-                                                        echo '<li>'.$research.'</li>'; 
+                                                        if( $research != ''){
+                                                            echo '<li>'.$research.'</li>'; 
+                                                        }
                                                         //$count++;
 
                                                     } ?>
