@@ -1,0 +1,128 @@
+<?
+// 檔案：MGE/index.html
+// 說明：後端管理登入頁
+
+session_start();	// 啓用 session
+$ip = getenv("REMOTE_ADDR");	// 取得client 的ip
+
+// 檢查是否屬於資訊所或本機
+if(strpos($ip, "140.109.16" ) === 0 || strpos($ip, "140.109.19" ) === 0 || strpos($ip, "140.109.22" ) === 0 || strpos($ip, "140.109.20" ) === 0 || strpos($ip, "140.109.21" ) === 0 || strcmp($ip,"127.0.0.1" ) == 0){
+
+	// 是的話將會顯示登入頁
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>網頁管理 - 多媒體網路與系統實驗室</title>
+<link href="../style_s.css" rel="stylesheet" type="text/css" />
+<link href="../form.css" rel="stylesheet" type="text/css" />
+
+
+<script type="text/javascript">
+<!--
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_findObj(n, d) { //v4.01
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && d.getElementById) x=d.getElementById(n); return x;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+//-->
+</script>
+
+</head>
+
+<body topmargin="0" marginwidth="0" marginheight="0" onload="MM_preloadImages('../images/menu_item_rol_01.jpg','../images/eng_rol.jpg')">
+<div id="container">
+
+
+	<div id="header">
+    	<div id="banner">
+        	<img src="../images/index_mge_01.jpg" alt="MMNET" width="565" height="35" border="0" usemap="#Map" />
+<map name="Map" id="Map"><area shape="rect" coords="1,1,125,32" href="index.html" /></map>
+
+      </div>
+    </div>
+	<div id="main">
+
+        
+<div  style="width:400px; margin:0px auto ">
+       	  <div class="main_item"><br />
+
+           	<img src="../images/title_mge_1.jpg" alt="多媒體網路與系統實驗室" width="460" height="35" />
+            <div class="main_item_content">
+
+           
+              	<form action="auth.html" method="post" name="formx" id="formx">
+              	  <label>帳號：
+              	  <input type="text" name="user_id" id="user_id" />
+</label>
+                
+                  <br />
+              	  <label>密碼：
+              	  <input type="password" name="password" id="password" />
+              	  </label>
+              	  <input type="submit" name="submit" id="submit" value="確定"  class="button" />
+           	  </form>
+<?   if(isset($_SESSION['msg_mmnet'])){ ?>
+				<img src="../pic/not_ok.jpg" alt="NOT ok" width="8" height="8" align="absmiddle" /> <span class="small"><? echo $_SESSION['msg_mmnet'] ?></span>
+<? }else{ ?>
+				<img src="../pic/ok.jpg" alt="ok" width="8" height="8" align="absmiddle" /> <span class="small">中研院資訊所，歡迎登入﹗</span>
+<? } ?>
+
+<?
+// add in 2014.12.10 kj@mmnet.iis.sinica.
+if( isset($_SESSION['user_mmnet']) )
+{
+    require_once('/home/kj/mmnet-manager-2015/mod_database.php');
+    $dba = new Accessor();
+    $dba->writeLog(0,'MGE::Logout','使用者 '.$_SESSION['user_mmnet'].' 登出。');
+}
+?>
+
+<?
+	session_unset();
+?>            
+              </div>
+          </div>
+
+   	  <div class="main_item"></div>   
+            
+    </div>
+        
+        
+    </div>
+
+   
+  <div id="footer">
+  </div>
+</div>
+<div id="copyright">
+	<div align="center" class="small"><a href="../index.html">多媒體網路與系統實驗室</a> <a href="http://www.iis.sinica.edu.tw/"> 資訊科學研究所</a> <a href="http://www.sinica.edu.tw/" target="_blank">中央研究院</a>.    </div>
+</div>
+</div>
+</body>
+</html>
+<?
+}else{
+
+	// 不在資訊所內將會導向首頁
+	header("location:../index.html");
+}
+
+?>

@@ -1,0 +1,85 @@
+<?php
+/*-------------------------------------------------------------\
+ * 檔案：project.html
+ - 說明：研究計劃
+\-------------------------------------------------------------*/
+$subtitle = array(
+    'TC' => '研究計劃',
+    'EN' => 'Projects',
+);
+
+include('_template/header.php');
+include('_template/menu.php'); 
+include("MGE/lib/link.html");
+mysql_query('SET NAMES utf8;');
+
+?>
+    
+<!-- wrap-content start -->
+<!-- ================ -->
+<div class="wrap-content">
+    <!-- banner start -->
+    <!-- ================ -->
+    <div class="banner">
+        <div class="container">
+            <div class="row bannerbg">
+                <div class="col-md-12 pagebannerbg"></div>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+    <!-- section start -->
+    <!-- ================ -->
+    <section class="mtt-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                        <div class="maintitle">
+                            <? echo $subtitle[$lang] ?>
+                        </div>
+                        <div class="pv-30 ph-20 mcontent">
+                            <ul class="downloadList">
+                            <?
+                                $result = mysql_query('SELECT * FROM projects ORDER BY ordinal ASC');
+                                while( $row = mysql_fetch_array($result) )
+                                {
+                                    if( $row['v_state'] != 'working' ) { continue; }
+                                    $this_lang = $lang;
+                                    if( $row['use_lang'] == 'EN' ) { $this_lang = 'EN'; }
+                                    $title_json = json_decode($row['title'],true);
+                                    $descript_json = json_decode($row['descript'],true);
+
+                                    $title = $title_json[$this_lang];
+                                    if( empty($title) )
+                                    {
+                                        foreach( array('TC','EN') as $dlang )
+                                        {
+                                            $title = $title_json[$dlang];
+                                            if( !empty($title) ) { break; }
+                                        }
+                                    }
+
+                                    $description = $descript_json[$this_lang];
+                                    if( count($description) > 1 ) { $description = implode('</p><p class="-tal">',$description); }
+
+                                    if( !empty($row['link']) ) { $title = '<a href="'.$row['link'].'" target="_new">'.$title.'</a>'; }
+                                ?>
+                                    <li>
+                                        <?=$title?>
+                                        <p><?=$description?></p>
+                                    </li>
+                                <?
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- section end -->
+</div>
+<!-- wrap-content end -->
+<? include('_template/footer.php'); ?>

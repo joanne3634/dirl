@@ -1,0 +1,351 @@
+<?
+// 檔案：MGE/panel6.html
+// 說明：實驗室資源頁面內容
+session_start();
+
+// 如果沒有通過認直接存取，則送到登入頁
+if($_SESSION['login_mmnet'] != "ok_mmnet"){
+	header("location:index.html");
+}
+
+
+$_SESSION['pos'] = "panel_6";	// 讓server端確認目前的位置，避免在頁外被呼叫
+
+// 初始化頁面內容
+include("lib/link.html");
+
+// 初始化所有變數
+
+$id_tc = array();
+$subject_tc = array();
+$link_tc = array();
+$visible_tc = array();
+$top_tc = array();
+$post_time_tc = array();
+$private_tc = array();
+$img_link_tc = array();
+$total_tc = 0;
+
+$id_en = array();
+$subject_en = array();
+$link_en = array();
+$visible_en = array();
+$top_en = array();
+$post_time_en = array();
+$private_en = array();
+$img_link_en = array();
+$total_en = 0;
+
+
+// 抓取資料庫資料
+if($con){
+    if($db_selected){
+        
+        // 抓取資料表 news 
+        $sql = "select * from resources  ORDER BY post_time DESC, top DESC";
+        $result = mysql_query($sql);
+        
+
+        if($result){
+            while($row = mysql_fetch_row($result)){
+                if($row[1] == "TC"){
+                    $id_tc[$total_tc] = $row[0];
+                    $subject_tc[$total_tc] = $row[2];
+                    $link_tc[$total_tc] = $row[3];
+                    $visible_tc[$total_tc] = $row[4];
+                    $top_tc[$total_tc] = $row[5];
+                    $post_time_tc[$total_tc] = $row[6];
+					$private_tc[$total_tc] = $row[7];
+					$img_link_tc[$total_tc] = $row[8];
+
+                    
+                    $total_tc++;
+
+                }else if($row[1] == "EN"){
+                    $id_en[$total_en] = $row[0];
+                    $subject_en[$total_en] = $row[2];
+                    $link_en[$total_en] = $row[3];
+                    $visible_en[$total_en] = $row[4];
+                    $top_en[$total_en] = $row[5];
+                    $post_time_en[$total_en] = $row[6];
+					$private_en[$total_en] = $row[7];
+					$img_link_en[$total_en] = $row[8];
+                    
+                    $total_en++;
+                }                    
+          
+            }
+        }     
+
+    }else{
+
+    }
+}
+
+?>
+
+
+<img src="../images/title_7.jpg" /><br />
+<form action="" method="post" >        
+              <div style="padding-left:30px">
+              建立新資源：<br />
+
+              <table width="568" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+              <tr>
+                <td width="50"><div align="right">內容：</div></td>
+                <td colspan="4"><input name="p6_subject_add" type="text" id="p6_subject_add" size="80"  value="" /></td>
+                </tr>
+              <tr>
+                <td><div align="right">連結：</div></td>
+                <td colspan="4"><input name="p6_link_add" type="text" id="p6_link_add" size="80"  value="" /></td>
+                </tr>
+              <tr>
+              <tr>
+                <td><div align="right">圖片：</div></td>
+                <td colspan="4"><input name="p6_img_link_add" type="text" id="p6_img_link_add" size="80"  value="" /></td>
+                </tr>
+              <tr>
+                <td height="40"><div align="right">選項：</div></td>
+                <td width="58"><input name="p6_visible_add" type="checkbox" id="p6_visible_add" value="1" checked="checked" />
+                  顯示</td>
+                <td width="63"><input name="p6_top_add" type="checkbox" id="p6_top_add" value="1"  />                  
+                  置頂</td>
+                <td width="305">語言：
+                  <select name="p6_lang_add" id="p6_lang_add">
+                    <option value="TC">中文</option>
+                    <option value="EN">英文</option>
+                  </select>
+                  類型：
+                  <select name="p6_private" id="p6_private_add">
+                    <option value="0">研究資源</option>
+                    <option value="2">教學資源</option>
+                    <option value="3">學會資源</option>
+                    <option value="1">內部資源</option>
+                   </select></td>
+                <td width="68">
+				<input type="button" name="p6_submit_add" id="p6_submit_add" value="新增資源"  class="button"  onclick="sync_input_group('p6_news_group', 'lib/update_6.html',33)" />                </td>
+              </tr>
+            </table>
+
+  </div>
+</form>
+			<br />
+
+            <span style="padding-left:30px"><img src="../pic/icon2.jpg" width="8" height="8" /> 中文資源：</span><br />
+            
+            
+            <div id="p6_news_tc" style="padding-left:30px">
+
+<? 
+	if($total_tc > 0){
+?>			
+            <table width="700" border="0">
+              <tr>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">顯示</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">置頂</div></td>
+                <td width="250" bgcolor="#FFD193"><div align="center" class="tbsx">內容</div></td>
+                <td width="280" bgcolor="#FFD193"><div align="center" class="tbsx">連結</div></td>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">建立日期</div></td>
+                <td width="40" bgcolor="#FFD193"><div align="center" class="tbsx">類型</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>
+
+              </tr>
+<? 
+	$i = 0;
+    while($i < $total_tc){
+?>             
+              <tr  class="tbs" onmouseover="this.className = 'tbs2';show_div('p6_pic_tc<? echo $id_tc[$i] ?>')" onmouseout="this.className = 'tbs';hide_div_x('p6_pic_tc<? echo $id_tc[$i] ?>')">
+
+                <td align="center">
+
+                    <? if($visible_tc[$i] == 1){ ?>
+                    <a href="#resources_toggle_show"><img id="p6_btn_toggle_show_tc_<? echo $id_tc[$i] ?>"  border="0" src="../pic/show.gif"  onclick="sync_toggle(this.id,'lib/update_6.html',10,<? echo $id_tc[$i] ?>, '../pic/show')"  alt="是否顯示" title="是否顯示" /></a>
+                    <? }else{ ?>                
+                    <a href="#resources_toggle_show"><img id="p6_btn_toggle_show_tc_<? echo $id_tc[$i] ?>" border="0" src="../pic/show_n.gif" onclick="sync_toggle(this.id,'lib/update_6.html',10,<? echo $id_tc[$i] ?>,  '../pic/show')" alt="是否顯示" title="是否顯示" /></a>
+                    <? }?>                  
+                 <div id="p6_pic_tc<? echo $id_tc[$i] ?>" align="center" style="display:none; position:absolute; padding-left:5px">
+                    
+                 </div>
+                </td>
+                <td align="center">
+                    <? if($top_tc[$i] == 1){ ?>
+                    <a href="#resources_toggle_top"><img id="p6_btn_toggle_top_tc_<? echo $id_tc[$i] ?>" border="0" src="../pic/top.gif" onclick="sync_toggle(this.id,'lib/update_6.html',11,<? echo $id_tc[$i] ?>, '../pic/top')" alt="是否置頂" title="是否置頂" /></a>
+                    <? }else{ ?>                
+                    <a href="#resources_toggle_top"><img id="p6_btn_toggle_top_tc_<? echo $id_tc[$i] ?>" border="0" src="../pic/top_n.gif" onclick="sync_toggle(this.id,'lib/update_6.html',11,<? echo $id_tc[$i] ?>, '../pic/top')" alt="是否置頂" title="是否置頂" /></a>
+                    <? }?>                                
+                </td>                
+                <td align="center" onclick="toggle_edit('p6_subject_tc_<? echo $id_tc[$i] ?>', 'p6_subject_mod_tc_<? echo $id_tc[$i] ?>');">
+                	<div id="p6_subject_tc_<? echo $id_tc[$i] ?>">
+                    	<? echo $subject_tc[$i] ?>
+                    </div>
+                	<div id="p6_subject_mod_tc_<? echo $id_tc[$i] ?>" style="display:none">
+	                    <input name="p6_subject_mod_tc_<? echo $id_tc[$i] ?>_field" type="text" id="p6_subject_mod_tc_<? echo $id_tc[$i] ?>_field" size="40"  value="<? echo $subject_tc[$i] ?>"  onblur="toggle_edit( 'p6_subject_mod_tc_<? echo $id_tc[$i] ?>','p6_subject_tc_<? echo $id_tc[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_6.html',34, '', 'p6_subject_tc_<? echo $id_tc[$i] ?>')" />
+                    </div>
+                
+                </td>
+                
+                <td align="center" onclick="toggle_edit('p6_link_tc_<? echo $id_tc[$i] ?>', 'p6_link_mod_tc_<? echo $id_tc[$i] ?>');">
+                	<div id="p6_link_tc_<? echo $id_tc[$i] ?>">
+                    	<? echo $link_tc[$i] ?>
+                    </div>
+                	<div id="p6_link_mod_tc_<? echo $id_tc[$i] ?>" style="display:none">
+	                    <input name="p6_link_mod_tc_<? echo $id_tc[$i] ?>_field" type="text" id="p6_link_mod_tc_<? echo $id_tc[$i] ?>_field" size="40"  value="<? echo $link_tc[$i] ?>"  onblur="toggle_edit( 'p6_link_mod_tc_<? echo $id_tc[$i] ?>','p6_link_tc_<? echo $id_tc[$i] ?>');" onchange="sync_input(this.id, 'lib/update_6.html',35, '', 'p6_link_tc_<? echo $id_tc[$i] ?>')" />
+                    </div>
+                
+                </td>
+                <td align="center"><? echo date("Y-m-d", strtotime($post_time_tc[$i])) ?></td>
+                <td align="center"><? 
+                	if($private_tc[$i] == 1){
+							?><a href="#resources_private"><img id="p6_btn_private_tc_<? echo $id_tc[$i] ?>"  border="0" src="../pic/private.gif"  onclick="sync_toggle(this.id, 'lib/update_6.html', 36,'<? echo $id_tc[$i] ?>', '../pic/')"  alt="設定資源類型" title="設定資源類型"/></a><?
+                    }else if ($private_tc[$i] == 0){
+ 							?><a href="#resources_private"><img id="p6_btn_private_tc_<? echo $id_tc[$i] ?>"  border="0" src="../pic/acad.gif"  onclick="sync_toggle(this.id, 'lib/update_6.html', 36,'<? echo $id_tc[$i] ?>', '../pic/')"  alt="設定資源類型" title="設定資源類型"/></a><?
+                    }else if ($private_tc[$i] == 2){
+ 							?><a href="#resources_private"><img id="p6_btn_private_tc_<? echo $id_tc[$i] ?>"  border="0" src="../pic/edu.gif"  onclick="sync_toggle(this.id, 'lib/update_6.html', 36,'<? echo $id_tc[$i] ?>', '../pic/')"  alt="設定資源類型" title="設定資源類型"/></a><?
+                    }else if ($private_tc[$i] == 3){
+ 							?><a href="#resources_private"><img id="p6_btn_private_tc_<? echo $id_tc[$i] ?>"  border="0" src="../pic/asoc.gif"  onclick="sync_toggle(this.id, 'lib/update_6.html', 36,'<? echo $id_tc[$i] ?>', '../pic/')"  alt="設定資源類型" title="設定資源類型"/></a><?                   
+                    }               
+                ?></td>                
+                <td align="center"><a href="#resources_del"><img id="p6_btn_del_tc_<? echo $id_tc[$i] ?>"  border="0" src="../pic/del.gif" width="15" height="15" onclick="sync_delete(this.id, 'lib/update_6.html', 8,'<? echo $id_tc[$i] ?>', 'p6_news_tc')"  alt="刪除此筆消息" title="刪除此筆消息"/></a></td>
+                
+              </tr>
+			  <? if($img_link_tc[$i] != ""){ ?>
+			  <tr bgcolor="#faf7da">
+			  <td colspan="3" ></td>
+				<td align="center" onclick="toggle_edit('p6_img_link_tc_<? echo $id_tc[$i] ?>', 'p6_img_link_mod_tc_<? echo $id_tc[$i] ?>');">
+					<div id="p6_img_link_tc_<? echo $id_tc[$i] ?>">
+						<? echo $img_link_tc[$i] ?>
+					</div>
+					<div id="p6_img_link_mod_tc_<? echo $id_tc[$i] ?>" style="display:none">
+						<input name="p6_img_link_mod_tc_<? echo $id_tc[$i] ?>_field" type="text" id="p6_img_link_mod_tc_<? echo $id_tc[$i] ?>_field" size="40"  value="<? echo $img_link_tc[$i] ?>"  onblur="toggle_edit( 'p6_img_link_mod_tc_<? echo $id_tc[$i] ?>','p6_img_link_tc_<? echo $id_tc[$i] ?>');" onchange="sync_input(this.id, 'lib/update_6.html',35, '', 'p6_img_link_tc_<? echo $id_tc[$i] ?>')" />
+					</div>
+				
+				</td>
+			  <td colspan="3" align="center">
+			  <<- 圖片連結
+			  </td>
+			  </tr>
+
+			  <? } ?>
+<?
+		$i++;
+	}              
+ ?>
+            </table>
+<?
+}else{
+?>
+			<br /> - 沒有任何資源。
+<?
+}
+?>
+            </div>
+            
+            <br />
+
+            <span style="padding-left:30px"><img src="../pic/icon2.jpg" width="8" height="8" /> 英文資源：</span><br />
+
+          <div id="p6_news_en" style="padding-left:30px">
+
+<? 
+	if($total_en > 0){
+?>			
+            <table width="700" border="0">
+              <tr>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">顯示</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">置頂</div></td>
+                <td width="250" bgcolor="#FFD193"><div align="center" class="tbsx">內容</div></td>
+                <td width="280" bgcolor="#FFD193"><div align="center" class="tbsx">連結</div></td>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">建立日期</div></td>
+                <td width="40" bgcolor="#FFD193"><div align="center" class="tbsx">類型</div></td>               
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>
+
+              </tr>
+<? 
+	$i = 0;
+    while($i < $total_en){
+?>             
+              <tr  class="tbs" onmouseover="this.className = 'tbs2';show_div('p6_pic_en<? echo $id_en[$i] ?>')" onmouseout="this.className = 'tbs';hide_div_x('p6_pic_en<? echo $id_en[$i] ?>')">
+                <td align="center">
+                    <? if($visible_en[$i] == 1){ ?>
+                    <a href="#resources_toggle_show"><img id="p6_btn_toggle_show_en_<? echo $id_en[$i] ?>"  border="0" src="../pic/show.gif"  onclick="sync_toggle(this.id,'lib/update_6.html',10,<? echo $id_en[$i] ?>, '../pic/show')"  alt="是否顯示" title="是否顯示" /></a>
+                    <? }else{ ?>                
+                    <a href="#resources_toggle_show"><img id="p6_btn_toggle_show_en_<? echo $id_en[$i] ?>" border="0" src="../pic/show_n.gif" onclick="sync_toggle(this.id,'lib/update_6.html',10,<? echo $id_en[$i] ?>,  '../pic/show')" alt="是否顯示" title="是否顯示" /></a>
+                    <? }?>      
+                 <div id="p6_pic_en<? echo $id_en[$i] ?>" align="center" style="display:none; position:absolute; padding-left:5px">
+                   
+                 </div>					
+                </td>
+                <td align="center">
+                    <? if($top_en[$i] == 1){ ?>
+                    <a href="#resources_toggle_top"><img id="p6_btn_toggle_top_en_<? echo $id_en[$i] ?>" border="0" src="../pic/top.gif" onclick="sync_toggle(this.id,'lib/update_6.html',11,<? echo $id_en[$i] ?>, '../pic/top')" alt="是否置頂" title="是否置頂" /></a>
+                    <? }else{ ?>                
+                    <a href="#resources_toggle_top"><img id="p6_btn_toggle_top_en_<? echo $id_en[$i] ?>" border="0" src="../pic/top_n.gif" onclick="sync_toggle(this.id,'lib/update_6.html',11,<? echo $id_en[$i] ?>, '../pic/top')" alt="是否置頂" title="是否置頂" /></a>
+                    <? }?>                                
+                </td>                
+                <td align="center" onclick="toggle_edit('p6_subject_en_<? echo $id_en[$i] ?>', 'p6_subject_mod_en_<? echo $id_en[$i] ?>');">
+                	<div id="p6_subject_en_<? echo $id_en[$i] ?>">
+                    	<? echo $subject_en[$i] ?>
+                    </div>
+                	<div id="p6_subject_mod_en_<? echo $id_en[$i] ?>" style="display:none">
+	                    <input name="p6_subject_mod_en_<? echo $id_en[$i] ?>_field" type="text" id="p6_subject_mod_en_<? echo $id_en[$i] ?>_field" size="40"  value="<? echo $subject_en[$i] ?>"  onblur="toggle_edit( 'p6_subject_mod_en_<? echo $id_en[$i] ?>','p6_subject_en_<? echo $id_en[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_6.html',34, '', 'p6_subject_en_<? echo $id_en[$i] ?>')" />
+                    </div>
+                
+                </td>
+                
+                <td align="center" onclick="toggle_edit('p6_link_en_<? echo $id_en[$i] ?>', 'p6_link_mod_en_<? echo $id_en[$i] ?>');">
+                	<div id="p6_link_en_<? echo $id_en[$i] ?>">
+                    	<? echo $link_en[$i] ?>
+                    </div>
+                	<div id="p6_link_mod_en_<? echo $id_en[$i] ?>" style="display:none">
+	                    <input name="p6_link_mod_en_<? echo $id_en[$i] ?>_field" type="text" id="p6_link_mod_en_<? echo $id_en[$i] ?>_field" size="40"  value="<? echo $link_en[$i] ?>"  onblur="toggle_edit( 'p6_link_mod_en_<? echo $id_en[$i] ?>','p6_link_en_<? echo $id_en[$i] ?>');" onchange="sync_input(this.id, 'lib/update_6.html',35, '', 'p6_link_en_<? echo $id_en[$i] ?>')" />
+                    </div>
+                
+                </td>
+                <td align="center"><? echo date("Y-m-d", strtotime($post_time_en[$i])) ?></td>
+                <td align="center"><? 
+                	if($private_en[$i] == 1){
+							?><a href="#resources_private"><img id="p6_btn_private_en_<? echo $id_en[$i] ?>"  border="0" src="../pic/private.gif"  onclick="sync_toggle(this.id, 'lib/update_6.html', 36,'<? echo $id_en[$i] ?>', '../pic/')"  alt="設定資源類型" title="設定資源類型"/></a><?
+                    }else if($private_en[$i] == 0){
+ 							?><a href="#resources_private"><img id="p6_btn_private_en_<? echo $id_en[$i] ?>"  border="0" src="../pic/acad.gif"  onclick="sync_toggle(this.id, 'lib/update_6.html', 36,'<? echo $id_en[$i] ?>', '../pic/')"  alt="設定資源類型" title="設定資源類型"/></a><?
+
+                    }else if($private_en[$i] == 2){
+ 							?><a href="#resources_private"><img id="p6_btn_private_en_<? echo $id_en[$i] ?>"  border="0" src="../pic/edu.gif"  onclick="sync_toggle(this.id, 'lib/update_6.html', 36,'<? echo $id_en[$i] ?>', '../pic/')"  alt="設定資源類型" title="設定資源類型"/></a><?
+                    }else if($private_en[$i] == 3){
+ 							?><a href="#resources_private"><img id="p6_btn_private_en_<? echo $id_en[$i] ?>"  border="0" src="../pic/asoc.gif"  onclick="sync_toggle(this.id, 'lib/update_6.html', 36,'<? echo $id_en[$i] ?>', '../pic/')"  alt="設定資源類型" title="設定資源類型"/></a><?
+				   
+                    }               
+                ?></td>                                
+                <td align="center"><a href="#resources_del"><img id="p6_btn_del_en_<? echo $id_en[$i] ?>"  border="0" src="../pic/del.gif" width="15" height="15" onclick="sync_delete(this.id, 'lib/update_6.html', 8,'<? echo $id_en[$i] ?>', 'p6_news_en')"  alt="刪除此筆消息" title="刪除此筆消息"/></a></td>
+                
+              </tr>
+			  <? if($img_link_en[$i] != ""){ ?>
+			  <tr bgcolor="#faf7da">
+			  <td colspan="3"></td>
+				<td align="center" onclick="toggle_edit('p6_img_link_en_<? echo $id_en[$i] ?>', 'p6_img_link_mod_en_<? echo $id_en[$i] ?>');">
+					<div id="p6_img_link_en_<? echo $id_en[$i] ?>">
+						<? echo $img_link_en[$i] ?>
+					</div>
+					<div id="p6_img_link_mod_en_<? echo $id_en[$i] ?>" style="display:none">
+						<input name="p6_img_link_mod_en_<? echo $id_en[$i] ?>_field" type="text" id="p6_img_link_mod_en_<? echo $id_en[$i] ?>_field" size="40"  value="<? echo $img_link_en[$i] ?>"  onblur="toggle_edit( 'p6_img_link_mod_en_<? echo $id_en[$i] ?>','p6_img_link_en_<? echo $id_en[$i] ?>');" onchange="sync_input(this.id, 'lib/update_6.html',35, '', 'p6_img_link_en_<? echo $id_en[$i] ?>')" />
+					</div>
+				
+				</td>
+			  <td colspan="3" align="center">
+			  <<- 圖片連結
+			  </td>
+			  </tr>
+
+			  <? } ?>
+<?
+		$i++;
+	}              
+ ?>
+            </table>
+<?
+}else{
+?>
+			<br /> - 沒有任何資源。
+<?
+}
+?>
+            </div>            <br />          

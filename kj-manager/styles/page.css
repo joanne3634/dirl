@@ -1,0 +1,146 @@
+/*-------------------------------------------------------------\
+ * DashBoard
+\-------------------------------------------------------------*/
+#main-content > h1.caption {
+    display: block;
+    margin: -5px -5px 0px;
+    padding: 10px;
+    background-color: rgb(150,150,150);
+    color: white;
+    text-shadow: -1px -1px 1px rgba(0,0,0,0.5);
+    font-size: 2.5em;
+    font-weight: normal;
+}
+
+#main-content > h1.caption > span {
+    padding-left: 5px;
+}
+
+#main-content > section.dashboard {
+    display: block;
+    margin: 0px;
+    outline: 5px solid rgb(150,150,150);
+    border: 5px solid rgb(120,120,120);
+    border-right-color: rgb(180,180,180);
+    border-bottom-color: rgb(180,180,180);
+    padding: 5px 5px 45px;
+}
+
+
+/*-------------------------------------------------------------\
+ * Section(s) ListItem
+\-------------------------------------------------------------*/
+#main-content.menupage ul#sections {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+#main-content.menupage ul#sections li {
+    margin-top: 15px;
+}
+
+#main-content.menupage ul#sections li > h2 {
+    margin: 0px -5px 5px -15px;
+    padding: 8px 0px 5px 15px;
+    background-color: rgb(120,200,255);
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    font-size: 1.8em;
+    font-weight: normal;
+    line-height: 1.5em;
+}
+
+#main-content.menupage ul#sections li.dragdrop-placeholder {
+    display: block;
+    width: 100%;
+    height: 2.7em;
+    margin: 5px -5px 5px -15px;
+    padding: 8px 5px 5px 15px;
+    border: 1px dashed rgb(0,0,0);
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-radius: 0px;
+    background-color: rgb(120,200,255);
+}
+
+
+/*-------------------------------------------------------------\
+ * Section(s)
+\-------------------------------------------------------------*/
+
+#main-content.menupage .language-selector {
+    float: right;
+    display: block;
+    width: 150px;
+    padding: 0px;
+    margin: 0px 10px 0px 0px;
+}
+#main-content.menupage .language-selector.-hide {
+    display: none;
+}
+
+#main-content.menupage .language-selector a.active {
+    background-color: gray;
+    color: lightgray;
+    cursor: default;
+}
+
+#main-content.menupage .section-content {
+    padding: 5px;
+    margin: 5px 160px 5px 5px;
+}
+#main-content.menupage .section-content.-full {
+    margin-right: 5px;
+}
+
+#main-content.menupage .section-content textarea {
+    margin: 0px -3px -3px;
+    padding: 2px;
+    border: 1px solid gray;
+    display: block;
+    width: 100%;
+    min-height: 400px;
+    resize: none;
+}
+
+#main-content.menupage .section-content textarea.-tm10 { margin-top: 10px; }
+
+#main-content.menupage .section-content .table-side {
+    float: right;
+    width: 185px;
+    margin: 0px 5px 0px 10px;
+}
+
+#main-content.menupage .table-side > select {
+    width: 175px;
+    padding: 2px;
+    border: 1px solid lightgray;
+    margin: 2px;
+}
+
+#main-content.menupage .table-side > label {
+    display: block;
+    margin: 2px 0px;
+    padding: 3px 0px;
+    min-height: 20px;
+    vertical-align: middle;
+}
+
+#main-content.menupage .table-side > label > input[type="number"] {
+    width: 50px;
+    padding: 2px;
+    border: 1px solid lightgray;
+    margin: 2px;
+}
+
+#main-content.menupage .section-content .template {
+    margin-right: 200px;
+}
+
+#main-content.menupage td.table-view {
+    padding: 0px;
+}
+#main-content.menupage td.table-view > .viewport {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}

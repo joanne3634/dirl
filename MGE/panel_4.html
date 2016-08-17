@@ -1,0 +1,1008 @@
+<?
+// 檔案：MGE/panel4.html
+// 說明：管理實驗室成員資料
+session_start();
+
+// 如果沒有通過認直接存取，則送到登入頁
+if($_SESSION['login_mmnet'] != "ok_mmnet"){
+	header("location:index.html");
+}
+
+$_SESSION['pos'] = "panel_4";	// 讓server端確認目前的位置，避免在頁外被呼叫
+
+function print_select_month($selected_month) {
+	$i = 1;
+	while($i <= 12){
+		echo "<option value=\"".$i."\" ";
+		if($selected_month == $i){
+			echo " selected=\"selected\"";
+		}
+		echo ">".$i."</option>";
+		$i++;
+	}
+}
+
+// 初始化頁面內容
+include("lib/link.html");
+
+// 初始化所有變數
+$user_id  = array();
+$name_tc = array();
+$last_name_en = array();
+$first_name_en = array();
+$aka_tc  = array();
+$aka_en = array();
+$type = array();
+$page_link = array();
+$blog_link = array();
+$email = array();
+$tel = array();
+$cell = array();
+$period_in_mon = array();
+$period_in_year = array();
+$period_out_mon = array();
+$period_out_year = array();
+$study_tc = array();
+$study_en = array();
+$work_tc = array();
+$work_en = array();
+$research = array();
+$iis_id = array();
+$msn = array();
+$skype = array();
+$google = array();
+$last_update = array();
+$total_members = 0;
+
+if($con){
+    if($db_selected){
+        // 抓取資料表 news 
+        $sql = "select *  from members ORDER BY type ASC, period_in_year ASC, period_in_mon ASC, name_tc ASC";
+        $result = mysql_query($sql);
+
+        if($result){
+            while($row = mysql_fetch_row($result)){
+                $user_id[$total_members] = $row[0];
+                $name_tc[$total_members] = $row[1];
+                $last_name_en[$total_members] = $row[2];
+                $first_name_en[$total_members] = $row[3];
+                $aka_tc[$total_members]  = $row[4];
+                $aka_en[$total_members] = $row[5];
+                $type[$total_members] = $row[6];
+                $page_link[$total_members] = $row[7];
+                $blog_link[$total_members] = $row[8];
+                $email[$total_members] = $row[9];
+                $tel[$total_members] = $row[10];
+                $cell[$total_members] = $row[11];
+                $period_in_mon[$total_members] = $row[12];
+                $period_in_year[$total_members] = $row[13];
+                $period_out_mon[$total_members] = $row[14];
+                $period_out_year[$total_members] = $row[15];
+                $study_tc[$total_members] = $row[16];
+                $study_en[$total_members] = $row[17];
+                $work_tc[$total_members] = $row[18];
+                $work_en[$total_members] = $row[19];
+                $research[$total_members] = $row[20];
+                $iis_id[$total_members] = $row[21];
+                $msn[$total_members] = $row[22];
+                $skype[$total_members] = $row[23];
+                $google[$total_members] = $row[24];
+                $last_update[$total_members] = $row[25];
+
+                $total_members++;                           
+            }
+        }     
+    }else{
+
+    }
+}
+
+?>
+<img src="../images/title_5.jpg" />
+              <div style="padding-left:30px; line-height:20px">
+              <table width="820" border="0">
+              <tr>
+              	<td><div id="p4_add_pd_fast_btn">
+           	    <a href="#add_pd_fast" onclick="switch_add('p4_add_pd_fast')" title="請點選此項來開啟/關閉表格"><img src="../pic/add2.gif" width="15" height="15" align="absmiddle" border="0"  /> 新增博後研究員 (快速) </a></div>
+                </td>
+                <td><div id="p4_add_pd_full_btn">
+              	<a href="#add_pd_full" onclick="switch_add('p4_add_pd_full')" title="請點選此項來開啟/關閉表格"><img src="../pic/add2.gif" width="15" height="15" align="absmiddle" border="0" /> 新增博後研究員 (詳細) </a></div>
+                </td>
+                <td><div id="p4_add_ra_fast_btn">
+           	    <a href="#add_ra_fast" onclick="switch_add('p4_add_ra_fast')" title="請點選此項來開啟/關閉表格"><img src="../pic/add2.gif" width="15" height="15" align="absmiddle" border="0"  /> 新增研究助理 (快速) </a></div>
+                </td>
+                <td><div id="p4_add_ra_full_btn">
+              	<a href="#add_ra_full" onclick="switch_add('p4_add_ra_full')" title="請點選此項來開啟/關閉表格"><img src="../pic/add2.gif" width="15" height="15" align="absmiddle" border="0" /> 新增研究助理 (詳細) </a></div>
+                </td>
+			  </tr>
+			  <tr>
+                <td><div id="p4_add_al_fast_btn">
+           	    <a href="#add_al_fast" onclick="switch_add('p4_add_al_fast')" title="請點選此項來開啟/關閉表格"><img src="../pic/add.gif" width="15" height="15" align="absmiddle" border="0" /> 新增Alumni (快速) </a></div>
+                </td>
+                <td><div id="p4_add_al_full_btn">
+              	<a href="#add_al_full" onclick="switch_add('p4_add_al_full')" title="請點選此項來開啟/關閉表格"><img src="../pic/add.gif" width="15" height="15" align="absmiddle" border="0" /> 新增Alumni (詳細) </a></div>
+                </td>
+                <td><div id="p4_add_si_fast_btn">
+           	    <a href="#add_si_fast" onclick="switch_add('p4_add_si_fast')" title="請點選此項來開啟/關閉表格"><img src="../pic/add.gif" width="15" height="15" align="absmiddle" border="0" /> 新增Summer Internal (快速) </a></div>
+                </td>
+                <td><div id="p4_add_si_full_btn">
+              	<a href="#add_si_full" onclick="switch_add('p4_add_si_full')" title="請點選此項來開啟/關閉表格"><img src="../pic/add.gif" width="15" height="15" align="absmiddle" border="0" /> 新增Summer Internal (詳細) </a></div>
+                </td>
+			  </tr>
+            </table>
+  </div>
+  <div id="p4_mod_member" style="padding-left:30px;display:none"></div>
+  <div id="p4_mod_member_btn" style="display:none"></div>
+
+<!-- PostDoc full -->
+  <div id="p4_add_pd_full" style="padding-left:30px;display:none">
+	<form action="" method="post" >   
+    <table width="436" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+      <tr bgcolor="#FFD78C">
+       	<td colspan="2" style="padding:3px; color:#AA5500; font-size:13px; ">
+          <strong>新增博士後研究員 (紅色欄位為必填欄位)： </strong>  <input type="button" name="p4_cancel" id="p4_cancel" class="button" value="取消新增" onclick="switch_add('p4_add_pd_full')" />
+          </td>
+      </tr>
+      <tr>
+        <td width="153"><div align="right">資訊所帳號：</div></td>
+        <td><input name="p4_add_ra_full_iis_id" type="text" id="p4_add_pd_full_iis_id" size="15"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">中文姓名：</div></td>
+        <td><input name="p4_add_pd_full_name_tc" type="text" id="p4_add_pd_full_name_tc" size="15"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td height="40"><div align="right">英文姓名：</div></td>
+        <td><input name="p4_add_pd_full_name_en" type="text" id="p4_add_pd_full_name_en" size="15"  value="" class="need_input" /> 
+          ( 格式: first-first last )</td>
+      </tr>
+      <tr>
+        <td><div align="right">中文暱稱 (或別名)：</div></td>
+        <td width="271"><input name="p4_add_pd_full_aka_tc" type="text" id="p4_add_pd_full_aka_tc" size="15"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">英文暱稱 (或別名)：</div></td>
+        <td><input name="p4_add_pd_full_aka_en" type="text" id="p4_add_pd_full_aka_en" size="15"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">生日：</div></td>
+        <td><input name="p4_add_pd_full_birthday" type="text" id="p4_add_pd_full_birthday" size="15"  value="" /> (格式: YYYY-MM-DD)</td>
+      </tr>
+      <tr>
+        <td><div align="right">職稱 (中文)：</div></td>
+        <td width="271"><input name="p4_add_pd_full_title_tc" type="text" id="p4_add_pd_full_title_tc" size="15"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">職稱 (英文)：</div></td>
+        <td><input name="p4_add_pd_full_title_en" type="text" id="p4_add_pd_full_title_en" size="15"  value="" /></td>
+      </tr> 
+      <tr>     
+      	<td><div align="right">個人網頁：</div></td>
+        <td><input name="p4_add_pd_full_page_link" type="text" id="p4_add_pd_full_page_link" size="40"  value="" /></td>
+       </tr>
+      <tr>     
+      	<td><div align="right">個人網頁(英文)：</div></td>
+        <td><input name="p4_add_pd_full_page_link_en" type="text" id="p4_add_pd_full_page_link_en" size="40"  value="" /></td>
+       </tr>       
+      <tr>
+        <td><div align="right">個人部落格：</div></td>
+        <td><input name="p4_add_pd_full_blog_link" type="text" id="p4_add_pd_full_blog_link" size="40"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">電子郵件：</div></td>
+        <td><input name="p4_add_pd_full_email" type="text" id="p4_add_pd_full_email" size="30"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">永久電子郵件：</div></td>
+        <td><input name="p4_add_pd_full_email_stable" type="text" id="p4_add_pd_full_email_stable" size="30"  value="" class="need_input" /></td>
+      </tr>	  
+      <tr>
+        <td><div align="right">電話：</div></td>
+        <td><input name="p4_add_pd_full_tel" type="text" id="p4_add_pd_full_tel" size="30"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">手機：</div></td>
+        <td><input name="p4_add_pd_full_cell" type="text" id="p4_add_pd_full_cell" size="30"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">加入時間：</div></td>
+        <td><input name="p4_add_pd_full_period_in_year" type="text" id="p4_add_pd_full_period_in_year"  value="" size="4" maxlength="4" class="need_input" />
+          年 
+          <select name="p4_add_pd_full_period_in_mon" id="p4_add_pd_full_period_in_mon" class="need_input">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+          月</td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (中文)：</div></td>
+        <td><input name="p4_add_pd_full_study_tc" type="text" id="p4_add_pd_full_study_tc" size="40"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (英文)：</div></td>
+        <td><input name="p4_add_pd_full_study_en" type="text" id="p4_add_pd_full_study_en" size="40"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">研究主題 (英文)：</div></td>
+        <td><textarea name="p4_add_pd_full_research" cols="40" rows="5" id="p4_add_pd_full_research" class="need_input"></textarea>
+          <br />
+        (一行一個主題)</td>
+      </tr>
+      <tr>
+        <td><div align="right">MSN 帳號：</div></td>
+        <td><input name="p4_add_pd_full_msn" type="text" id="p4_add_pd_full_msn" size="30"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">Skype 帳號：</div></td>
+        <td><input name="p4_add_pd_full_skype" type="text" id="p4_add_pd_full_skype" size="30"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">Google 帳號：</div></td>
+        <td><input name="p4_add_pd_full_google" type="text" id="p4_add_pd_full_google" size="30"  value="" /></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><input type="button" name="p2_submit_add" id="p2_submit_add" value="新增成員"  class="button"  onclick="sync_input_group('p4_add_pd_full', 'lib/update_4.html',23)" /> <input type="reset" name="Reset" id="button" class="button" value="重填" /></td>
+      </tr>
+    </table>
+</form>
+  </div>
+
+<!-- PostDoc fast -->
+  <div id="p4_add_pd_fast" style="padding-left:30px; display:none">
+	<form action="" method="post" >   
+    <table width="436" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+      <tr bgcolor="#FFD78C">
+       	<td colspan="2" style="padding:3px; color:#AA5500; font-size:13px">
+          <strong>新增博士後研究員 (紅色欄位為必填欄位)： </strong> <input type="button" name="p4_cancel" id="p4_cancel" class="button" value="取消新增" onclick="switch_add('p4_add_pd_fast')" />        </td>
+      </tr>
+      <tr>
+        <td width="153"><div align="right">資訊所帳號：</div></td>
+        <td width="271"><input name="p4_add_pd_fast_iis_id" type="text" id="p4_add_pd_fast_iis_id" size="15"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">中文姓名：</div></td>
+        <td><input name="p4_add_pd_fast_name_tc" type="text" id="p4_add_pd_fast_name_tc" size="15"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td height="40"><div align="right">英文姓名：</div></td>
+        <td><input name="p4_add_pd_fast_name_en" type="text" id="p4_add_pd_fast_name_en" size="15"  value="" class="need_input" /> 
+          ( 格式: first-first last )</td>
+      </tr>
+      <tr>
+        <td><div align="right">電子郵件：</div></td>
+        <td><input name="p4_add_pd_fast_email" type="text" id="p4_add_pd_fast_email" size="30"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">加入時間：</div></td>
+        <td><input name="p4_add_pd_fast_period_in_year" type="text" id="p4_add_pd_fast_period_in_year"  value="" size="4" maxlength="4" class="need_input" />
+          年 
+          <select name="p4_add_pd_fast_period_in_mon" id="p4_add_pd_fast_period_in_mon" class="need_input">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+          月</td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (中文)：</div></td>
+        <td><input name="p4_add_pd_fast_study_tc" type="text" id="p4_add_pd_fast_study_tc" size="40"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (英文)：</div></td>
+        <td><input name="p4_add_pd_fast_study_en" type="text" id="p4_add_pd_fast_study_en" size="40"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">研究主題 (英文)：</div></td>
+        <td><textarea name="p4_add_pd_fast_research" cols="40" rows="5" id="p4_add_pd_fast_research" class="need_input"></textarea>
+          <br />
+        (一行一個主題)</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><input type="button" name="p2_submit_add" id="p2_submit_add" value="新增成員"  class="button"  onclick="sync_input_group('p4_add_pd_fast', 'lib/update_4.html',22)" /> <input type="reset" name="Reset" id="button" class="button" value="重填" /></td>
+      </tr>
+    </table>
+</form>
+  </div>
+
+<!-- RA full -->
+  <div id="p4_add_ra_full" style="padding-left:30px;display:none">
+	<form action="" method="post" >   
+    <table width="436" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+      <tr bgcolor="#FFD78C">
+       	<td colspan="2" style="padding:3px; color:#AA5500; font-size:13px; ">
+          <strong>新增研究助理 (紅色欄位為必填欄位)： </strong>  <input type="button" name="p4_cancel" id="p4_cancel" class="button" value="取消新增" onclick="switch_add('p4_add_ra_full')" />
+          </td>
+      </tr>
+      <tr>
+        <td width="153"><div align="right">資訊所帳號：</div></td>
+        <td><input name="p4_add_ra_full_iis_id" type="text" id="p4_add_ra_full_iis_id" size="15"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">中文姓名：</div></td>
+        <td><input name="p4_add_ra_full_name_tc" type="text" id="p4_add_ra_full_name_tc" size="15"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td height="40"><div align="right">英文姓名：</div></td>
+        <td><input name="p4_add_ra_full_name_en" type="text" id="p4_add_ra_full_name_en" size="15"  value="" class="need_input" /> 
+          ( 格式: first-first last )</td>
+      </tr>
+      <tr>
+        <td><div align="right">中文暱稱 (或別名)：</div></td>
+        <td width="271"><input name="p4_add_ra_full_aka_tc" type="text" id="p4_add_ra_full_aka_tc" size="15"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">英文暱稱 (或別名)：</div></td>
+        <td><input name="p4_add_ra_full_aka_en" type="text" id="p4_add_ra_full_aka_en" size="15"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">生日：</div></td>
+        <td><input name="p4_add_ra_full_birthday" type="text" id="p4_add_ra_full_birthday" size="15"  value="" /> (格式: YYYY-MM-DD)</td>
+      </tr>
+      <tr>
+        <td><div align="right">職稱 (中文)：</div></td>
+        <td width="271"><input name="p4_add_ra_full_title_tc" type="text" id="p4_add_ra_full_title_tc" size="15"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">職稱 (英文)：</div></td>
+        <td><input name="p4_add_ra_full_title_en" type="text" id="p4_add_ra_full_title_en" size="15"  value="" /></td>
+      </tr> 
+      <tr>     
+      	<td><div align="right">個人網頁：</div></td>
+        <td><input name="p4_add_ra_full_page_link" type="text" id="p4_add_ra_full_page_link" size="40"  value="" /></td>
+       </tr>
+      <tr>     
+      	<td><div align="right">個人網頁(英文)：</div></td>
+        <td><input name="p4_add_ra_full_page_link_en" type="text" id="p4_add_ra_full_page_link_en" size="40"  value="" /></td>
+       </tr>       
+      <tr>
+        <td><div align="right">個人部落格：</div></td>
+        <td><input name="p4_add_ra_full_blog_link" type="text" id="p4_add_ra_full_blog_link" size="40"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">電子郵件：</div></td>
+        <td><input name="p4_add_ra_full_email" type="text" id="p4_add_ra_full_email" size="30"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">永久電子郵件：</div></td>
+        <td><input name="p4_add_ra_full_email_stable" type="text" id="p4_add_ra_full_email_stable" size="30"  value="" class="need_input" /></td>
+      </tr>	  
+      <tr>
+        <td><div align="right">電話：</div></td>
+        <td><input name="p4_add_ra_full_tel" type="text" id="p4_add_ra_full_tel" size="30"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">手機：</div></td>
+        <td><input name="p4_add_ra_full_cell" type="text" id="p4_add_ra_full_cell" size="30"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">加入時間：</div></td>
+        <td><input name="p4_add_ra_full_period_in_year" type="text" id="p4_add_ra_full_period_in_year"  value="" size="4" maxlength="4" class="need_input" />
+          年 
+          <select name="p4_add_ra_full_period_in_mon" id="p4_add_ra_full_period_in_mon" class="need_input">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+          月</td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (中文)：</div></td>
+        <td><input name="p4_add_ra_full_study_tc" type="text" id="p4_add_ra_full_study_tc" size="40"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (英文)：</div></td>
+        <td><input name="p4_add_ra_full_study_en" type="text" id="p4_add_ra_full_study_en" size="40"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">研究主題 (英文)：</div></td>
+        <td><textarea name="p4_add_ra_full_research" cols="40" rows="5" id="p4_add_ra_full_research" class="need_input"></textarea>
+          <br />
+        (一行一個主題)</td>
+      </tr>
+      <tr>
+        <td><div align="right">MSN 帳號：</div></td>
+        <td><input name="p4_add_ra_full_msn" type="text" id="p4_add_ra_full_msn" size="30"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">Skype 帳號：</div></td>
+        <td><input name="p4_add_ra_full_skype" type="text" id="p4_add_ra_full_skype" size="30"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">Google 帳號：</div></td>
+        <td><input name="p4_add_ra_full_google" type="text" id="p4_add_ra_full_google" size="30"  value="" /></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><input type="button" name="p2_submit_add" id="p2_submit_add" value="新增成員"  class="button"  onclick="sync_input_group('p4_add_ra_full', 'lib/update_4.html',13)" /> <input type="reset" name="Reset" id="button" class="button" value="重填" /></td>
+      </tr>
+    </table>
+</form>
+  </div>
+
+<!-- RA fast -->
+  <div id="p4_add_ra_fast" style="padding-left:30px; display:none">
+	<form action="" method="post" >   
+    <table width="436" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+      <tr bgcolor="#FFD78C">
+       	<td colspan="2" style="padding:3px; color:#AA5500; font-size:13px">
+          <strong>新增研究助理 (紅色欄位為必填欄位)： </strong> <input type="button" name="p4_cancel" id="p4_cancel" class="button" value="取消新增" onclick="switch_add('p4_add_ra_fast')" />        </td>
+      </tr>
+      <tr>
+        <td width="153"><div align="right">資訊所帳號：</div></td>
+        <td width="271"><input name="p4_add_ra_fast_iis_id" type="text" id="p4_add_ra_fast_iis_id" size="15"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">中文姓名：</div></td>
+        <td><input name="p4_add_ra_fast_name_tc" type="text" id="p4_add_ra_fast_name_tc" size="15"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td height="40"><div align="right">英文姓名：</div></td>
+        <td><input name="p4_add_ra_fast_name_en" type="text" id="p4_add_ra_fast_name_en" size="15"  value="" class="need_input" /> 
+          ( 格式: first-first last )</td>
+      </tr>
+      <tr>
+        <td><div align="right">電子郵件：</div></td>
+        <td><input name="p4_add_ra_fast_email" type="text" id="p4_add_ra_fast_email" size="30"  value="" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">加入時間：</div></td>
+        <td><input name="p4_add_ra_fast_period_in_year" type="text" id="p4_add_ra_fast_period_in_year"  value="" size="4" maxlength="4" class="need_input" />
+          年 
+          <select name="p4_add_ra_fast_period_in_mon" id="p4_add_ra_fast_period_in_mon" class="need_input">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+          月</td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (中文)：</div></td>
+        <td><input name="p4_add_ra_fast_study_tc" type="text" id="p4_add_ra_fast_study_tc" size="40"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (英文)：</div></td>
+        <td><input name="p4_add_ra_fast_study_en" type="text" id="p4_add_ra_fast_study_en" size="40"  value="" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">研究主題 (英文)：</div></td>
+        <td><textarea name="p4_add_ra_fast_research" cols="40" rows="5" id="p4_add_ra_fast_research" class="need_input"></textarea>
+          <br />
+        (一行一個主題)</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><input type="button" name="p2_submit_add" id="p2_submit_add" value="新增成員"  class="button"  onclick="sync_input_group('p4_add_ra_fast', 'lib/update_4.html',12)" /> <input type="reset" name="Reset" id="button" class="button" value="重填" /></td>
+      </tr>
+    </table>
+</form>
+  </div>
+  
+<!-- alumni full -->
+    <div id="p4_add_al_full" style="padding-left:30px; display:none">
+	<form action="" method="post" >   
+
+              <table width="436" border="0" style="border: #71BA03 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+              <tr bgcolor="#DBFF88">
+              	<td colspan="2" style="padding:3px; color:#336600; font-size:13px">
+              <strong>新增Alumni (綠色欄位為必填欄位)： </strong> <input type="button" name="p4_cancel" id="p4_cancel" class="button" value="取消新增" onclick="switch_add('p4_add_al_full')" />               </td>
+              </tr>
+              <tr>
+                <td width="153"><div align="right">資訊所帳號：</div></td>
+                <td><input name="p4_add_al_full_iis_id" type="text" id="p4_add_al_full_iis_id" size="15"  value="" class="need_input2" /></td>
+                </tr>
+              <tr>
+                <td><div align="right">中文姓名：</div></td>
+                <td><input name="p4_add_al_full_name_tc" type="text" id="p4_add_al_full_name_tc" size="15"  value="" class="need_input2" /></td>
+                </tr>
+              <tr>
+                <td height="40"><div align="right">英文姓名：</div></td>
+                <td><input name="p4_add_al_full_name_en" type="text" id="p4_add_al_full_name_en" size="15"  value="" class="need_input2" /> 
+                  ( 格式: first-first last )</td>
+                </tr>
+              <tr>
+                <td><div align="right">中文暱稱 (或別名)：</div></td>
+                <td width="271"><input name="p4_add_al_full_aka_tc" type="text" id="p4_add_al_full_aka_tc" size="15"  value="" /></td>
+                </tr>
+              <tr>
+                <td><div align="right">英文暱稱 (或別名)：</div></td>
+                <td><input name="p4_add_al_full_aka_en" type="text" id="p4_add_al_full_aka_en" size="15"  value="" /></td>
+                </tr>
+              <tr>
+                <td><div align="right">生日：</div></td>
+                <td><input name="p4_add_al_full_birthday" type="text" id="p4_add_al_full_birthday" size="15"  value="" /> (格式: YYYY-MM-DD)</td>
+              </tr>                
+              <tr>
+                <td><div align="right">電子郵件：</div></td>
+                <td><input name="p4_add_al_full_email" type="text" id="p4_add_al_full_email" size="30"  value="" class="need_input2" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">永久電子郵件：</div></td>
+                <td><input name="p4_add_al_full_email_stable" type="text" id="p4_add_al_full_email_stable" size="30"  value="" class="need_input2" /></td>
+              </tr>			  
+              <tr>
+                <td><div align="right">電話：</div></td>
+                <td><input name="p4_add_al_full_tel" type="text" id="p4_add_al_full_tel" size="30"  value="" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">手機：</div></td>
+                <td><input name="p4_add_al_full_cell" type="text" id="p4_add_al_full_cell" size="30"  value="" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">加入時間：</div></td>
+                <td><input name="p4_add_al_full_period_in_year" type="text" id="p4_add_al_full_period_in_year"  value="" size="4" maxlength="4" class="need_input2" />
+                 年 
+                  <select name="p4_add_al_full_period_in_mon" id="p4_add_al_full_period_in_mon" class="need_input2">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+                  月</td>
+              </tr>
+              <tr>
+                <td><div align="right">離職時間：</div></td>
+                <td><input name="p4_add_al_full_period_out_year" type="text" id="p4_add_al_full_period_out_year"  value="" size="4" maxlength="4" class="need_input2" />
+                  年
+                  <select name="p4_add_al_full_period_out_mon" id="p4_add_al_full_period_out_mon" class="need_input2">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+                  月</td>
+              </tr>
+              <tr>
+                <td><div align="right">現在工作 (中文)：</div></td>
+                <td><input name="p4_add_al_full_work_tc" type="text" id="p4_add_al_full_work_tc" size="40"  value="" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">現在工作 (英文)：</div></td>
+                <td><input name="p4_add_al_full_work_en" type="text" id="p4_add_al_full_work_en" size="40"  value="" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">研究主題 (英文)：</div></td>
+                <td><textarea name="p4_add_al_full_research" cols="40" rows="5" id="p4_add_al_full_research" ></textarea>
+                <br />
+                (一行一個主題)</td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td><input type="button" name="p2_submit_add" id="p2_submit_add" value="新增成員"  class="button"  onclick="sync_input_group('p4_add_al_full', 'lib/update_4.html',15)" /> <input type="reset" name="Reset" id="button" class="button" value="重填" /></td>
+              </tr>
+    </table>
+    </form>
+    </div>
+
+<!-- alumni fast -->
+    <div id="p4_add_al_fast" style="padding-left:30px; display:none">
+	<form action="" method="post" >   
+              <table width="436" border="0" style="border: #71BA03 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+              <tr bgcolor="#DBFF88">
+              	<td colspan="2" style="padding:3px; color:#336600; font-size:13px">
+              <strong>新增Alumni (綠色欄位為必填欄位)： </strong> <input type="button" name="p4_cancel" id="p4_cancel" class="button" value="取消新增" onclick="switch_add('p4_add_al_fast')" />                </td>
+              </tr>
+              <tr>
+                <td width="153"><div align="right">資訊所帳號：</div></td>
+                <td width="271"><input name="p4_add_al_fast_iis_id" type="text" id="p4_add_al_fast_iis_id" size="15"  value="" class="need_input2" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">中文姓名：</div></td>
+                <td><input name="p4_add_al_fast_name_tc" type="text" id="p4_add_al_fast_name_tc" size="15"  value="" class="need_input2" /></td>
+                </tr>
+              <tr>
+                <td height="40"><div align="right">英文姓名：</div></td>
+                <td><input name="p4_add_al_fast_name_en" type="text" id="p4_add_al_fast_name_en" size="15"  value="" class="need_input2" /> 
+                  ( 格式: first-first last )</td>
+                </tr>
+              <tr>
+                <td><div align="right">電子郵件：</div></td>
+                <td><input name="p4_add_al_fast_email" type="text" id="p4_add_al_fast_email" size="30"  value="" class="need_input2" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">加入時間：</div></td>
+                <td><input name="p4_add_al_fast_period_in_year" type="text" id="p4_add_al_fast_period_in_year"  value="" size="4" maxlength="4" class="need_input2" />
+                 年 
+                  <select name="p4_add_al_fast_period_in_mon" id="p4_add_al_fast_period_in_mon" class="need_input2">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+                  月</td>
+              </tr>
+              <tr>
+                <td><div align="right">離職時間：</div></td>
+                <td><input name="p4_add_al_fast_period_out_year" type="text" id="p4_add_al_fast_period_out_year"  value="" size="4" maxlength="4" class="need_input2" />
+                  年
+                  <select name="p4_add_al_fast_period_out_mon" id="p4_add_al_fast_period_out_mon" class="need_input2"  >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+                  月</td>
+              </tr>
+              <tr>
+                <td><div align="right">現在工作 (中文)：</div></td>
+                <td><input name="p4_add_al_fast_work_tc" type="text" id="p4_add_al_fast_work_tc" size="40"  value="" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">現在工作 (英文)：</div></td>
+                <td><input name="p4_add_al_fast_work_en" type="text" id="p4_add_al_fast_work_en" size="40"  value="" /></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td><input type="button" name="p2_submit_add" id="p2_submit_add" value="新增成員"  class="button"  onclick="sync_input_group('p4_add_al_fast', 'lib/update_4.html',14)" /> <input type="reset" name="Reset" id="button" class="button" value="重填" /></td>
+              </tr>
+            </table>
+</form>
+             </div>
+
+<!-- Summer Intern full -->
+    <div id="p4_add_si_full" style="padding-left:30px; display:none">
+	<form action="" method="post" >   
+
+              <table width="436" border="0" style="border: #71BA03 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+              <tr bgcolor="#DBFF88">
+              	<td colspan="2" style="padding:3px; color:#336600; font-size:13px">
+              <strong>新增Summer Intern (綠色欄位為必填欄位)： </strong> <input type="button" name="p4_cancel" id="p4_cancel" class="button" value="取消新增" onclick="switch_add('p4_add_si_full')" />               </td>
+              </tr>
+              <tr>
+                <td width="153"><div align="right">資訊所帳號：</div></td>
+                <td><input name="p4_add_si_full_iis_id" type="text" id="p4_add_si_full_iis_id" size="15"  value="" class="need_input2" /></td>
+                </tr>
+              <tr>
+                <td><div align="right">中文姓名：</div></td>
+                <td><input name="p4_add_si_full_name_tc" type="text" id="p4_add_si_full_name_tc" size="15"  value="" class="need_input2" /></td>
+                </tr>
+              <tr>
+                <td height="40"><div align="right">英文姓名：</div></td>
+                <td><input name="p4_add_si_full_name_en" type="text" id="p4_add_si_full_name_en" size="15"  value="" class="need_input2" /> 
+                  ( 格式: first-first last )</td>
+                </tr>
+              <tr>
+                <td><div align="right">中文暱稱 (或別名)：</div></td>
+                <td width="271"><input name="p4_add_si_full_aka_tc" type="text" id="p4_add_si_full_aka_tc" size="15"  value="" /></td>
+                </tr>
+              <tr>
+                <td><div align="right">英文暱稱 (或別名)：</div></td>
+                <td><input name="p4_add_si_full_aka_en" type="text" id="p4_add_si_full_aka_en" size="15"  value="" /></td>
+                </tr>
+              <tr>
+                <td><div align="right">生日：</div></td>
+                <td><input name="p4_add_si_full_birthday" type="text" id="p4_add_si_full_birthday" size="15"  value="" /> (格式: YYYY-MM-DD)</td>
+              </tr>                
+              <tr>
+                <td><div align="right">電子郵件：</div></td>
+                <td><input name="p4_add_si_full_email" type="text" id="p4_add_si_full_email" size="30"  value="" class="need_input2" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">永久電子郵件：</div></td>
+                <td><input name="p4_add_si_full_email_stable" type="text" id="p4_add_si_full_email_stable" size="30"  value="" class="need_input2" /></td>
+              </tr>			  
+              <tr>
+                <td><div align="right">電話：</div></td>
+                <td><input name="p4_add_si_full_tel" type="text" id="p4_add_si_full_tel" size="30"  value="" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">手機：</div></td>
+                <td><input name="p4_add_si_full_cell" type="text" id="p4_add_si_full_cell" size="30"  value="" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">加入時間：</div></td>
+                <td><input name="p4_add_si_full_period_in_year" type="text" id="p4_add_si_full_period_in_year"  value="" size="4" maxlength="4" class="need_input2" />
+                 年 
+                  <select name="p4_add_si_full_period_in_mon" id="p4_add_si_full_period_in_mon" class="need_input2">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+                  月</td>
+              </tr>
+              <tr>
+                <td><div align="right">離職時間：</div></td>
+                <td><input name="p4_add_si_full_period_out_year" type="text" id="p4_add_si_full_period_out_year"  value="" size="4" maxlength="4" class="need_input2" />
+                  年
+                  <select name="p4_add_si_full_period_out_mon" id="p4_add_si_full_period_out_mon" class="need_input2">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+                  月</td>
+              </tr>
+              <tr>
+                <td><div align="right">現在工作 (中文)：</div></td>
+                <td><input name="p4_add_si_full_work_tc" type="text" id="p4_add_si_full_work_tc" size="40"  value="" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">現在工作 (英文)：</div></td>
+                <td><input name="p4_add_si_full_work_en" type="text" id="p4_add_si_full_work_en" size="40"  value="" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">研究主題 (英文)：</div></td>
+                <td><textarea name="p4_add_si_full_research" cols="40" rows="5" id="p4_add_si_full_research" ></textarea>
+                <br />
+                (一行一個主題)</td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td><input type="button" name="p2_submit_add" id="p2_submit_add" value="新增成員"  class="button"  onclick="sync_input_group('p4_add_si_full', 'lib/update_4.html',15)" /> <input type="reset" name="Reset" id="button" class="button" value="重填" /></td>
+              </tr>
+    </table>
+    </form>
+    </div>
+
+<!-- Summer Intern fast -->
+    <div id="p4_add_si_fast" style="padding-left:30px; display:none">
+	<form action="" method="post" >   
+              <table width="436" border="0" style="border: #71BA03 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+              <tr bgcolor="#DBFF88">
+              	<td colspan="2" style="padding:3px; color:#336600; font-size:13px">
+              <strong>新增Summer Intern (綠色欄位為必填欄位)： </strong> <input type="button" name="p4_cancel" id="p4_cancel" class="button" value="取消新增" onclick="switch_add('p4_add_si_fast')" />                </td>
+              </tr>
+              <tr>
+                <td width="153"><div align="right">資訊所帳號：</div></td>
+                <td width="271"><input name="p4_add_si_fast_iis_id" type="text" id="p4_add_si_fast_iis_id" size="15"  value="" class="need_input2" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">中文姓名：</div></td>
+                <td><input name="p4_add_si_fast_name_tc" type="text" id="p4_add_si_fast_name_tc" size="15"  value="" class="need_input2" /></td>
+                </tr>
+              <tr>
+                <td height="40"><div align="right">英文姓名：</div></td>
+                <td><input name="p4_add_si_fast_name_en" type="text" id="p4_add_si_fast_name_en" size="15"  value="" class="need_input2" /> 
+                  ( 格式: first-first last )</td>
+                </tr>
+              <tr>
+                <td><div align="right">電子郵件：</div></td>
+                <td><input name="p4_add_si_fast_email" type="text" id="p4_add_si_fast_email" size="30"  value="" class="need_input2" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">加入時間：</div></td>
+                <td><input name="p4_add_si_fast_period_in_year" type="text" id="p4_add_si_fast_period_in_year"  value="" size="4" maxlength="4" class="need_input2" />
+                 年 
+                  <select name="p4_add_si_fast_period_in_mon" id="p4_add_si_fast_period_in_mon" class="need_input2">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+                  月</td>
+              </tr>
+              <tr>
+                <td><div align="right">離職時間：</div></td>
+                <td><input name="p4_add_si_fast_period_out_year" type="text" id="p4_add_si_fast_period_out_year"  value="" size="4" maxlength="4" class="need_input2" />
+                  年
+                  <select name="p4_add_si_fast_period_out_mon" id="p4_add_si_fast_period_out_mon" class="need_input2"  >
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+                  月</td>
+              </tr>
+              <tr>
+                <td><div align="right">現在工作 (中文)：</div></td>
+                <td><input name="p4_add_si_fast_work_tc" type="text" id="p4_add_si_fast_work_tc" size="40"  value="" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">現在工作 (英文)：</div></td>
+                <td><input name="p4_add_si_fast_work_en" type="text" id="p4_add_si_fast_work_en" size="40"  value="" /></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td><input type="button" name="p2_submit_add" id="p2_submit_add" value="新增成員"  class="button"  onclick="sync_input_group('p4_add_si_fast', 'lib/update_4.html',14)" /> <input type="reset" name="Reset" id="button" class="button" value="重填" /></td>
+              </tr>
+            </table>
+</form>
+             </div>
+
+			 <br />
+
+            <span style="padding-left:30px"><img src="../pic/icon2.jpg" width="8" height="8" /> 已有成員：</span><br />
+            <div id="p4_members" style="padding-left:30px">
+            <table width="600" border="0">
+              <tr>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">類型</div></td>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">中文姓名</div></td>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">英文姓名</div></td>
+                <td width="60" bgcolor="#FFD193"><div align="center" class="tbsx">加入時間</div></td>
+                <td width="60" bgcolor="#FFD193"><div align="center" class="tbsx">離開時間</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">修改</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>
+              </tr>
+<? 
+	$i = 0;
+    while($i < $total_members){
+?>                  
+              <tr class="tbs" onmouseover="this.className = 'tbs2';show_div('p4_photo_<? echo $user_id[$i] ?>')" onmouseout="this.className = 'tbs';hide_div_x('p4_photo_<? echo $user_id[$i] ?>')">
+                <td><div align="center" >
+                <? 
+                	if($type[$i] == 0){
+?>
+					<img src="../pic/label_ld.jpg" alt="實驗室主持人" title="實驗室主持人" />
+<?                    
+                    }else if ($type[$i] == 1){
+?>
+					<img src="../pic/label_pd.jpg" alt="博士後研究員" title="博士後研究員" />
+<?                    
+                    }else if ($type[$i] == 2){
+?>
+					<img src="../pic/label_ra.jpg" alt="研究助理" title="研究助理" />
+<?                    
+                    }else if ($type[$i] == 3){
+?>
+					<img src="../pic/label_al.jpg" alt="Alumni" title="Alumni" />
+<?                    
+                    }else if ($type[$i] == 4){
+?>
+					<img src="../pic/label_si.jpg" alt="Summer Intern" title="Summer Intern" />
+<?                    
+                    }
+?>             
+                 </div>
+                 <div id="p4_photo_<? echo $user_id[$i] ?>" align="center" style="display:none; position:absolute; padding-left:5px">
+<?
+					if(file_exists("../photos/".$user_id[$i].".jpg")){
+?>                 
+	                 <img src="../photos/<? echo $user_id[$i] ?>.jpg" />
+<?
+					}else{
+?>
+	                 <img src="../photos/no_pic.jpg" /><br />
+					請建立照片：<br /> ../photos/<? echo $user_id[$i] ?>.jpg<br />
+					尺寸：100 x 118 px
+<?
+					}
+?>                     
+                 </div>
+                 </td>
+                <td><div align="center"><? echo $name_tc[$i] ?></div></td>
+                <td><div align="center"><? echo $first_name_en[$i]." ".$last_name_en[$i] ?></div></td>
+                <td><div align="center">
+                <?
+                		if( $period_in_year[$i] != 0 && $type[$i] != 0){
+	                		echo $period_in_year[$i]." 年 ".$period_in_mon[$i]." 月" ;
+                        }else{
+                        	echo "---";
+                        }
+                ?>                
+                </div></td>
+                <td><div align="center">
+                <?
+                		if( $period_out_year[$i] != 0 && $type[$i] != 0){
+	                		echo $period_out_year[$i]." 年 ".$period_out_mon[$i]." 月" ;
+                        }else{
+                        	echo "---";
+                        }
+                        
+                ?></div>               
+                </td>
+                <td><div align="center"><a href="#member_mod">
+                <img  id="p4_btn_mod_member_<? echo $user_id[$i] ?>" src="../pic/mod.gif" alt="修改詳細內容"  border="0" title="修改詳細內容" onclick="update_div('p4_mod_member', 'lib/mod_4.html?user_id=<? echo $user_id[$i] ?>', 17);show_div('p4_mod_member')"/></a></div>
+                </td>
+                <td><div align="center">
+<?
+					if($type[$i] != 0){
+?>                
+                		<a href="#member_del"><img id="p4_btn_del_member_<? echo $user_id[$i] ?>"  border="0" src="../pic/del.gif" alt="刪除成員" title="刪除成員" onclick="sync_delete(this.id, 'lib/update_4.html', 16,'<? echo $user_id[$i] ?>', 'p4_members')" /></a>
+<?
+					}else{
+?>                    
+                		<img src="../pic/del_n.gif" border="0" alt="無法刪除" title="無法刪除"/>
+<?
+					}
+?>                    
+                    </div></td>
+              </tr>
+<?
+		$i++;
+	}              
+ ?>              
+            </table>
+</div>

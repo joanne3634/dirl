@@ -1,0 +1,85 @@
+<?
+session_start();
+if($_SESSION['login_mmnet'] != 'ok_mmnet') { die('發生錯誤'); }
+if( !isset($_SESSION['pos']) OR $_SESSION['pos']!='panel_5' ) { die('參數錯誤'); }
+
+if( isset($_GET['id']) OR isset($edit_pub_id) )
+{
+    if( isset($_GET['id']) )
+    {
+        require_once('../../kj-manager/mod_database.php');
+        require_once('../../kj-manager/plugins/bibtex.php');
+        $dba = new Accessor();
+        $pid = $_GET['id'];
+    } else { $pid = $edit_pub_id; }
+    //$pub_query = $dba->query('SELECT title,abstract,related,material,bibtex,taglist FROM publications WHERE id='.$pid.' LIMIT 1');
+    $pub = $dba->get('publications',$pid,array(
+        'title' => 'string',
+        'abstract' => 'string:lines',
+        'related' => 'list:comma',
+        'material' => 'json',
+        'bibtex' => 'string:lines',
+        'taglist' => 'string'
+    ));
+    if( empty($pub) ) { die('3&&&'); }
+    //$pub = $pub_query->fetch(PDO::FETCH_ASSOC);
+    $mat = $pub['material'];
+    $act = '修改';
+    $divid = "'p5_mod_publication'";
+
+    $bibx = new BibTeX($pub['bibtex']);
+    $bib_str = $bibx->toString(array('x_tag'),0,PHP_EOL);
+}
+else
+{
+    $pub = array();
+    $act = '新增';
+    $divid = "'p5_add_publication'";
+    $pid = 0;
+    $bib_str = '';
+}
+?>
+<form action="/kj-manager/extends/publications.update.php">        
+    <table width="750" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+        <tbody>
+            <tr bgcolor="#FFD78C">
+                <td colspan="2" style="padding:3px; color:#AA5500; font-size:13px">
+                    <strong><?=$act?>著作</strong>
+                    <button type="button" class="button" onclick="switch_add2(<?=$divid?>);">取消<?=$act?></button>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:100px;"><div align="right">摘要</div></td>
+                <td><textarea style="width:600px;" name="abstract" rows="8"><?=$pub['abstract']?></textarea></td>
+            </tr>
+            <tr>
+                <td><div align="right">相關著作</div></td>
+                <td><textarea style="width:600px;" name="related" rows="6"><?=implode(PHP_EOL,$pub['related'])?></textarea></td>
+            </tr>
+            <tr>
+                <td><div align="right">BibTeX：</div></td>
+                <td><textarea style="width:600px;" name="bibtex" rows="6" style="font-family:'Courier New', Courier, monospace;"><?=$bib_str?></textarea></td>
+            </tr>
+            <tr>
+                <td><div align="right">Full Text：</div></td>
+                <td><input style="width:600px;" type="text" name="fulltext" value="<?=$mat['fulltext']?>" /></td>
+            </tr>
+            <tr>
+                <td><div align="right">Slide Share：</div></td>
+                <td><input style="width:600px;" type="text" name="slideshare" value="<?=$mat['slideshare']?>" /></td>
+            </tr>
+            <tr>
+                <td><div align="right">Tags：</div></td>
+                <td><textarea style="width:600px;" name="taglist" rows="3" style="font-family:'Courier New', Courier, monospace;"><?=$pub['taglist']?></textarea></td>
+            </tr>
+            <tr>
+                <td height="40" colspan="2">
+                    <div align="center">
+                        <button type="button" class="button" onclick="update(this.form,<?=$pid?>);"><?=$act?>研究著作</button>
+                        <button type="reset" class="button">清空</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>

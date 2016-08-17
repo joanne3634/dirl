@@ -1,0 +1,356 @@
+<?
+require_once('/home/kj/mmnet-manager-2015/mod_database.php');
+$dba = new Accessor();
+session_start();
+
+$split_char = "&&&";
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && isset($_POST['id']) && isset($_POST['data'])){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+			
+				$data = mysql_real_escape_string($_POST['data']);
+			//	filter_var($data, FILTER_SANITIZE_STRING);
+
+				// 判別是哪一個panel (只允許指定傳送)
+				if($_SESSION['pos'] == "panel_1"){
+					// 判別是那一個id需要更新
+					// 關於我們 - 中文
+					if($_POST['id'] == "p1_about_tc"){		
+
+						$sql = "update main_info set about='".$data."', last_update=NOW()  where lang='TC'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「關於我們」中文資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select about, last_update from main_info where lang='TC'";
+							$result2 = mysql_query($sql);
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+
+					// 關於我們 - 英文
+					}else if($_POST['id'] == "p1_about_en"){
+						
+						$sql = "update main_info set about='".$data."', last_update=NOW()  where lang='EN'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「關於我們」英文資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select about, last_update from main_info where lang='EN'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 研究領域 - 中文
+					}else if($_POST['id'] == "p1_research_tc"){
+						
+						$sql = "update main_info set research='".$data."', last_update_res=NOW()  where lang='TC'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「研究領域」中文資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select research, last_update_res from main_info where lang='TC'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 研究領域 - 英文
+					}else if($_POST['id'] == "p1_research_en"){
+						
+						$sql = "update main_info set research='".$data."', last_update_res=NOW()  where lang='EN'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「研究領域」英文資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select research, last_update_res from main_info where lang='EN'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 聯絡我們 - 中文 - email
+					}else if($_POST['id'] == "p1_contact_email_tc"){
+						
+						$sql = "update contact set email='".$data."', last_update=NOW() where lang='TC'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「聯絡我們」的中文 E-mail 資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select email, last_update from contact where lang='TC'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 聯絡我們 - 中文 - tel
+					}else if($_POST['id'] == "p1_contact_tel_tc"){
+						
+						$sql = "update contact set tel='".$data."' , last_update=NOW() where lang='TC'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「聯絡我們」的中文電話資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select tel, last_update from contact where lang='TC'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 聯絡我們 - 中文 - fax
+					}else if($_POST['id'] == "p1_contact_fax_tc"){
+						
+						$sql = "update contact set fax='".$data."', last_update=NOW() where lang='TC'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「聯絡我們」的中文傳真機資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select fax, last_update from contact where lang='TC'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+
+					// 聯絡我們 - 中文 - ADDR
+					}else if($_POST['id'] == "p1_contact_addr_tc"){
+						
+						$sql = "update contact set addr='".$data."', last_update=NOW() where lang='TC'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「聯絡我們」的中文地址資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select addr, last_update from contact where lang='TC'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 聯絡我們 - 英文 - email
+					}else if($_POST['id'] == "p1_contact_email_en"){
+						
+						$sql = "update contact set email='".$data."', last_update=NOW() where lang='EN'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「聯絡我們」的英文 E-mail 資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select email, last_update from contact where lang='EN'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 聯絡我們 - 英文 - tel
+					}else if($_POST['id'] == "p1_contact_tel_en"){
+						
+						$sql = "update contact set tel='".$data."', last_update=NOW() where lang='EN'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「聯絡我們」的英文電話資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select tel, last_update from contact where lang='EN'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 聯絡我們 - 英文 - fax
+					}else if($_POST['id'] == "p1_contact_fax_en"){
+						
+						$sql = "update contact set fax='".$data."', last_update=NOW() where lang='EN'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「聯絡我們」的英文傳真機資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select fax, last_update from contact where lang='EN'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+
+					// 聯絡我們 - 英文 - ADDR
+					}else if($_POST['id'] == "p1_contact_addr_en"){
+						
+						$sql = "update contact set addr='".$data."', last_update=NOW() where lang='EN'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「聯絡我們」的英文地址資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select addr, last_update from contact where lang='EN'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 聯絡我們 - 中文 - 全部更新
+					}else if($_POST['id'] == "p1_contact_group_tc"){
+						
+						$data_token = explode("||", $data);
+						
+						// 必須有四個參數
+						if(sizeof($data_token) == 4){
+
+							$sql = "update contact set email='".$data_token[0]."', tel='".$data_token[1]."', fax='".$data_token[2]."', addr='".$data_token[3]."', last_update=NOW() where lang='TC'";
+							$result = mysql_query($sql);
+
+							if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「聯絡我們」的中文資料。');
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+								$sql = "select last_update from contact where lang='TC'";
+								$result2 = mysql_query($sql);
+
+								if($result2){
+									$row = mysql_fetch_row($result2);
+									echo " ( ".$row[0]." )";
+								}
+			
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+
+						}else{
+								echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+
+					// 聯絡我們 - 英文 - 全部更新
+					}else if($_POST['id'] == "p1_contact_group_en"){
+						
+						$data_token = explode("||", $data);
+						
+						// 必須有四個參數
+						if(sizeof($data_token) == 4){
+
+							$sql = "update contact set email='".$data_token[0]."', tel='".$data_token[1]."', fax='".$data_token[2]."', addr='".$data_token[3]."', last_update=NOW() where lang='EN'";
+							$result = mysql_query($sql);
+
+							if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「聯絡我們」的英文資料。');
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+								$sql = "select last_update from contact where lang='EN'";
+								$result2 = mysql_query($sql);
+
+								if($result2){
+									$row = mysql_fetch_row($result2);
+									echo " ( ".$row[0]." )";
+								}
+			
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+
+						}else{
+								echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+
+					// 未知的 id
+
+					}else{
+						echo "6".$split_char;				//傳送錯誤碼，未定義的名稱				
+
+					}
+				}else{
+					echo "7".$split_char;				//傳送錯誤碼，使用不當				
+				}
+				
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+
+	}
+}
+?>

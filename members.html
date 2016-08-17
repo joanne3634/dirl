@@ -1,0 +1,406 @@
+<?php
+/*-------------------------------------------------------------\
+ * 檔案：members.html
+ - 說明：實驗室成員內容
+ - modified by kj 2015.01.06
+\-------------------------------------------------------------*/
+$subtitle = array(
+    'TC' => '實驗室成員',
+    'EN' => 'Members',
+);
+include('_template/header.php');
+include('_template/menu.php'); 
+
+// 顯示內容設定，預設值為中文.
+switch ($lang)
+{
+case "EN":
+    $lang_key_main  = "_eng";
+    $main_alt       = "Members";
+    $home_page_alt  = "";
+    $blog_page_alt  = "";
+    $blog_alt       = "";
+    $page_alt       = "";
+    $email_alt      = "";
+    $tel_alt        = "";
+    $fax_alt        = "";
+    $period_alt     = "Join Period";
+    $study_alt      = "Now Studying";
+    $work_alt       = "Now Working";
+    $name_cap       = "Name";
+    $year_cap       = "Year";
+    break;
+default:
+    $lang_key_main  = "";   // 圖片改變用
+    $main_alt   = "實驗室成員";
+    $home_page_alt  = "";
+    $blog_page_alt  = "";
+    $page_alt   = "";
+    $blog_alt   = "";
+    $email_alt  = "";
+    $tel_alt    = "";
+    $fax_alt    = "";
+    $period_alt = "加入時間";
+    $study_alt  = "現在就讀";
+    $work_alt   = "現在工作";
+    $name_cap   = "姓名";
+    $year_cap   = "年份";
+}
+
+$mon = array();
+$mon[1] = "Jan";
+$mon[2] = "Feb";
+$mon[3] = "Mar";
+$mon[4] = "Apr";
+$mon[5] = "May";
+$mon[6] = "Jun";
+$mon[7] = "Jul";
+$mon[8] = "Aug";
+$mon[9] = "Sep";
+$mon[10] = "Oct";
+$mon[11] = "Nov";
+$mon[12] = "Dec";
+
+$link_item_list = array(
+    'website' => array(
+        'icon' => 'fa-globe',
+        'name' => array(
+            'TC' => '個人網頁',
+            'EN' => 'Personal Page'
+        ),
+        'suffix' => array(
+            'TC' => '的首頁',
+            'EN' => '\'s Homepage'
+        )
+    ),
+    'blog' => array(
+        'icon' => 'fa-rss-square',
+        'name' => array(
+            'TC' => '個人部落格',
+            'EN' => 'Blog'
+        ),
+        'suffix' => array(
+            'TC' => '的部落格',
+            'EN' => '\'s Blog'
+        )
+    )
+);
+$contact_item_list = array(
+    'email' => array(
+        'icon' => 'fa-envelope-o',
+        'name' => array(
+            'TC' => '電子郵件地址',
+            'EN' => 'Email Address'
+        )
+    ),
+    'office' => array(
+        'icon' => 'fa-phone',
+        'name' => array(
+            'TC' => '電話號碼',
+            'EN' => 'Phone Number'
+        )
+    ),
+    'fax' => array(
+        'icon' => 'fa-fax',
+        'name' => array(
+            'TC' => '傳真號碼',
+            'EN' => 'Fax Number'
+        )
+    ),
+);
+
+require_once('kj-manager/mod_general.php');
+require_once('kj-manager/mod_database.php');
+$dba = new Accessor();
+?>
+    <!-- wrap-content start -->
+    <!-- ================ -->
+    <div class="wrap-content">
+        <!-- banner start -->
+        <!-- ================ -->
+        <div class="banner">
+            <div class="container">
+                <div class="row bannerbg">
+                    <div class="col-md-12 pagebannerbg"></div>
+                </div>
+            </div>
+        </div>
+        <!-- banner end -->
+        <section class="mtt-30">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- block 1 -->
+                        <div class="feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                            <div class="maintitle"><? echo $main_alt ?></div>
+                            <div class="pv-30 ph-20 mcontent">
+                            <?
+                                $member_type = $dba->query(
+                                    'member_type',
+                                    array(
+                                        'v_state' => array( 'value' => 'working' ),
+                                        'id' => array( 'type' => 'NOT', 'value' => 5 )
+                                    ),
+                                    array(
+                                        'id' => 'number',
+                                        'name' => 'json:language',
+                                        'image' => 'string'
+                                    )
+                                );
+                                foreach( $member_type as $m_type )
+                                {
+                                    $category_title = $m_type['name'][$lang];
+                                    if( $lang != 'EN' ) { $category_title .= ' <small> ' . $m_type['name']['EN'] . '</small>'; }
+                                    
+                                    $members = $dba->query(
+                                        'member_list',
+                                        array(
+                                            'v_state' => array('value'=>'working'),
+                                            'type'=>array('value'=>$m_type['id'])
+                                        ),
+                                        array(
+                                            'pic' => 'string',
+                                            'name' => 'json:language',
+                                            'title' => 'json:language',
+                                            'alias' => 'json:language',
+                                            'iis_user' => 'string',
+                                            'email' => 'string',
+                                            'phone' => 'string',
+                                            'period' => 'string',
+                                            'research' => 'list:stroke',
+                                            'contact' => 'json',
+                                            'others' => 'json'
+                                        )
+                                    );
+                                
+
+                                if( count( $members ) > 0 ){
+                                echo '<div class="title-container">';
+                            ?>
+                                <h3 class="title-user"><?=$category_title?></h3>
+                                <div class="separator-2"></div>
+                                <?
+                                    $row_count = 0;
+                                    foreach( $members as $member )
+                                    {
+                                        $image = empty($member['pic']) ? 'photos/'.$member['iis_user'].'.jpg' : $member['pic'];
+                                        $img_path = ( strpos($image,'/') == 0 ) ? rtrim($_SERVER['DOCUMENT_ROOT'],'/') . $image : $image;
+                                        if( !file_exists($img_path) ) { $image = 'photos/no_pic.jpg'; }
+                                        $name = $member['name'][$lang];
+                                        
+                                        $column_css = array();
+                                        $column_css[0] = 'col-xs-12 col-md-6';
+                                        $column_css[1] = 'member-photo col-xs-12 col-sm-4';
+                                        $column_css[2] = 'col-xs-12 col-sm-8';
+                                        $column_css[3] = '';
+
+                                        $manager = 0;
+                                        if( $m_type['name'][$lang] == '實驗室主持人' ||  $m_type['name'][$lang] == 'Laboratory Director'){
+                                            $manager = 1;
+                                            $column_css[0] = '';
+                                            $column_css[1] = 'member-photo col-xs-12 col-sm-3 col-md-2 col-lg-2';
+                                            $column_css[2] = 'col-xs-12 col-sm-4 col-md-4 col-lg-5';
+                                            $column_css[3] = 'col-xs-12 col-sm-5 col-md-6 col-lg-5';
+                                        }
+                                    
+                                    if( $row_count == 0 ){
+                                        echo '<div class="row">';
+                                    }
+                                ?>
+
+                                <!-- <div class="team-member"> -->
+                                    <div class="team-member <? echo $column_css[0] ?>">
+                                        <div class="<? echo $column_css[1] ?>">
+                                            <div class="overlay-container overlay-visible">
+                                                <img src="<?=$image?>" title="<?=$name?>" alt="<?=$name?>" class="img-responsive">
+                                            </div>
+                                        </div>
+                                        <div class="<? echo $column_css[2] ?>">
+                                            <div class="body">
+                                                <?
+                                                    echo '<h4 class="title margin-clear">'.$name;
+                                                // Alias
+                                                    if( !empty($member['alias'][$lang]) )
+                                                    {
+                                                        if( $m_type['id'] === 1 )
+                                                        {
+                                                            if( $lang != 'TC' ) { echo '<br/>'; }
+                                                            echo ' ('.$member['alias'][$lang].') ';
+                                                        }
+                                                    }
+                                                    if( $lang == 'TC' )
+                                                    {
+                                                        echo ' '.$member['name']['EN'].' ';
+                                                    }
+                                                // Title
+                                                    if( !empty($member['title'][$lang]) )
+                                                    {
+                                                        echo '<small>'.$member['title'][$lang].'</small>';
+                                                    }
+                                                    echo '</h4>';
+                                                ?>
+                                                <div class="separator-2 mt-10"></div>
+                                                <ul class="list-icons">
+                                                    <?
+                                                        if( $m_type['id'] > 1 )
+                                                        {
+                                                            //$period = sscanf($member['period'],'%d/%d~%d/%d');
+                                                    ?>
+                                                    <!-- <li><i class="fa fa-calendar-o pr-5 text-default"></i>
+                                                        SINCE <?=($mon[$period[1]].', '.$period[0])?>
+                                                    </li> -->
+                                                    <?
+                                                            if ( !empty($member['others']['education']) )
+                                                            {
+                                                    ?>
+                                                    <li><i class="fa fa-book pr-5 text-default"></i>
+                                                        <?=$member['others']['education']?>
+                                                    </li>
+                                                    <?
+                                                            }
+                                                        }
+                                                
+                                                        foreach ( $link_item_list as $key => $item )
+                                                        {
+                                                            if( empty($member['others'][$key]) ) { continue; }
+                                                    ?>
+                                                    <li><i class="fa <?=$item['icon']?> pr-5 text-default"></i>
+                                                        <a href="<?=$member['others'][$key]?>" target="_blank" title="<?=($name.$item['suffix'][$lang])?>">
+                                                            <?=($name.$item['suffix'][$lang])?>
+                                                        </a>
+                                                    </li>
+                                                    <?
+                                                        }
+                                                        foreach ( $contact_item_list as $key => $item )
+                                                        {
+                                                            if( $key == 'email' )
+                                                            {
+                                                    ?>
+                                                    <li><i class="fa <?=$item['icon']?> pr-5 text-default"></i>
+                                                        <?=$member['iis_user']?><img src="pic/at.jpg" align="absmiddle" />
+                                                    </li>
+                                                    <?
+                                                                continue;
+                                                            }
+                                                            if( empty($member['contact'][$key]) ) { continue; }
+                                                    ?>
+                                                    <li><i class="fa <?=$item['icon']?> pr-5 text-default"></i>
+                                                            <?=$member['contact'][$key]?>
+                                                    </li>
+                                                    <?
+                                                        }
+                                                        if ( !empty($member['research']) && !$manager )
+                                                        { 
+                                                    ?>
+                                                    <i class="fa fa-flask pr-5 text-default"></i> Research Interests
+                                                <ul class="rslist">
+                                                    <? 
+                                                    //$count = 0;
+                                                    foreach( $member['research'] as $research ) { 
+                                                       // if( $count > 1){ continue;}
+                                                        echo '<li>'.$research.'</li>'; 
+                                                        //$count++;
+
+                                                    } ?>
+                                                </ul>
+                                                    <?
+                                                        }
+                                                    ?>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <?php if( $manager ){ ?>
+                                            <div class="<? echo $column_css[3] ?>">
+                                                <div><i class="fa fa-flask pr-5 text-default"></i> Research Interests</div>
+                                                <ul class="rslist">
+                                                    <? foreach( $member['research'] as $research ) { echo '<li>'.$research.'</li>'; } ?>
+                                                </ul>
+                                            </div>
+                                        <? } 
+
+                                    $row_count++;    
+                                    if( $row_count == 2 ){
+                                        echo '</div>';
+                                        $row_count = 0;
+                                    }
+
+                                        ?>                                    
+                                    </div>
+                                
+                            <?
+                                    }
+                                if( $row_count == 1 ){
+                                    echo '</div>';
+                                }    
+                                echo '</div>';
+                                }
+                            }
+                            ?><div class="title-container">
+                                <h3 class="title-user">Alumni</h3>
+                                <div class="separator-2"></div>                                    
+                                        <?
+                                            $alumnis = $dba->query(
+                                                'member_list',
+                                                array(
+                                                    'v_state' => array( 'type' => 'not', 'value' => 'hidden' ),
+                                                    'type' => array('value'=>5)
+                                                ),
+                                                array(
+                                                    'name' => 'json:language',
+                                                    'period' => 'string'
+                                                )
+                                            );
+                                            $alumni_year = array();
+                                            foreach( $alumnis as $alumni )
+                                            {
+                                                $period = sscanf($alumni['period'],'%d/%d~%d/%d');
+                                                $out_year = $period[2];
+                                                if( !isset($alumni_year[$out_year]) ) { $alumni_year[$out_year] = array(); }
+                                                $alumni_year[$out_year][] = $alumni['name'][$lang];
+                                            }
+                                            krsort($alumni_year);
+                                            $year_row_count = 0;
+                                            foreach( $alumni_year as $year => $members )
+                                            {
+                                                if( $year_row_count == 0 ){
+                                                    echo '<div class="row">';    
+                                                }
+                                                
+                                        ?>
+                                        <div class="col-md-4 ">
+                                            <div class="feature-box-2 animated fadeInDownSmall" data-animation-effect="fadeInDownSmall" data-effect-delay="100">
+                                                <span class="icon without-bg"><?=$year?></span>
+                                                <div class="body">
+                                                    <ul class="mmlist">
+                                                    <?
+                                                        foreach( $members as $member )
+                                                        {                                                            
+                                                            echo '<li class="'. (($lang == 'EN')? 'english':'').'">'.$member.'</li>';
+                                                        }
+                                                    ?>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?
+                                                $year_row_count++;
+                                                if( $year_row_count == 3 ){
+                                                    echo '</div>'; 
+                                                    $year_row_count = 0;
+                                                }
+                                                
+                                            }
+                                        ?>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- section end -->
+        </div>
+        <!-- wrap-content end -->
+                                        
+<? include('_template/footer.php'); ?> 

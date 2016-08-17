@@ -1,0 +1,200 @@
+<?
+require_once('/home/kj/mmnet-manager-2015/mod_database.php');
+$dba = new Accessor();
+session_start();
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 修改「文件」。');
+
+$split_char = "&&&";
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && isset($_POST['id']) && isset($_POST['data'])){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+			
+				$data = $_POST['data'];
+			//	filter_var($data, FILTER_SANITIZE_STRING);
+
+				// 判別是哪一個panel (只允許指定傳送)
+				if($_SESSION['pos'] == "panel_9"){
+					
+					// 判別是那一個id需要更新
+
+					// 新增文件
+					if($_POST['id'] == "p9_add_doc"){	
+					
+						$data_token = explode("||", $data);
+
+                        $data_token[2] = str_replace("'", "\'", $data_token[2]);
+                        $data_token[2] = str_replace("\"", "\\\"", $data_token[2]);
+                        $data_token[3] = str_replace("'", "\'", $data_token[3]);
+                        $data_token[3] = str_replace("\"", "\\\"", $data_token[3]);
+
+						
+						// 必須有四個參數
+						if(sizeof($data_token) >= 2){
+
+							$sql = "insert into custom_page values(null, '".$data_token[0]."', '".$data_token[1]."', '".$data_token[2]."', '".$data_token[3]."', null)";
+							$result = mysql_query($sql);
+
+							if($result && mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功							
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+						}else{
+
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+
+						}
+
+
+					// 修改文件
+					}else if($_POST['id'] == "p9_mod_doc" ){
+
+						$data_token = explode("||", $data);
+
+                        $data_token[3] = str_replace("'", "\'", $data_token[3]);
+                     //   $data_token[3] = str_replace("\"", "\\\"", $data_token[3]);
+                        $data_token[4] = str_replace("'", "\'", $data_token[4]);
+                     //   $data_token[4] = str_replace("\"", "\\\"", $data_token[4]);
+
+						
+						$sql = "update custom_page set get_id='".$data_token[1]."', category='".$data_token[2]."', html_tc='".$data_token[3]."', html_en='".$data_token[4]."' where id='".$data_token[0]."'";
+						//echo($_POST['id'].",".$news_id[4]);
+						$result = mysql_query($sql);
+
+						if($result){
+							if(mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+								$sql = "select user_id from mmnet_user where id='".$news_id[4]."'";
+								$result2 = mysql_query($sql);
+								if($result2){
+									$row = mysql_fetch_row($result2);
+									echo $row[0];
+								}
+							}else{
+								//echo $sql;
+							
+								echo "0".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+								//echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+							}
+						}else{
+						
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+
+					//  刪除
+					}else if(strpos($_POST['id'], "p9_del") === 0 ){
+					
+						
+						$sql = "delete from custom_page where id='".$data."'";
+						$result = mysql_query($sql);
+
+//						echo $sql;
+						if($result){
+							if(mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+							}else{
+								echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+							}
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 網頁使用者 -  是否啟用
+					}else if(strpos($_POST['id'], "p8_btn_toggle_show") === 0 ){
+
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) == 2){
+
+							$sql = "update mmnet_user set activated='".$data_token[1]."' where id='".$data_token[0]."'";
+							//echo $sql;
+							$result = mysql_query($sql);
+
+							if($result){
+								if(mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功
+								}else{
+									echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+								}
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+
+						}else{
+							echo "5".$split_char;				//傳送錯誤碼，未定義的名稱				
+						}
+						
+					// 網頁使用者 -  是否置頂
+					}else if(strpos($_POST['id'], "p7_btn_toggle_top") === 0 ){
+
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) == 2){
+
+							$sql = "update downloads set top='".$data_token[1]."' where id='".$data_token[0]."'";
+							//echo $sql;
+							$result = mysql_query($sql);
+
+							if($result){
+								if(mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功
+								}else{
+									echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+								}
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+
+						}else{
+							echo "5".$split_char;				//傳送錯誤碼，未定義的名稱				
+						}
+					// 網頁使用者 -  語系
+					}else if(strpos($_POST['id'], "p7_btn_toggle_lang") === 0 ){
+
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) == 2){
+
+							$sql = "update downloads set lang='".$data_token[1]."' where id='".$data_token[0]."'";
+							//echo $sql;
+							$result = mysql_query($sql);
+
+							if($result){
+								if(mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功
+								}else{
+									echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+								}
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+
+						}else{
+							echo "5".$split_char;				//傳送錯誤碼，未定義的名稱				
+						}
+					// 未知的 id
+					}else{
+						echo "6".$split_char;				//傳送錯誤碼，未定義的名稱				
+
+					}
+				}else{
+					echo "7".$split_char;				//傳送錯誤碼，使用不當				
+				}
+				
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+
+	}
+}
+?>

@@ -1,0 +1,77 @@
+<?php
+/*-------------------------------------------------------------\
+ * 檔案：login.html
+ - 說明：實驗室成員登入
+ - modified by kj 2014.10.22
+\-------------------------------------------------------------*/
+$subtitle = array(
+    'TC' => '實驗室成員登入',
+    'EN' => 'Lab Members Login',
+);
+
+include('_template/header.php');
+include('_template/menu.php'); 
+    
+$id = "帳號";
+$pwd = "密碼";
+
+if($lang == "EN"){
+    $id = "User ID";
+    $pwd = "Password";
+}
+?>
+<!-- wrap-content start -->
+<!-- ================ -->
+<div class="wrap-content">
+    <!-- banner start -->
+    <!-- ================ -->
+    <div class="banner">
+        <div class="container">
+            <div class="row bannerbg">
+                <div class="col-md-12 pagebannerbg"></div>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+    <section class="mtt-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3">
+                    <!-- block 1 -->
+                    <div class="feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                        <div class="maintitle">
+                            <? echo $subtitle[$lang] ?>
+                        </div>
+                        <div class="pv-30 ph-20 mcontent">
+                            <?
+                                if ( isset($_SESSION['error']) )
+                                {
+                            ?>
+                                <div class="box alert alert-danger">
+                                    <?=implode('<br/>',$_SESSION['error']['messages'])?>
+                                </div>
+                                
+                                <?
+                                    unset($_SESSION['error']);
+                                }
+                            ?>
+                            <form action="kj-manager/act/login.php" method="post" name="formx" id="formx">
+                                <input type="hidden" name="redirect" value="/" />
+                                <input type="hidden" name="error" value="/login.html" />
+                                <div class="box">
+                                    <input type="text" placeholder="username" name="username">
+                                    <input type="password" placeholder="password" name="password">
+                                    <button class="btn btn-default full-width" type="submit" form="formx" value="Submit"><span class="glyphicon glyphicon-ok"></span></button>
+                                </div>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- section end -->
+</div>
+<!-- wrap-content end -->
+<? include('_template/footer.php'); ?>

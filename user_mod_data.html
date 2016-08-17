@@ -1,0 +1,284 @@
+<?
+// 檔案：user_mod_data.html
+// 說明：提供使用者修改個人資料
+
+session_start();
+if(isset($_SESSION['login']) && $_SESSION['login'] == "ok_mmnet" && isset($_SESSION['login_user']) && $_SESSION['login_user'] != ""){
+	if(isset($_POST['mod_data']) && $_POST['mod_data'] == "yes"){
+        if(isset($_POST['mod_ra_full_name_tc']) && $_POST['mod_ra_full_name_tc'] != "" && isset($_POST['mod_ra_full_name_en']) && $_POST['mod_ra_full_name_en'] != "" && isset($_POST['mod_ra_full_email']) && $_POST['mod_ra_full_email'] != "" && isset($_POST['mod_ra_full_research']) && $_POST['mod_ra_full_research']!= ""){
+        
+
+            include("MGE/lib/link.html");
+            if($con){
+                if($db_selected){
+                    
+	        $name_en = explode(" ", $_POST['mod_ra_full_name_en']);
+            
+        	$sql = "update members set name_tc = '".$_POST['mod_ra_full_name_tc']."', first_name_en = '".$name_en[0]."', last_name_en = '".$name_en[1]."', aka_tc = '".$_POST['mod_ra_full_aka_tc']."', aka_en = '".$_POST['mod_ra_full_aka_en']."', page_link = '".$_POST['mod_ra_full_page_link']."', blog_link = '".$_POST['mod_ra_full_blog_link']."', email = '".$_POST['mod_ra_full_email']."', tel = '".$_POST['mod_ra_full_tel']."', cell = '".$_POST['mod_ra_full_cell']."',  study_tc = '".$_POST['mod_ra_full_study_tc']."', study_en = '".$_POST['mod_ra_full_study_en']."', research = '".$_POST['mod_ra_full_research']."', msn = '".$_POST['mod_ra_full_msn']."', skype = '".$_POST['mod_ra_full_skype']."', google = '".$_POST['mod_ra_full_google']."', birthday='".$_POST['mod_ra_full_birthday']."', email_stable='".$_POST['mod_ra_full_email_stable']."' where user_id='".$_SESSION['login_user']."' ";
+
+                    $result = mysql_query($sql);
+                    if($result && mysql_affected_rows() == 1){
+                       $_SESSION['msg'] = "資料更新成功";            
+                       $_SESSION['msg_type'] = "1";                                                                                                
+                    }else{
+                       $_SESSION['msg'] = "資料更新失敗";            
+                       $_SESSION['msg_type'] = "-1";                                                                        
+                    }
+                 }else{
+                   $_SESSION['msg'] = "資料庫連接失敗";            
+                   $_SESSION['msg_type'] = "-1";                                                
+                 }
+            }else{
+               $_SESSION['msg'] = "資料庫連接失敗";            
+               $_SESSION['msg_type'] = "-1";                           
+            }					
+
+
+        
+           $_SESSION['msg'] = "個人資料更新成功!";            
+           $_SESSION['msg_type'] = "1";  
+        }else{
+           $_SESSION['msg'] = "請填寫必填欄位";            
+           $_SESSION['msg_type'] = "-1";                           
+        
+        }
+    }
+}else{
+	header("location:login.html");
+}
+
+//初始化變數
+$self = 5;  //本頁標記 (選單用，首頁為1, 研究領域為2 如此類推)
+$lang = "TC"; // 語言
+
+if(isset($_GET['lang']) && $_GET['lang'] != ""){
+	$lang = $_GET['lang'];
+}
+
+// 統一使用header.html作為開始 
+include("header.html");
+
+// 統一使用menu.html作為選單
+include("menu.html"); 
+
+	// 這頁使用的程式碼 ---
+    
+	$lang_key_main = "";	// 圖片改變用    
+    $main_alt = "修改個人資料";
+
+    
+    
+
+	 // 如果語系設定為英文，則顯示英文內容，中文為預設值.
+	if($lang == "EN"){
+    	$lang_key_main = "_eng";
+        $main_alt = "Modify Personal Info";
+   
+    }
+
+// 初始化所有變數
+$user_id  = array();
+$name_tc = array();
+$last_name_en = array();
+$first_name_en = array();
+$aka_tc  = array();
+$aka_en = array();
+$type = array();
+$page_link = array();
+$blog_link = array();
+$email = array();
+$tel = array();
+$cell = array();
+$period_in_mon = array();
+$period_in_year = array();
+$period_out_mon = array();
+$period_out_year = array();
+$study_tc = array();
+$study_en = array();
+$work_tc = array();
+$work_en = array();
+$research = array();
+$iis_id = array();
+$msn = array();
+$skype = array();
+$google = array();
+$last_update = array();
+$title_tc = array();
+$title_en = array();
+$birthday  = array();
+$email_stable  = array();
+
+
+$total_members = 0;
+
+include("MGE/lib/link.html");
+
+		if($con){
+			if($db_selected){
+
+				// 抓取資料表 news 
+				$sql = "select *  from members where user_id='".$_SESSION['login_user']."'";
+				$result = mysql_query($sql);
+        
+				if($result){
+					while($row = mysql_fetch_row($result)){
+						$user_id[$total_members] = $row[0];
+						$name_tc[$total_members] = $row[1];
+						$last_name_en[$total_members] = $row[2];
+						$first_name_en[$total_members] = $row[3];
+						$aka_tc[$total_members]  = $row[4];
+						$aka_en[$total_members] = $row[5];
+						$type[$total_members] = $row[6];
+						$page_link[$total_members] = $row[7];
+						$blog_link[$total_members] = $row[8];
+						$email[$total_members] = $row[9];
+						$tel[$total_members] = $row[10];
+						$cell[$total_members] = $row[11];
+						$period_in_mon[$total_members] = $row[12];
+						$period_in_year[$total_members] = $row[13];
+						$period_out_mon[$total_members] = $row[14];
+						$period_out_year[$total_members] = $row[15];
+						$study_tc[$total_members] = $row[16];
+						$study_en[$total_members] = $row[17];
+						$work_tc[$total_members] = $row[18];
+						$work_en[$total_members] = $row[19];
+						$research[$total_members] = $row[20];
+						$iis_id[$total_members] = $row[21];
+						$msn[$total_members] = $row[22];
+						$skype[$total_members] = $row[23];
+						$google[$total_members] = $row[24];
+						$last_update[$total_members] = $row[25];
+						$title_tc[$total_members] = $row[26];
+						$title_en[$total_members] = $row[27];
+						$birthday[$total_members] = $row[28];                       
+						$email_stable[$total_members] = $row[30];         
+						$total_members++;                           
+					}
+				}
+               }
+}
+
+// 寫入內容
+
+?>
+<link href="form.css" rel="stylesheet" type="text/css" />
+        
+        <div id="main_content">
+       	  <div class="main_item">
+           	<img src="images/title<? echo $lang_key_main ?>_13.jpg" alt="<? echo $main_alt ?>" />
+                <div class="main_item_content" style="color:#666666; font-size:12px">
+
+<?   if(isset($_SESSION['msg']) && $_SESSION['msg'] != ""){ ?>
+		<?   if($_SESSION['msg_type'] == 1){ ?>				
+				<img src="../pic/ok.jpg" alt="NOT ok" width="8" height="8" align="absmiddle" />
+        <?	}else{		?>
+				<img src="../pic/not_ok.jpg" alt="OK" width="8" height="8" align="absmiddle" />        
+        <?		}		?>                
+                <span class="small"><? echo $_SESSION['msg'] ?></span>
+<?
+		$_SESSION['msg'] = "";
+	 } ?>  
+
+	<form action="user_mod_data.html" method="post" >   
+
+    <table width="436" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+
+      <tr bgcolor="#FFD78C">
+       	<td colspan="2" style="padding:3px; color:#AA5500; font-size:13px; ">
+          <strong>修改研究助理： </strong> <span style="font-size:11px">[ 上次更新 - <? echo $last_update[0] ?> ]</span>          </td>
+      </tr>
+      <tr>
+        <td width="153"><div align="right">資訊所帳號：</div></td>
+            <input name="mod_ra_full_user_id" id="mod_ra_full_user_id" type="hidden" value="<? echo $user_id[0] ?>" />
+
+        <td><? echo $user_id[0] ?></td>
+      </tr>
+      <tr>
+        <td><div align="right">中文姓名：</div></td>
+        <td><input name="mod_ra_full_name_tc" type="text" id="mod_ra_full_name_tc" size="15"  value="<? echo $name_tc[0] ?>" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td height="40"><div align="right">英文姓名：</div></td>
+        <td><input name="mod_ra_full_name_en" type="text" id="mod_ra_full_name_en" size="15"  value="<? echo $first_name_en[0]." ".$last_name_en[0] ?>" class="need_input" /> 
+          (格式: first-first last)</td>
+      </tr>
+      <tr>
+        <td><div align="right">中文暱稱 (或別名)：</div></td>
+        <td width="271"><input name="mod_ra_full_aka_tc" type="text" id="mod_ra_full_aka_tc" size="15"  value="<? echo $aka_tc[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">英文暱稱 (或別名)：</div></td>
+        <td><input name="mod_ra_full_aka_en" type="text" id="mod_ra_full_aka_en" size="15"  value="<? echo $aka_en[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">生日：</div></td>
+        <td><input name="mod_ra_full_birthday" type="text" id="mod_ra_full_birthday" size="15"  value="<? echo $birthday[0] ?>" /> (格式: YYYY-MM-DD)</td>
+      </tr> 
+
+	  <tr>
+      <td><div align="right">個人網頁：</div></td>
+        <td><input name="mod_ra_full_page_link" type="text" id="mod_ra_full_page_link" size="40"  value="<? echo $page_link[0] ?>" /></td>
+                </tr>
+      <tr>
+        <td><div align="right">個人部落格：</div></td>
+        <td><input name="mod_ra_full_blog_link" type="text" id="mod_ra_full_blog_link" size="40"  value="<? echo $blog_link[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">電子郵件：</div></td>
+        <td><input name="mod_ra_full_email" type="text" id="mod_ra_full_email" size="30"  value="<? echo $email[0] ?>" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">永久電子郵件：</div></td>
+        <td><input name="mod_ra_full_email_stable" type="text" id="mod_ra_full_email_stable" size="30"  value="<? echo $email_stable[0] ?>" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">電話：</div></td>
+        <td><input name="mod_ra_full_tel" type="text" id="mod_ra_full_tel" size="30"  value="<? echo $tel[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">手機：</div></td>
+        <td><input name="mod_ra_full_cell" type="text" id="mod_ra_full_cell" size="30"  value="<? echo $cell[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (中文)：</div></td>
+        <td><input name="mod_ra_full_study_tc" type="text" id="mod_ra_full_study_tc" size="40"  value="<? echo $study_tc[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (英文)：</div></td>
+        <td><input name="mod_ra_full_study_en" type="text" id="mod_ra_full_study_en" size="40"  value="<? echo $study_en[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">研究主題 (英文)：</div></td>
+        <td><textarea name="mod_ra_full_research" cols="40" rows="5" id="mod_ra_full_research" class="need_input"><? echo $research[0] ?></textarea>
+          <br />
+        (一行一個主題)</td>
+      </tr>
+      <tr>
+        <td><div align="right">MSN 帳號：</div></td>
+        <td><input name="mod_ra_full_msn" type="text" id="mod_ra_full_msn" size="30"  value="<? echo $msn[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">Skype 帳號：</div></td>
+        <td><input name="mod_ra_full_skype" type="text" id="mod_ra_full_skype" size="30"  value="<? echo $skype[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">Google 帳號：</div></td>
+        <td><input name="mod_ra_full_google" type="text" id="mod_ra_full_google" size="30"  value="<? echo $google[0] ?>" />
+          <input name="mod_data" type="hidden" id="mod_data" value="yes" /></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><input type="submit" name="submit_mod" id="submit_mod" value="更新資料"  class="button"   /> <input type="reset" name="Reset" id="button" class="button" value="重填" /></td>
+      </tr>
+    </table>
+</form>
+
+                </div>
+          </div>
+    </div>
+        
+        
+<?
+// 統一使用footer.html作為結尾 
+include("footer.html");
+?>

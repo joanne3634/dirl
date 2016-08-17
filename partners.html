@@ -1,0 +1,115 @@
+<?php
+/*-------------------------------------------------------------\
+ * 檔案：partners.html
+ - 說明：合作夥伴
+\-------------------------------------------------------------*/
+$subtitle = array(
+    'TC' => '合作夥伴',
+    'EN' => 'Partners'
+);
+
+include('_template/header.php');
+include('_template/menu.php'); 
+include("MGE/lib/link.html");
+
+$data_lang = 0;
+$title_cor = "實驗室或單位";
+$title_director = "主持人";
+
+if ( $lang == 'EN' ) {
+    $data_lang = 1;
+    $title_cor = "Research Laboratory or Company";
+    $title_director = "Director";
+}
+
+$total_data = 0;
+
+if($con){
+    if($db_selected){
+        $sql = "SELECT * FROM collaborators WHERE ch_version=1 ORDER BY ordinal ASC";
+        $result = mysql_query($sql);
+        if( $result ){
+            while( $row = mysql_fetch_row($result) )
+            {
+                
+                    $s_href[$total_data] = data_split($row[6],'|',$data_lang);
+                    $s_name[$total_data] = data_split($row[7],'|',$data_lang);
+                    $u_href[$total_data] = data_split($row[8],'|',$data_lang);
+                    $u_name[$total_data] = data_split($row[9],'|',$data_lang);
+                    $p_href[$total_data] = data_split($row[10],'|',$data_lang);
+                    $p_name[$total_data] = data_split($row[11],'|',$data_lang);
+                    $total_data++;
+            }
+        }
+    }else{
+
+    }
+}
+
+
+function data_split($str,$split,$num)
+{
+    $arr = explode($split,$str);
+    if( $arr == null ) { throw new Exception(); }
+    if( $num >= count($arr) ) { $num = 0; }
+    if( count($arr) < 1 ) { throw new Exception(); }
+    return $arr[$num];
+}
+?>
+
+<!-- wrap-content start -->
+<!-- ================ -->
+<div class="wrap-content">
+    <!-- banner start -->
+    <!-- ================ -->
+    <div class="banner">
+        <div class="container">
+            <div class="row bannerbg">
+                <div class="col-md-12 pagebannerbg"></div>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+    <section class="mtt-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- block 1 -->
+                    <div class="feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                        <div class="maintitle">
+                            <? echo $subtitle[$lang] ?>
+                        </div>
+                        <div class="pv-30 ph-20 mcontent">
+                            <table class="table table-hover" >
+                                <thead>
+                                    <tr>
+                                        <td><? echo $title_director ?></td>
+                                        <td><? echo $title_cor ?></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?
+                                    $i = 0;
+                                    while($i < $total_data)
+                                    {
+                                ?>
+                                        <tr>
+                                            <td><a href="<?=$p_href[$i]?>" target="_blank"><?=$p_name[$i]?></a></td>
+                                            <td><a href="<?=$s_href[$i]?>" target="_blank"><?=$s_name[$i]?></a>, <a href="<?=$u_href[$i]?>" target="_blank"><?=$u_name[$i]?></a></td>
+                                        </tr>
+                                <?
+                                        $i++;
+                                    }
+                                ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- section end -->
+</div>
+<!-- wrap-content end -->
+<? include('_template/footer.php'); ?>

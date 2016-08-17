@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf8" />
+    <title>資料轉運工人</title>
+    <script type="text/javascript" src="../../plugins/jQuery/jquery-2.1.1.min"></script>
+    <script type="text/javascript">
+$(document).ready(function() {
+    $("#configer").submit(function (event) {
+        event.preventDefault();
+        $.ajax({
+            "type": "post",
+            "url": "get-column-list.php",
+            "data": {
+                "from": this.from.value,
+                "to": this.to.value,
+                "ajax": "metatable"
+            },
+            "dataType": "html",
+            "success": function(html) {
+                try {
+                    var json = JSON.parse(html);
+                    console.log(json);
+                } catch(e) {
+                    $("#metatable").html(html);
+                }
+            }
+        });
+    });
+});
+
+function trigger(elem,type) {
+    var input = elem.get(0);
+    switch(type) {
+    case "json":
+        input.removeAttribute("disabled");
+        input.setAttribute("placeholder","輸入JSON物件的key");
+        break;
+    case "date":
+        input.removeAttribute("disabled");
+        input.setAttribute("placeholder","輸入日期格式");
+        input.setAttribute("value","Y-m-d H:i:s");
+        break;
+    case "format":
+        input.removeAttribute("disabled");
+        input.setAttribute("placeholder","輸入格式");
+        break;
+    default:
+        input.setAttribute("disabled","disabled");
+        input.removeAttribute("placeholder");
+        break;
+    }
+}
+
+function insert(sample,area) {
+    if( sample.length < 1 ) {
+        console.log("No Sample.");
+        return;
+    }
+    var count = parseInt(sample.attr("data-num"));
+    if( !count ) { count = 0; }
+    var clone = sample.get(0).cloneNode(true);
+    clone.setAttribute("data-num",count+1);
+    $(clone).find("*[name]").each(function(n,e) {
+        var name = e.name.replace("["+count+"]","["+(count+1)+"]");
+        e.setAttribute("name",name);
+    });
+    sample.removeClass("-sample");
+    if( next = sample.next() ) {
+        area.insertBefore(clone,next.get(0));
+    } else { area.appendChild(clone); }
+}
+
+function submit(form) {
+    $(form).get(0).submit();
+}
+    </script>
+    <style>
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 2px;
+    font-size: 14px;
+}
+
+th { min-width: 100px; }
+td { border: 1px solid lightgray; }
+
+.-tac { text-align: center; }
+
+.-button { visibility: hidden; }
+.-sample > .-button {
+    visibility: visible;
+    width: 30px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.end-of-line {
+    clear: both;
+}
+    </style>
+</head>
+
+<body>
+    <form id="configer">
+        <label>從資料表 <input type="text" name="from" value="members" /></label>
+        <label>到資料表 <input type="text" name="to" value="member_list" /></label>
+        <button type="submit">解讀資料</button>
+    </form>
+    <div class="progressor">
+        <button type="button" onclick="submit('#metatable');">開始轉運</button>
+        <progress value="0" max="0"></progress>
+    </div>
+    <form id="metatable" action="translate.php" method="post" target="_new">
+    </form>
+</body>
+
+</html>

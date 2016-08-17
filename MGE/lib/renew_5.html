@@ -1,0 +1,269 @@
+<?
+session_start();
+
+$split_char = "&&&";
+
+// 初始化所有變數
+$idx = array();
+$type  = array();
+$uniq_key = array();
+$title = array();
+$author = array();
+$journal  = array();
+$publisher = array();
+$year = array();
+$visible = array();
+$booktitle = array();
+$note = array();
+$month = array();
+$domestic = array();
+$appear = array();
+$pri = array();
+$total_publish = 0;
+
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && $_SESSION['pos'] == "panel_5"){
+
+		include("link.html");
+if($con){
+    if($db_selected){
+        
+        // 抓取資料表 news 
+        $sql = "select id, entry_type, uniq_key, title, author,journal, publisher, year, visible, booktitle, note, month, x_domestic, x_appear,  x_priority  from publication ORDER BY year DESC, x_domestic ASC, entry_type ASC, x_priority ASC, visible DESC, num_month ASC, title ASC ";
+        $result = mysql_query($sql);
+        
+        if($result){
+            while($row = mysql_fetch_row($result)){
+
+                $idx[$total_publish]  = $row[0];
+                $type[$total_publish]  = $row[1];
+                $uniq_key[$total_publish] = $row[2];
+                $title[$total_publish] = $row[3];
+                $author[$total_publish] = $row[4];
+                $journal[$total_publish]  = $row[5];
+                $publisher[$total_publish] = $row[6];
+                $year[$total_publish] = $row[7];   
+                $visible[$total_publish] = $row[8];    
+                $booktitle[$total_publish] = $row[9];    
+                $note[$total_publish] = $row[10];    
+                $month[$total_publish] = $row[11];                                    	
+                $domestic[$total_publish] = $row[12];  
+                $appear[$total_publish] = $row[13];
+                $pri[$total_publish] = $row[14];                    
+                $total_publish++;                           
+            }
+
+// 寫入內容
+    
+?>
+            <table width="720" border="0">
+              <tr>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">顯示</div></td>              
+                <td width="73" bgcolor="#FFD193"><div align="center" class="tbsx">類型</div></td>
+                <td width="54" bgcolor="#FFD193"><div align="center" class="tbsx">Key</div></td>
+                <td width="375" bgcolor="#FFD193"><div align="center" class="tbsx">主題</div></td>
+                <td width="62" bgcolor="#FFD193"><div align="center" class="tbsx">年份</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">修改</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>
+              </tr>
+
+<? 
+	$i = 0;
+    while($i < $total_publish){
+ 
+    
+    
+?>                  
+              <tr class="tbs" onmouseover="this.className = 'tbs2';show_div('p5_detail_<? echo $idx[$i] ?>')" onmouseout="this.className = 'tbs';hide_div_x('p5_detail_<? echo $idx[$i] ?>')">
+                <td align="center">
+                    <? if($visible[$i] == 1){ ?>
+                    <a href="#publication_toggle_show"><img id="p5_btn_toggle_show_<? echo $idx[$i] ?>"  border="0" src="../pic/show.gif"  onclick="sync_toggle(this.id,'lib/update_5.html',21,<? echo $idx[$i] ?>, '../pic/show')"  alt="是否顯示" title="是否顯示" /></a>
+                    <? }else{ ?>                
+                    <a href="#publication_toggle_show"><img id="p5_btn_toggle_show_<? echo $idx[$i] ?>" border="0" src="../pic/show_n.gif" onclick="sync_toggle(this.id,'lib/update_5.html',21,<? echo $idx[$i] ?>,  '../pic/show')" alt="是否顯示" title="是否顯示" /></a>
+                    <? }?>                  
+                </td>
+                              
+                <td><div align="center" >
+                <? 
+                	if(strtolower($type[$i]) == "article"){
+?>
+					<img src="../pic/article.jpg" alt="期刊論文" title="期刊論文" />
+<?                    
+                    }else if (strtolower($type[$i]) == "inproceedings"){
+?>
+					<img src="../pic/inproc.jpg" alt="會議論文" title="會議論文" />
+<?                    
+                    }else if (strtolower($type[$i]) == "media"){
+?>
+					<img src="../pic/media.jpg" alt="大眾媒體" title="大眾媒體" />            
+<?                    
+                    }else{
+?>
+					<img src="../pic/others.jpg" alt="其它" title="其它" />
+<?                    
+                    }
+					
+                    if($domestic[$i] != ""){
+?>
+					<img src="../pic/domestic.gif" alt="國內發表" title="國內發表" />
+<?                    	
+                    }
+                    if($pri[$i] != 999){                    
+?>             
+					<img src="../pic/prio.gif" alt="優先 (<? echo $pri[$i] ?>)" title="優先 (<? echo $pri[$i] ?>)" />
+<?                    	
+                    }
+?>
+                 </div>
+                 <div id="p5_detail_<? echo $idx[$i] ?>" align="left" style="display:none; width:200px;position:absolute; padding-left:5px; border:1px solid #FFCC33; background-color:#FFFFCC">
+					<strong>作者：</strong> <? echo $author[$i] ?><br />
+
+<?
+					if($journal[$i] != ""){
+?>
+					<strong>期刊：</strong> <? echo $journal[$i] ?><br />
+<? 
+					}
+?>
+
+<?
+					if($booktitle[$i] != ""){
+?>
+                    <strong>BOOK TITLE：</strong> <? echo $booktitle[$i] ?><br />
+<? 
+					}
+?>
+
+<?
+					if($publisher[$i] != ""){
+?>
+					<strong>出版：</strong> <? echo $publisher[$i] ?><br />  
+<? 
+					}
+?>
+
+<?
+					if($month[$i] != ""){
+?>
+					<strong>月份：</strong> <? echo $month[$i] ?><br />   
+<? 
+					}
+?>
+
+<?
+					if($appear[$i] != ""){
+?>
+					<strong>Appear：</strong> <? echo $appear[$i] ?><br />   
+<? 
+					}
+?>
+
+<?
+					if($note[$i] != ""){
+?>
+					<strong>Note：</strong> <? echo $note[$i] ?><br /> 
+<? 
+					}
+?>
+
+					<strong>優先：</strong> <? 
+                    	
+                        if($pri[$i] !=  999){
+                    		echo $pri[$i];
+                        }else{
+                        	echo "一般";
+                        }
+                    
+                    ?><br />  
+
+<?
+					$key = $uniq_key[$i];
+                                                           
+                    $have_file = 0;
+                    
+					if(file_exists("../../pub/".$key.".pdf")){
+                    	$have_file = 1;
+?>
+	                 <a href="../pub/<? echo $key ?>.pdf" target="_blank"><img src="../pic/pdf_btn.gif" border="0" /></a>
+
+<? 
+					}
+
+					if(file_exists("../../pub/".$key.".ppt")){
+                    	$have_file = 1;
+                    
+?>
+	                <a href="../pub/<? echo $key ?>.ppt" target="_blank"><img src="../pic/ppt_btn.gif" border="0" /></a>
+
+<? 
+					}
+                    
+					if(file_exists("../../pub/".$key."_slides.pdf")){
+                    	$have_file = 1;
+?> 
+	                <a href="../pub/<? echo $key ?>_slides.pdf" target="_blank"><img src="../pic/ppt_btn.gif" border="0" /></a>
+
+<? 
+					}                       
+                    
+					if(file_exists("../../pub/".$key."_poster.pdf")){
+                    	$have_file = 1;
+?> 
+	                <a href="../pub/<? echo $key ?>_poster.pdf" target="_blank"><img src="../pic/poster_btn.gif" border="0" /></a>
+
+<? 
+					}                       
+                    
+?>
+              
+                 </div>
+                 </td>
+                <td><div align="center"><? echo $uniq_key[$i] ?></div></td>
+                <td><div align="center"><? echo $title[$i] ?></div></td>
+                <td><div align="center"><? echo $year[$i] ?></div></td>
+                <td><div align="center"><a href="#member_mod">
+                <img  id="p5_btn_mod_publication_<? echo $idx[$i] ?>" src="../pic/mod.gif" alt="修改著作內容"  border="0" title="修改著作內容" onclick="update_div('p5_mod_publication', 'lib/mod_5.html?id=<? echo $idx[$i] ?>', 17);show_div('p5_mod_publication')"/></a></div>
+                </td>
+                <td><div align="center">
+              
+                		<a href="#publication_del"><img id="p5_btn_del_publication_<? echo $idx[$i] ?>"  border="0" src="../pic/del.gif" alt="刪除著怍" title="刪除著作" onclick="sync_delete(this.id, 'lib/update_5.html', 20,'<? echo $idx[$i] ?>', 'p5_public')" /></a>
+                                   
+
+                    </div></td>
+              </tr>
+              
+<?
+		$i++;
+	}              
+ ?>     
+              
+			</table>
+
+<?
+
+// 寫入完成
+
+
+
+
+				}else{
+					echo "3".$split_char;					//傳送錯誤碼，table失敗					
+				}
+
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+	}else{
+			echo "參數錯誤";
+	}
+		
+}else{
+	echo "發生錯誤";
+}
+?>

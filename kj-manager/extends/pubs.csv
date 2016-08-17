@@ -1,0 +1,68 @@
+src_dir,out_fn,mmpub_key,title
+ace06_bot,bot_identification,chen09_bot_traffic,Identifying MMORPG Bots: A Traffic Analysis Approach
+ace06_tcp,tcp_in_games,chen06_tcp,An Empirical Evaluation of TCP Performance in Online Games
+ace10_deviltyper,deviltyper,ho11_deviltyper,DevilTyper: A Game for CAPTCHA Usability Evaluation
+ace11,rhythm_bots,lin11_rhythm_bots,Bot Detection in Rhythm Games: A Physiological Approach
+bot_isomap_netgames08,bot_isomap_learning,chen08_manifold,Game Bot Identification based on Manifold Learning
+bot_path_icec08,bot_trajectory,chen08_gamebot,Game Bot Detection Based on Avatar Trajectory
+cacm_06nov,game_session_time,chen06_gamer_qos,How Sensitive are Online Gamers to Network Quality?
+cloud10,mmog_cloud,lee10_consolidation,Is Server Consolidation Beneficial to MMORPG? A Case Study of World of Warcraft
+cqr10_pc_game,pc_game_qoe,chang10_game_qoe,Online Game QoE Evaluation using Paired Comparisons
+cqr11_qos_battle,qos_battle,tseng11_lag_battle,On The Battle between Online Gamers and Lags##On The Battle between Lag and Online Gamers
+crowdsourcing11,crowdsourcing,chen11_crowdsourcing,Human Computation: Experience and Thoughts
+dsn08,relay_processing_measurement,chen08_relay,Toward an Understanding of the Processing Delay of Peer-to-Peer Relay Nodes
+elsevier_comnet_gta,game_traffic_analysis,chen06_traffic,Game Traffic Analysis: An MMORPG Perspective
+globecom08,skype_voice_activity_detection,chang08_speech,Inferring Speech Activities from Encrypted Skype Traffic##Inferring Speech Activity from Encrypted Skype Traffic
+icc09,p2p_traffic_detection,wu09_p2p,Peer-to-Peer Application Recognition Based on Signaling Activity
+ieee_computing,phishing_detection,chen09_phish_ic,Fighting Phishing with Discriminative Keypoint Features of Webpages
+ieee_network_si_qoe,qoe,chen10_qoe,Quadrant of Euphoria: A Crowdsourcing Platform for QoE Assessment
+ieee_network_radar_chart,radar_chart_for_qoe,chang10_radarchart,Radar Chart: Scanning for High QoE in QoS Dimensions##Radar Chart: Scanning for Satisfactory QoE in QoS Dimensions
+ieee_network_si_skype,skype_satisfaction,huang10_skype_fec,Can Skype be More Satisfying? - A QoE-Centric Study of the FEC Mechanism in the Internet-Scale VoIP System##Could Skype be More Satisfying? - A QoE-Centric Study of the FEC Mechanism in an Internet-Scale VoIP System
+infocom06,game_quality_of_service,chen06_qos,On the Sensitivity of Online Game Playing Time to Network QoS
+infocom09_oneclick,oneclick_quality_of_experience,chen09_oneclick,OneClick: A Framework for Measuring Network Quality of Experience##OneClick: A Framework for Capturing Users' Network Experiences
+iptcomm08,voip_traffic_detection,wu08_voip,Detecting VoIP Traffic Based on Human Conversation Patterns
+mm09,qoe_crowdsourcing,chen09_crowdsourcing,A Crowdsourceable QoE Evaluation Framework for Multimedia Content
+mm11,onlive_analysis,chen11_cloudgaming,Measuring The Latency of Cloud Gaming Systems
+mmsys11_qos_needs,quality_of_service_requirements,chen11_qosreq,Quantifying QoS Requirements of Network Services: A Cheat-Proof Framework
+mmsys11_wowah,world_of_warcraft_avatar_history,lee11_wowah,World of Warcraft Avatar History Dataset
+netgames06,interaction_in_games,chen06_interaction,Network Game Design: Hints and Implications of Player Interaction##Design Implications of Social Interaction in Online Games##Design Implications of Social Interaction for Online Games
+netgames07,gamer_identification,chen07_identify,User Identification based on Game-Play Activity Patterns
+netgames09,prophesying_gamers,tarng09_gamer_departure,On Prophesying Online Gamer Departure
+nossdav09,playout_buffer_measurement,wu09_playout,"An Empirical Evaluation of VoIP Playout Buffer Dimensioning in Skype, Google Talk, and MSN Messenger"
+raid10,fast_flux_bot_detection,hsu10_ffbot,Fast-Flux Bot Detection in Real Time
+sigcomm06,skype_user_satisfaction,chen06_skype,Quantifying Skype User Satisfaction
+trustcom11,disaster_privacy,wu11_crisis_privacy,Privacy Crisis due to Crisis Response on the Web
+iwsec08,information_leakage_socialnets,lam08_sns,Involuntary Information Leakage in Social Network Services
+mmsys13,gaming_anywhere,huang13_gaming_anywhere,GamingAnywhere: An Open Cloud Gaming System
+netgames12_qoe,cloud_gaming_friendly,lee12_cloudgaming,Are All Games Equally Cloud-Gaming-Friendly? An Electromyographic Approach
+netgames12_addictiveness,game_addictiveness_prediction,lou12_addictiveness,Forecasting Online Game Addictiveness
+taai12,pomics,wen12_pomics,Pomics: A Computer-aided Storytelling System with Automatic Picture-to-Comics Composition
+knosys_trajectory,trajectory_analysis_verification,pao12_trajectory,Trajectory Analysis for User Verification and Recognition
+tmm_qoe_crowdsourcing,qoe_crowdsourcing_framework,wu13_crowdsourcing,Crowdsourcing Multimedia QoE Evaluation: A Trusted Framework
+scnc11,stepping_stone_detection,lin11_stepping_stone,Stepping Stone Detection at The Server Side
+ieee_tciaig_bot_trajectory,bot_detection_trajectory,pao10_trajectory,Game Bot Detection via Avatar Trajectory Analysis
+mtap_mmo,tcp_mmorpg,wu09_game_protocol,On the Challenge and Design of Transport Protocols for MMORPGs
+ccnc09,collusion_detection,lou09_collusion,A Collusion-Resistant Automation Scheme for Social Moderation Systems
+hcomp09_kkb,kisskissban,ho09_kkb,KissKissBan: a competitive human computation game for image annotation
+hcomp09_model,social_verification_model,ho09_model,On formal models for social verification
+infocom09_skype,skype_redundancy_control,huang09_skype,Tuning the Redundancy Control Algorithm of Skype for User Satisfaction
+ieice_trans_comm_session_time,user_satisfaction_quantification,huang08_sat,A Generalizable Methodology for Quantifying User Satisfaction
+netgames08_wow,wow_player_game_hours,tarng08_wow,An Analysis of WoW Players Game Hours##An Analysis of WoW Players' Game Hours
+cqr10_pc_game,pc_game_qoe,chang11_thin_gaming,Understanding The Performance of Thin-Client Gaming
+ieee_tpds_departure,player_departure_analysis,chen09_qoe,Effect of network quality on player departure behavior in online games
+www13,gender_swapping_in_games,lou13_gender_swapping,Gender Swapping and User Behaviors in Online Social Games
+tomm14_ga,gaming_anywhere_open_source_system,huang14_gaminganywhere,GamingAnywhere: The First Open Source Cloud Gaming System
+netgames13_mobile_game_classification,mobile_game_recommendation_using_gestures,yang13_game_recommendation,Mobile Game Recommendation using Touch Gestures
+netgames13_lag,source_of_lags_in_games,chen13_lag,Dude the Source of Lags Is on Your Computer
+mm13_ga,gaming_anywhere_open_source,huang13_ga_oss,GamingAnywhere: An Open-Source Cloud Gaming Testbed
+hcomp13_ocr,boosting_ocr_accuracy,wang13_crowdsourcing_ocr,Boosting OCR Accuracy Using Crowdsourcing
+hcomp13_recruiting,understanding_potential_workers,wang13_crowdsourcing_potentials,Understanding Potential Microtask Workers for Paid Crowdsourcing
+socialcom14,fairness_on_kiva_microloaning_platform,lee14_microfinance,Fairness-Aware Loan Recommendation for Microfinance Services
+movid14,user_satisfaction_in_mobile_cloud_gaming,huang14_cloud_gaming_qoe,Quantifying User Satisfaction in Mobile Cloud Games
+tmm_cloud_gaming_qos,qos_cloud_gaming_systems,chen14_cloud_gaming_qos,On The Quality of Service of Cloud Gaming Systems
+cgame14,cloud_gaming_research_opportunities,chen14_cloud_gaming_onward,Cloud Gaming Onward: Research Opportunities and Outlook
+mmsys15,screencast_measurement_design_considerations,hsu15_screencast,Screencast Dissected: Performance Measurements and Design Considerations 
+netgames14_gpu,gpu_virtualization_for_cloud_games,hong14_cloud_game_gpu,GPU Consolidation for Cloud Games: Are We There Yet?
+tcc14,virtual_machine_allocation_for_cloud_gaming,hong14_vm_cgaming,Placing Virtual Machines to Optimize Cloud Gaming Experience
+netgames14_mobile,power_consumption_mobile_cloud_gaming,huang14_mobile_cloud_gaming_perf,Measuring the Client Performance and Energy Consumption in Mobile Cloud Gaming
+mm14,screencast_performance_in_the_wild,hsu14_screencast,Screencast in the Wild: Performance and Limitations

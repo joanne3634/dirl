@@ -1,0 +1,50 @@
+
+
+#menu{
+	width: 126px;
+	padding-left: 2px;
+	padding-top: 0px;
+	float: left;
+
+}
+
+#menu_top{
+	height:22px;
+	background-image:url(images/menu_1.jpg);
+	background-repeat:no-repeat;
+	background-position:bottom;
+}
+
+#menu_main{
+	background-image:url(images/menu_2.jpg);
+	background-repeat:repeat-y;
+	padding-left:3px;
+}
+
+
+#menu_bottom{
+	height:22px;
+	background-image:url(images/menu_3.jpg);
+	background-repeat:no-repeat;
+	background-position:top;
+}
+
+#main_content{
+	width:775px;
+	float:right;
+	padding-top:0px;
+}
+
+.main_item{
+	padding-top:10px;
+	padding-left:15px;
+	padding-bottom:5px;
+}
+
+.main_item_content{
+	padding-left:32px;
+	font-size:13px;
+	width:670px;
+	line-height:18px;
+	
+}

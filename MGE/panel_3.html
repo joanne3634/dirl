@@ -1,0 +1,101 @@
+<?
+// 檔案：MGE/panel3.html
+// 說明：研究領域頁面內容
+session_start();
+
+// 如果沒有通過認直接存取，則送到登入頁
+if($_SESSION['login_mmnet'] != "ok_mmnet"){
+	header("location:index.html");
+}
+
+
+$_SESSION['pos'] = "panel_3";	// 讓server端確認目前的位置，避免在頁外被呼叫
+
+// 初始化頁面內容
+include("lib/link.html");
+
+// 初始化所有變數
+$content_tc = "";
+$content_en = "";
+$last_tc = "";
+$last_en = "";
+
+
+// 抓取資料庫資料
+if($con){
+    if($db_selected){
+        
+        // 抓取資料表 research_area
+        $sql = "select * from research_area";
+        $result = mysql_query($sql);
+        
+        if($result){
+            while($row = mysql_fetch_row($result)){
+                if($row[0] == "TC"){
+                    $content_tc = $row[1];
+                    $last_tc = $row[2];
+                }else if($row[0] == "EN"){
+                    $content_en = $row[1];
+                    $last_en = $row[2];
+                }                    
+          
+            }
+        }     
+
+    }else{
+
+    }
+}
+
+
+?>
+
+<img src="../images/title_2.jpg" />
+
+<form action="" method="post" >        
+              <div style="padding-left:30px">
+				     
+                 語言： <select name="p3_lang" id="p3_lang" onchange="toggle_div('p3_edit_tc', 'p3_edit_en')">
+                  <option value="TC" >中文</option>
+                  <option value="EN">英文</option>
+                </select>   
+                <br />
+               <div id="p3_edit_tc" style="display:block">     
+              <table width="450" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+
+              <tr>
+                <td colspan="2"><textarea name="p3_content_tc" cols="115" rows="15" id="p3_content_tc" onchange="sync_input('p3_content_tc', 'lib/update_3.html',22)"><? echo $content_tc ?></textarea></td>
+                </tr>
+              <tr>
+                <td width="261" height="40">
+                最後更新時間：<span id="p3_content_tc_t" class="datex" title="最後更新時間">( <? echo $last_tc ?> )</span>                </td>
+                <td width="291">
+				
+			      <div align="right">
+			        <input type="button" name="p3_submit_tc" id="p3_submit_tc" value="更新內容"  class="button"  onclick="sync_input('p3_content_tc', 'lib/update_3.html',22)" />                
+	                </div></td>
+              </tr>
+            </table>
+            </div>
+
+               <div id="p3_edit_en" style="display:none">     
+              <table width="450" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+
+              <tr>
+                <td colspan="2"><textarea name="p3_content_en" cols="115" rows="15" id="p3_content_en" onchange="sync_input('p3_content_en', 'lib/update_3.html',23)"><? echo $content_en ?></textarea></td>
+                </tr>
+              <tr>
+                <td width="261" height="40">
+                最後更新時間：<span id="p3_content_en_t" class="datex" title="最後更新時間">( <? echo $last_en ?> )</span>
+                </td>
+                <td width="291">
+				
+			      <div align="right">
+			        <input type="button" name="p3_submit_en" id="p3_submit_en" value="更新內容"  class="button"  onclick="sync_input('p3_content_en', 'lib/update_3.html',23)" />                
+	                </div></td>
+              </tr>
+            </table>
+            </div>
+
+  </div>
+</form>

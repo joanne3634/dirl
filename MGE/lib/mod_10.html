@@ -1,0 +1,79 @@
+<?php
+require_once('link.html');
+mysql_query('SET NAMES utf8;');
+
+$id = null;
+$link = '';
+$name = array( 'TC' => '', 'EN' => '' );
+$help = array( 'TC' => '', 'EN' => '' );
+$button = '新增';
+$useengforcht = '';
+
+if( isset($_GET['id']) ) { $id = $_GET['id']; }
+if( isset($last_id) ) { $id = $last_id; }
+if( $id != null AND $row = mysql_fetch_array(mysql_query('SELECT * FROM projects WHERE id='.$id)) )
+{
+    $link = $row['link'];
+    $name = json_decode($row['title'],true);
+    $help = json_decode($row['descript'],true);
+    foreach( $help as $lang => $content )
+    {
+        if( count($content) <= 1 ) { continue; }
+        $help[$lang] = implode(PHP_EOL,$content);
+    }
+    $useengforcht = ( $row['use_lang'] == 'EN' ) ? ' checked' : '';
+    $button = '修改';
+}
+?>
+<form class="orange" action="/kj-manager/extends/projects.update.php" method="post">
+<?
+if( $id != null )
+{
+?>
+    <input type="hidden" name="id" value="<?=$id?>" />
+<?
+}
+?>
+    <table style="width:100%;">
+        <tbody>
+            <tr>
+                <th style="width:60px;">連結位置</th>
+                <td><input style="width:80%;" type="text" name="link" value="<?=$link?>" /></td>
+            </tr>
+            <tr>
+                <th>英文</th>
+                <!--<td><a href="javascript:mmnet.fake.copy('fake-form','TC','EN');">與中文相同</a></td>-->
+            </tr>
+            <tr>
+                <th>主題</th>
+                <td><input style="width:80%;" type="text" name="title[EN]" value="<?=$name['EN']?>" /></td>
+            </tr>
+            <tr>
+                <th>說明</th>
+                <td><textarea style="width:80%;height:80px;" name="descript[EN]"><?=$help['EN']?></textarea></td>
+            </tr>
+            <tr>
+                <th>中文</th>
+                <!--<td>[<a href="javascript:mmnet.fake.copy('fake-form','EN','TC');">與英文相同</a>]</td>-->
+            </tr>
+            <tr>
+                <th>主題</th>
+                <td><input style="width:80%;" type="text" name="title[TC]" value="<?=$name['TC']?>" /></td>
+            </tr>
+            <tr>
+                <th>說明</th>
+                <td><textarea style="width:80%;height:80px;" name="descript[TC]"><?=$help['TC']?></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label>
+                        <input type="checkbox" name="use-eng-for-cht"<?=$useengforcht?> />
+                        沿用英文版本 for 中文網頁
+                    </label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" onclick="mmnet.fake.submitFromForm(this.form,false);"><?=$button?></button>
+    <button type="reset">重置</button>
+</form>

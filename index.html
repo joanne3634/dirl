@@ -1,0 +1,223 @@
+<?php
+/*-------------------------------------------------------------\
+ * 檔案：index.html
+ - 說明：首頁，包括關於我們、研究領域(要點)及聯絡我們
+ - modified by kj 2014.10.21
+\-------------------------------------------------------------*/
+$subtitle = array(
+    'TC' => '首頁',
+    'EN' => 'Home',
+);
+
+include('_template/header.php');
+include('_template/menu.php'); 
+
+$main_alt = Array();    // 頁中各標題圖片的alt值
+$main_alt[1] = "關於我們";
+$main_alt[2] = "研究領域";
+$main_alt[3] = "最新消息";
+
+ // 如果語系設定為英文，則顯示英文內容，中文為預設值.
+if($lang == "EN"){
+    $main_alt[1] = "About DIRL";
+    $main_alt[2] = "Research Areas";
+    $main_alt[3] = "News";
+}
+    
+// 初始化頁面內容
+include("MGE/lib/link.html");
+
+$about = "";
+$research = "";
+$msg = array();
+$msg_link = array();
+$msg_time = array();
+$total_msg = 0;
+
+// 抓取資料庫資料
+if($con){
+    if($db_selected){
+        
+        // 抓取資料表 main_info
+        $sql = "select about, research from main_info where lang='".$lang."'";
+        $result = mysql_query($sql);
+
+        if($result){
+            $row = mysql_fetch_row($result);
+            $about = $row[0];
+            $research = $row[1];
+            
+        }
+
+        // 抓取資料表 main_slogan
+        $sql = "select * from main_slogan where visible=1";
+        $result = mysql_query($sql);
+        $slogan = array();
+        $slogan_total = 0;
+        if($result){
+            while($row = mysql_fetch_row($result)){
+                $slogan[$slogan_total] = $row[1];
+                $slogan_total++;
+            }
+        }
+        $random = rand(0,$slogan_total-1);
+        $main_quote = $slogan[ $random ];
+
+        $about = str_replace("\n", "<br/>", $about);
+
+        // 抓取資料表 news
+        $sql = "select subject, link, post_time from news where lang='".$lang."' and visible='1' ORDER BY post_time DESC, top DESC";
+        $result = mysql_query($sql);
+
+        if($result){
+            while($row = mysql_fetch_row($result)){
+                $msg[$total_msg] = $row[0];
+                $msg_link[$total_msg] = $row[1];
+                $msg_time[$total_msg] = $row[2];
+                $total_msg++;
+            }
+        }        
+    }
+}
+?>
+
+<!-- wrap-content start -->
+<!-- ================ -->
+<div class="wrap-content">
+    <!-- banner start -->
+    <!-- ================ -->
+    <div class="banner">
+        <div class="container">
+            <div class="row bannerbg">
+                <div class="col-md-12 mainbannerbg">
+                    <div class="qline object-non-visible" data-animation-effect="fadeIn" data-effect-delay="500">
+                        <?= $main_quote ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+    <section class="mtt-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- block 1 -->
+                    <?
+                        if($total_msg > 0)
+                        {
+                    ?>
+                    <div class=" feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                        <div class="maintitle"><?=$main_alt[3]?></div>
+                        <div class="pv-20 ph-20">
+                            <ul class="listlabicon">
+                            <?
+                                $i = 0;
+                                while($i < $total_msg)
+                                {
+                                    $message = $msg[$i];
+                                    if($msg_link[$i] != '')
+                                    {
+                                        $message = '<a href="'.$msg_link[$i].'"'.( (strpos($msg_link[$i],'http:') === 0) ? ' target="_blank"' : '' ).'>'.$message.'</a>';
+                                    }
+                            ?>
+                                <li><?=$message?></li>
+                            <?
+                                    $i++;
+                                }
+                            ?>
+                            </ul>
+                        </div>
+                    </div>
+                    <?
+                        }
+                    ?>
+<style>
+    .search-container{
+        text-align: center;
+    }
+    .search-img{
+        width: 12em;
+        margin: 10px 5px;
+        /*height: 5.8em;*/
+        display: inline-block;
+       /* background-image: url("_images/element/search1.svg");*/
+        background-size: 6em;
+        background-position: center top;
+        background-repeat: no-repeat;
+    }
+/*    .search-img:nth-child(1) {
+        background-image: url("_images/element/search1.svg");
+    }
+    .search-img:nth-child(2) {
+        background-image: url("_images/element/search2.svg");
+    }
+    .search-img:nth-child(3) {
+        background-image: url("_images/element/search3.svg");
+    }
+    .search-img:nth-child(4) {
+        background-image: url("_images/element/search4.svg");
+    }
+    .search-img:nth-child(5) {
+        background-image: url("_images/element/search5.svg");
+    }
+    .search-img:nth-child(6) {
+        background-image: url("_images/element/search6.svg");
+    }*/
+    .search-img span{
+        display: inline-block;
+        /*vertical-align: middle;*/
+    }
+    .search-img img {
+        display: inline-block;
+        vertical-align: middle;
+        width: 8em;
+    }
+    .inline-top{
+        display: inline-block;
+        vertical-align: top;
+    }
+    .inline{
+        display: inline-block;
+        vertical-align: top;
+    }
+</style>
+                    <!-- block 2 -->
+                    <div class=" feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                        <div class="maintitle"><? echo $main_alt[2] ?></div>
+                        <div class="pv-20 ph-20 search-container">
+                            <!-- <ul class="listlabicon">-->
+                                <?
+                                    $res_list = explode(";", $research);
+                                    $count = 1;
+                                    foreach($res_list as $res_item)
+                                    {
+                                        if($res_item == '') { continue; }
+                                ?>                     
+                                <div class="search-img <?php if($lang == 'EN'){ echo 'english';}?>">
+                                    <div class="inline-top"><img src="_images/element/search<?= $count?>.svg"></div>
+                                    <div class="inline"><span><?=$res_item ?></span></div>
+                                </div>
+                                <?
+                                    $count ++;
+                                    }
+                                ?>
+                            <!-- </ul> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class=" feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                        <div class="maintitle"><? echo $main_alt[1] ?></div>
+                        <div class="pv-20 ph-20 aboutsty">
+                            <? echo $about?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- section end -->
+</div>
+<!-- wrap-content end -->
+<? include('_template/footer.php'); ?> 

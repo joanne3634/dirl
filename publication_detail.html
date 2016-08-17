@@ -1,0 +1,198 @@
+<?
+/*-------------------------------------------------------------\
+ * 檔案：publication_detail.html
+ - 說明：研究著作內容
+ - modified by kj 2014.11.14
+\-------------------------------------------------------------*/
+include('_template/database.php');
+include('kj-manager/plugins/bibtex.php');
+
+// 必須要有key, 不然轉到publication 主頁
+if ( isset($_GET['key']) AND ($_GET['key']!='') AND ($pdo!=null) )
+{ // 抓取著作資料
+    $pub_query = $pdo->query("SELECT * FROM publications WHERE keyname='{$_GET['key']}' LIMIT 1");
+    if( $pub_query->rowCount() <= 0 )
+    {
+        header('Location: publication.html');
+        die();
+    }
+    $pub = $pub_query->fetch(PDO::FETCH_ASSOC);
+    $bibx = new BibTeX($pub['bibtex']);
+}
+else
+{
+	header('Location: publication.html');
+    die();
+}
+
+$subtitle = array(
+    'TC' => '研究著作內容',
+    'EN' => 'Publication Detail',
+);
+
+include('_template/header.php');
+include('_template/menu.php'); 
+session_start();
+?>
+           
+<script>document.title = '<?=$pub['title']?>';</script>
+<!-- wrap-content start -->
+<!-- ================ -->
+<div class="wrap-content">
+    <!-- banner start -->
+    <!-- ================ -->
+    <div class="banner">
+        <div class="container">
+            <div class="row bannerbg">
+                <div class="col-md-12 pagebannerbg"></div>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+    <section class="mtt-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- block 1 -->
+                    <div class="feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                        <div class="maintitle">
+                            <? echo $subtitle[$lang] ?>
+                        </div>
+<div class="pv-30 ph-20 mcontent">
+        <div class="pub_big_title"><?=$pub['title']?></div>
+        <span class="small">(NOTE: Sheng-Wei Chen is also known as Kuan-Ta Chen.)</span>
+        <br /><br />
+<?
+$full_text_file = 'pub/'.$pub['keyname'].'/'.$pub['keyname'].'.html';
+if ( file_exists($full_text_file) )
+{
+?>
+        <!-- Start Of Full Text import -->
+        <img src="pic/pub_5.jpg" alt="Full Text" />				
+        <div class="main_item_content" style="text-align:justify">
+            <? include($full_text_file); ?>
+        </div>
+        <!-- End Of Full Text import -->
+        <br />
+<?
+}
+else if( !empty($pub['abstract']) )
+{
+?>
+        <!-- Start Of Abstract -->
+        <img src="pic/pub_1.jpg" alt="Abstract" />
+        <div class="main_item_content" style="text-align:justify">
+            <?=htmlspecialchars_decode($pub['abstract'],ENT_QUOTES)?>
+<?
+    $relate_ready = array();
+    $relateds = array();
+    foreach( explode(',',$pub['related']) as $related_keyname )
+    {
+        if( empty($related_keyname) ) { continue; }
+        if( in_array($related_keyname,$relate_ready) ) { continue; }
+        $rel_query = $pdo->query("SELECT * FROM publications WHERE keyname='{$related_keyname}' LIMIT 1");
+        if( $rel_query->rowCount() <= 0 ) { continue; }
+        $relate_ready[] = $related_keyname;
+        $rel = $rel_query->fetch(PDO::FETCH_ASSOC);
+
+        $rel_bibx = new BibTeX($rel['bibtex']);
+        //$rel_link = '<a href="publication_detail.html?key='.$related_keyname.'&lang='.$lang.'">'.$rel['title'].'</a>';
+        $rel_link = '<a href="publication_detail.html?key='.$related_keyname.'">'.$rel['title'].'</a>';
+        //$rel_link = '<a href="publication_detail.html?key='.$related_keyname.'&lang='.$lang.'">'.$rel_bibx->toCitation().'</a>';
+
+        $relateds[] = str_replace($rel['title'],$rel_link,$rel_bibx->toCitation());
+    }
+    if( count($relateds) > 0 )
+    {
+        $header = ($lang=='EN') ? 'Related publications:' : '相關著作：';
+?>
+            <br/><br/>
+            <?=$header?>
+            <ul><? foreach($relateds as $relate) { echo '<li style="text-align:left;font-family:Georgia, \'Times New Roman\', Times, serif;">'.$relate.'</li>'; } ?></ul>
+<?
+    }
+?>
+        </div>
+        <!-- End Of Abstract -->
+        <br />
+<?			
+}
+?>
+
+<?
+$mat_order = array(
+    'slideshare' => '<iframe class="slideshare" src="http://www.slideshare.net/slideshow/embed_code/%path%" frameborder="0" scrolling="no" allowfullscreen></iframe>',
+    'fulltext' => '<img class="-ini" src="_images/icon/html.png" alt="Full Text (HTML format)" title="Full Text (HTML format)" align="absmiddle" /> <a href="%path%" target="_new">Full Text (HTML format)</a>',
+    'fulltext_pdf' => '<img class="-ini" src="_images/icon/pdf.png" alt="PDF Full Text" title="PDF Full Text" align="absmiddle" /> <a href="%path%">Full Text (PDF format, %size% KB)</a>',
+    'slides_ppt' => '<img class="-ini" src="_images/icon/pps.png" alt="PPT SLIDES" title="PPT SLIDES" align="absmiddle" /> <a href="%path%">Presentation Slides (PPT format, %size% KB)</a>',
+    'slides_pdf' => '<img class="-ini" src="_images/icon/pdf.png" alt="PDF SLIDES" title="PDF SLIDES" align="absmiddle" /> <a href="%path%">Presentation Slides (PDF format, %size% KB)</a>',
+    'poster_pdf' => '<img class="-ini" src="_images/icon/pdf.png" alt="PDF Poster" title="PDF Poster" align="absmiddle" /> <a href="%path%">Poster (PDF format, %size% KB)</a>'
+);
+$material = json_decode($pub['material'],true);
+if( count($material) > 0 )
+{
+    $contents = array();
+    foreach( $mat_order as $m_key => $m_sample )
+    {
+        if( !isset($material[$m_key]) ) { continue; }
+        $link_path = $material[$m_key];
+        $file_path = $_SERVER['DOCUMENT_ROOT'] . $link_path;
+        $sample = preg_replace('/%path%/',$link_path,$m_sample);
+        if( preg_match('/%size%/',$sample) )
+        {
+            $file_size = ceil(filesize($file_path)/1024);
+            $sample = preg_replace('/%size%/',$file_size,$sample);
+        }
+        if( $m_key != 'slideshare' ) { $sample = '<div class="material_line">'.$sample.'</div>'; }
+        $contents[] = $sample;
+    }
+?>
+        <!-- Start Of Materials -->
+        <img src="pic/pub_3.jpg" alt="Materials" />				
+        <div class="main_item_content">
+            <? echo implode(''.PHP_EOL,$contents); ?>
+        </div>
+        <!-- End Of Materials -->
+        <br/>
+<?
+}
+?>
+
+        <!-- Start Of Citation -->
+        <img src="pic/pub_4.jpg" alt="Citation" />
+        <div class="main_item_content">
+            <? echo $bibx->toCitation(); ?>                   
+        </div>
+        <!-- End Of Citation -->
+        <br />
+
+        <!-- Start Of BibTeX -->
+        <img src="pic/pub_2.jpg" alt="BibTex" />				
+        <div class="main_item_content">
+            <div class="bibtex">
+<?
+$ignore_list = array(
+    'page-start', 'page-end',
+    'extrapubinfo', 'extra_info',
+    'raw', 'num_month',
+    '/^x_.*/'
+);
+$bibtex = $bibx->toString($ignore_list,10,'<br/>');
+//echo $bibtex;
+echo str_replace(' ','&nbsp;',$bibtex); 
+?>
+            </div>
+        </div>
+        <!-- End Of BibTeX -->
+        <br/>
+
+    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- section end -->
+</div>
+<!-- wrap-content end -->
+<? include('_template/footer.php'); ?>

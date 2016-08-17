@@ -1,0 +1,130 @@
+<?
+// 檔案：MGE/panel5.html
+// 說明：研究著作頁面內容
+session_start();
+
+// 如果沒有通過認直接存取，則送到登入頁
+if($_SESSION['login_mmnet'] != "ok_mmnet"){
+	header("location:index.html");
+}
+
+
+$_SESSION['pos'] = "panel_5";	// 讓server端確認目前的位置，避免在頁外被呼叫
+include('../kj-manager/mod_database.php');
+include('../kj-manager/plugins/bibtex.php');
+
+$dba = new Accessor();
+$articles = array();
+$pub_query = $dba->_query('SELECT * FROM publications ORDER BY pub_year DESC, ordinal ASC');
+while( $pub = $pub_query->fetch(PDO::FETCH_ASSOC) )
+{
+    if( !isset($articles[$pub['pub_year']]) ) { $articles[$pub['pub_year']] = array(); }
+    $articles[$pub['pub_year']][] = $pub;
+}
+?>
+<img src="../images/title_6.jpg" /><br/>
+
+<div id="p5_add_publication_btn" style="padding-left:30px;">
+    <a href="#add_publication" onclick="switch_add2('p5_add_publication')" title="請點選此項來開啟/關閉表格">
+        <img src="../pic/add.gif" width="15" height="15" align="absmiddle" border="0" /> 新增著作
+    </a>
+</div>
+
+<div id="p5_add_publication" style="padding-left:30px;display:none;"><? include('lib/mod_5.html'); ?></div>
+<?
+$displaynone = 'display:none;';
+if( isset($_SESSION['target']) )
+{
+    $displaynone = '';
+    $edit_pub_id = $_SESSION['target'];
+}
+?>
+<div id="p5_mod_publication" style="padding-left:30px;<?=$displaynone?>"><? include('lib/mod_5.html'); ?></div>
+<br/>
+<br/>
+<div>[ <a href="/kj-manager/extends/publications.export.php" target="_blank">下載全部 BibTeX 檔案</a> ]</div>
+<br/>
+<span style="padding-left:30px"><img src="../pic/icon2.jpg" width="8" height="8" /> 已存著作：</span>
+<br />
+
+<?
+foreach( $articles as $a_year => $article_list )
+{
+?>
+<div class="list-container">
+    <header class="line">
+        <h1><?=$a_year?></h1>
+        <div class="bibtex-download">[ <a href="/kj-manager/extends/publications.export.php?year=<?=$a_year?>" target="_blank">下載 BibTeX 檔案</a> ]</div>
+    </header>
+    <div class="line">
+        <div class="-cell -head" style="width: 80px;">工具</div>
+        <div class="-cell -head" style="width: 70px;">類型</div>
+        <div class="-cell -head" style="width:460px;">主題</div>
+        <div class="-cell -head" style="width:150px;">Tag</div>
+        <div class="line-end"></div>
+    </div>
+    <ul class="list">
+<?
+    for($i=0;$i<count($article_list);$i++)
+    {
+        $article = $article_list[$i];
+        $a_id = $article['id'];
+        $fadding = '';
+        if( isset($_SESSION['target']) AND $a_id == $_SESSION['target'] )
+        {
+            //$fadding_script = true;
+            $fadding = ' fadding" ';
+        }
+        $visible = ($article['v_state']!='working') ? 'hide' : 'show';
+        $next_state = ($article['v_state']!='working') ? 'working' : 'hidden';
+        $cht_text = ($article['v_state']!='working') ? '隱藏' : '顯示';
+?>
+    <li class="line<?=$fadding?>" data-dbid="<?=$a_id?>" data-table="publications">
+        <div class="-cell" style="width: 80px;">
+            <div class="btn-like icon <?=$visible?>" onclick="mmnet.change('publications',<?=$a_id?>,'v_state','<?=$next_state?>','<?=$cht_text?>著作');" title="隱藏或顯示著作"></div>
+            <div class="btn-like icon remove" onclick="mmnet.remove('publications',<?=$a_id?>);" title="刪除著作"></div>
+            <div class="btn-like icon edit" onclick="update_div('p5_mod_publication','lib/mod_5.html?id=<?=$a_id?>',19);show_div('p5_mod_publication');kj_goto('p5_mod_publication');" title="修改著作內容"></div>
+        </div>
+        <div class="-cell -tac" style="width: 70px;">
+<?
+        $a_title = $article['title'];
+        switch (strtolower($article['type'])) {
+        case 'article':
+            $img_file = 'article';
+            $alt_title = '期刊論文';
+            $a_title .= '<br/>('.$article['collection'].')';
+            break;
+        case 'inproceedings':
+            $img_file = 'inproc';
+            $alt_title = '會議論文';
+            $a_title .= '<br/>('.$article['collection'].')';
+            break;
+        case 'media':
+            $img_file = 'media';
+            $alt_title = '大眾媒體';
+            break;
+        default:
+            $img_file = 'others';
+            $alt_title = '其它';
+            break;
+        }
+?>
+            <img src="../pic/<?=$img_file?>.jpg" alt="<?=$alt_title?>" title="<?=$alt_title?>" />
+        </div>
+        <div class="-cell" style="width:460px;"><?=$a_title?></div>
+        <div class="-cell -tac" style="width:150px;">
+            <input type="text" value="<?=$article['taglist']?>" style="width:120px;" readonly
+                title="點擊以改變分類" onclick="this.removeAttribute('readonly');"
+                onblur="update_publication_taglist(<?=$a_id?>,this.value);this.setAttribute('readonly','readonly');" />
+        </div>
+        <div class="line-end"></div>
+    </li>
+<?
+    }
+?>
+    </ul>
+</div>
+<?
+}
+unset($_SESSION['target']);
+?>

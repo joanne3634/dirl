@@ -1,0 +1,60 @@
+<?
+// 檔案：MGE/panel_12.html
+// 說明：LOG頁面內容
+define( 'PAGE_LIMIT', 30 );
+require_once('/home/kj/mmnet-manager-2015/mod_database.php');
+session_start();
+
+// 如果沒有通過認直接存取，則送到登入頁
+if ($_SESSION['login_mmnet'] != "ok_mmnet") {
+    header('location: index.html');
+    die();
+}
+$_SESSION['pos'] = "panel_12";	// 讓server端確認目前的位置，避免在頁外被呼叫
+$dba = new Accessor();
+
+$thispage = 1;
+if( isset($_GET['page']) AND intval($_GET['page']) > 1 ) { $thispage = intval($_GET['page']); }
+$offset = ( $thispage > 1 ) ? ' OFFSET '.(($thispage-1)*PAGE_LIMIT) : '';
+$count_query = $dba->_query("SELECT COUNT(*) FROM log WHERE action LIKE 'MGE::%'");
+$counter = $count_query->fetch(PDO::FETCH_NUM);
+$max_page = ceil( $counter[0] / PAGE_LIMIT );
+
+$menu = '<div align="center">';
+for($i=1;$i<=$max_page;$i++)
+{
+    $page_name = ( $i != $thispage ) ? '<a href="javascript:select_item(12,null,{\'page\':' . $i . '});">' . $i . '</a>' : $i;
+    $b_color = ( $i != $thispage ) ? 'black' : 'lightgray';
+    $menu .= '<span style="display: inline-block; border: 1px solid '.$b_color.'; margin: 2px; width: 20px; text-align: center;">' . $page_name . '</span>';
+}
+$menu .= '</div>';
+
+echo $menu;
+$dba->drawTable(
+    array(
+        'name' => 'log',
+        'style' => 'width:100%',
+        'where' => "action LIKE 'MGE::%'",
+        'order' => 'num DESC',
+        'limit' => PAGE_LIMIT.$offset
+    ),
+    array(
+        'stamp' => array(
+            'type' => 'date',
+            'title' => '時間',
+            'width' => 150,
+            'class' => '-tac'
+        ),
+        /*'user' => array(
+            'type' => 'user',
+            'title' => '記錄者',
+            'width' => 100,
+            'class' => '-tac'
+        ),*/
+        'message' => array(
+            'title' => '動作'
+        )
+    ),
+    null
+);
+echo $menu;

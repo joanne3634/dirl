@@ -1,0 +1,227 @@
+<?
+
+class BibTeX
+{
+	var $type;
+	var $abst;
+	var $uniq_key;
+	var $items;
+	
+function BibTeX($raw_bibtex) {
+
+		$this->items = array(
+			'author' => "",
+			'title' => "",
+			'journal' => "",
+			'booktitle' => "",
+			'chapter' => "",
+			'volume' => "",
+			'vol' => "",
+			'no' => "",
+			'number' => "",
+			'pages' => "",
+			'publisher' => "",
+			'organization' => "",
+			'address' => "",
+			'month' => "",
+			'year' => "",
+			'note' => "",
+			'url' => "",
+			'key' => "",
+			'abstract' => "",
+			'group' => "",
+			'page-start' => "",
+			'page-end' => "",
+			'raw' => "",
+			'folder' => "",
+			'type' => "",
+			'linebegin' => "",
+			'lineend' => "",
+			'crossref' => "",
+			'x_domestic' => "",
+			'x_appear' => "",
+			'num_month' => "",
+			'x_priority' => ""            
+                   			
+			);
+
+		$this->parse_bibtex($raw_bibtex);
+	}
+
+
+function parse_bibtex($bibtex){
+
+	$value = array();
+	$var = array();
+    $monx = array();
+    $monx['jan'] = 1;
+    $monx['feb'] = 2;
+    $monx['mar'] = 3;
+    $monx['apr'] = 4;
+    $monx['may'] = 5;
+    $monx['jun'] = 6;
+    $monx['jul'] = 7;
+    $monx['aug'] = 8;
+    $monx['sep'] = 9
+    $monx['oct'] = 10;
+    $monx['nov'] = 11;
+    $monx['dec'] = 12;
+    
+    $monx['january'] = 1;
+    $monx['february'] = 2;
+    $monx['march'] = 3;
+    $monx['april'] = 4;
+    $monx['may'] = 5;
+    $monx['june'] = 6;
+    $monx['july'] = 7;
+    $monx['august'] = 8;
+    $monx['september'] = 9
+    $monx['octuber'] = 10;
+    $monx['november'] = 11;
+    $monx['december'] = 12;
+    
+
+	$lineindex = 0;
+
+	$fieldcount = -1;
+	
+	$bib_line = explode("\n", $bibtex);
+
+	foreach($bib_line as $line) {
+
+		$line = trim($line);
+		
+		$raw_line = $line + '\n';
+
+		$line=str_replace("'","`",$line);
+		$seg=str_replace("\"","`",$line);
+
+		$ps=strpos($seg,'=');
+
+		$segtest=strtolower($seg);
+
+		// some funny comment string
+		if (strpos($segtest,'@string')!==false) {continue;}
+
+		// pybliographer comments
+		if (strpos($segtest,'@comment')!==false) {continue;}
+
+		// normal TeX style comment
+		if (strpos($seg,'%%')!==false) {continue;}
+
+		/* ok when there is nothing to see, skip it! */
+		if (!strlen($seg)) continue;
+
+		if ("@" == $seg[0]) {
+
+			$this->items['raw'] = $line . "\r\n";
+
+            $ps=strpos($seg,'@');
+            $pe=strpos($seg,'{');
+            $pc=strpos($seg,',');
+			
+
+            $this->type=trim(substr($seg, 1,$pe-1));
+            $this->uniq_key=trim(substr($seg, $pe+1,$pc-$pe-1));
+
+            $fieldcount=-1;
+
+            $this->items['linebegin'] = $lineindex;
+
+
+        } // #of item increase
+        elseif ($ps!==false ) { // one field begins
+
+				$this->items['raw'] .= $line . "\r\n";
+
+                $ps=strpos($seg,'=');
+
+                $fieldcount++;
+
+                $var[$fieldcount]=strtolower(trim(substr($seg,0,$ps)));
+
+                if ($var[$fieldcount]=='pages') {
+						$ps=strpos($seg,'=');
+						$pm=strpos($seg,'--');
+                        $pe=strpos($seg,'},');
+
+                        $pagefrom = substr($seg,$ps,$pm-$ps);
+						$pageto=substr($seg,$pm,$pe-$pm);
+
+						$bp=str_replace('=','',$pagefrom); $bp=str_replace('{','',$bp);$bp=str_replace('}','',$bp);$bp=trim(str_replace('-','',$bp));
+
+        				$ep=str_replace('=','',$pageto); $bp=str_replace('{','',$bp);$bp=str_replace('}','',$bp);;$ep=trim(str_replace('-','',$ep));
+                }
+
+                $pe=strpos($seg,'},');
+
+                if ($pe===false) {
+					$value[$fieldcount]=strstr($seg,'=');
+				} else {
+					$value[$fieldcount]=substr($seg,$ps,$pe);
+				}
+
+			} else {
+				$this->items['raw'] .= $line . "\r\n";
+				$pe=strpos($seg,'},');
+
+				if ($fieldcount > -1) {
+					if ($pe===false) {
+						$value[$fieldcount].=' '.strstr($seg,' ');
+					} else {
+						$value[$fieldcount] .=' '.substr($seg,$ps,$pe);
+					}
+				}
+			}
+
+
+			if ($fieldcount > -1) {
+				$v = $value[$fieldcount];
+
+				$v=str_replace('=','',$v);
+				$v=str_replace('{','',$v);
+				$v=str_replace('}','',$v);
+				$v=str_replace('\'',' ',$v);
+				$v=str_replace('\"',' ',$v);
+                $x = $v;
+				$v=str_replace(',',' ',$v);
+				
+                
+				// test!
+				$v=str_replace('`',' ',$v);
+
+				$v=trim($v);
+
+				$this->items["$var[$fieldcount]"]="$v";
+
+			}
+                
+                if ($var[$fieldcount]=='x_appear') {
+                	$x = trim($x);
+                    if(strlen($x) > 2 && substr($x, -1) == ","){
+                    	$x = substr($x, 0, strlen($x) - 1).".";
+                    }else if(substr($x, -1) != "."){
+                    	$x = $x.".";
+                    }
+                	$this->items['x_appear']="$x";
+                    
+                }else if($var[$fieldcount]=='month' || $var[$fieldcount]=='mon'){
+                	if(isset($monx[$v])){
+                    	$v = $monx[$v];
+	                	$this->items['num_month']=$v;
+                    }
+
+                }	
+	}
+
+}
+
+}
+
+
+
+
+
+
+
+?>

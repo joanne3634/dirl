@@ -1,0 +1,85 @@
+<?
+// 檔案：MGE/panel3.html
+// 說明：研究領域頁面內容
+session_start();
+
+// 如果沒有通過認直接存取，則送到登入頁
+if($_SESSION['login_mmnet'] != "ok_mmnet"){
+	header("location:index.html");
+}
+
+$_SESSION['pos'] = "panel_10";	// 讓server端確認目前的位置，避免在頁外被呼叫
+
+// 初始化頁面內容
+require_once("lib/link.html");
+mysql_query('SET NAMES utf8;');
+
+?>
+
+<img src="../images/title_20.jpg" />
+
+<br/>
+<a href="javascript:mmnet.turn('new-form');">
+    <img src="../pic/add.gif" width="15" height="15" align="absmiddle" border="0" />
+    新增計劃
+</a>
+<div id="new-form" style="display:none;"><? include('lib/mod_10.html'); ?></div>
+<div id="fake-form">
+<?
+if( isset($_SESSION['last_modified_id']) )
+{
+    $last_id = $_SESSION['last_modified_id'];
+    include('lib/mod_10.html');
+    unset($last_id);
+    unset($_SESSION['last_modified_id']);
+}
+?>
+</div>
+
+<table style="width:100%;">
+    <thead>
+        <tr style="background-color:#FFD193;">
+            <th style="width: 50px;">顯示</th>
+            <th style="width:150px;">標題</th>
+            <th>內容</th>
+            <th style="width: 50px;">修改</th>
+            <th style="width: 50px;">刪除</th>
+        </tr>
+    </thead>
+    <tbody class="list">
+<?
+$result = mysql_query('SELECT * FROM projects ORDER BY ordinal ASC');
+while( $row = mysql_fetch_array($result) )
+{
+    if( $row['v_state'] == 'remove' ) { continue; }
+    $name = json_decode($row['title'],true);
+    $help = json_decode($row['descript'],true);
+    $show = ($row['v_state']=='hidden') ? '_n' : '';
+    $trigger = ($row['v_state']=='hidden') ? 'working' : 'hidden';
+
+    $title = $name['TC'] . '(' . $name['EN'] . ')';
+    $describe = array();
+    if( count($help['TC']) <= 1 ) { $describe[] = $help['TC']; }
+    else { $describe = array_merge($describe,$help['TC']); }
+    if( count($help['EN']) <= 1 ) { $describe[] = $help['EN']; }
+    else { $describe = array_merge($describe,$help['EN']); }
+    if( $row['use_lang'] == 'EN' )
+    {
+        $title = $name['EN'];
+        $describe = $help['EN'];
+    }
+
+    if( !empty($row['link']) ) { $title = '<a href="'.$row['link'].'">'.$title.'</a>'; }
+?>
+        <tr data-dbid="<?=$row['id']?>">
+            <td style="text-align:center;"><a href="javascript:mmnet.fake.set('projects',<?=$row['id']?>,'<?=$trigger?>');"><img src="../pic/show<?=$show?>.gif" /></a></td>
+            <td><?=$title?></td>
+            <td><?=( (count($describe)>1) ? implode('<br/>',$describe) : $describe ) ?></td>
+            <td style="text-align:center;"><a href="javascript:update_div('fake-form','lib/mod_10.html?id=<?=$row['id']?>',17);show_div('fake_form');"><img src="/_image/icon/edit.gif" /></a></td>
+            <td style="text-align:center;"><a href="javascript:mmnet.fake.set('projects',<?=$row['id']?>,'remove');"><img src="/_image/icon/remove.gif" /></a></td>
+        </tr>
+<?
+}
+?>
+    </tbody>
+</table>

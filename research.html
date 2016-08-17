@@ -1,0 +1,70 @@
+<?php
+/*-------------------------------------------------------------\
+ * 檔案：research.html
+ - 說明：研究領域內容
+ - modified by kj 2014.10.20
+\-------------------------------------------------------------*/
+
+$subtitle = array(
+    'TC' => '研究領域',
+    'EN' => 'Research Areas',
+);
+
+include('_template/header.php');
+include('_template/menu.php'); 
+include("MGE/lib/link.html");
+
+$content = "";
+
+if($con){
+    if($db_selected){
+        
+        // 抓取資料表 research_area
+        $sql = "select content  from research_area where lang='".$lang."' ";
+        $result = mysql_query($sql);
+        
+        if($result){
+            $row = mysql_fetch_row($result);
+            $content = $row[0];
+        }     
+
+    }else{
+
+    }
+}
+
+?>
+<!-- wrap-content start -->
+<!-- ================ -->
+<div class="wrap-content">
+    <!-- banner start -->
+    <!-- ================ -->
+    <div class="banner">
+        <div class="container">
+            <div class="row bannerbg">
+                <div class="col-md-12 pagebannerbg"></div>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+    <section class="mtt-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- block 1 -->
+                    <div class="feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                        <div class="maintitle">
+                            <? echo $subtitle[$lang] ?>
+                        </div>
+                        <div class="pv-30 ph-20 mcontent">
+                            <? echo $content ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- section end -->
+</div>
+<!-- wrap-content end -->
+<? include('_template/footer.php'); ?>

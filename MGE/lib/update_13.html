@@ -1,0 +1,161 @@
+<?
+require_once('/home/kj/mmnet-manager-2015/mod_database.php');
+$dba = new Accessor();
+session_start();
+
+$split_char = "&&&";
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && isset($_POST['id']) && isset($_POST['data'])){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+				$data = $_POST['data'];
+			//	filter_var($data, FILTER_SANITIZE_STRING);
+				// 判別是哪一個panel (只允許指定傳送)
+				if($_SESSION['pos'] == "panel_13"){
+					
+					// 判別是那一個id需要更新
+
+					// 新增消息
+					if($_POST['id'] == "p13_main_slogan_group"){	
+					
+						$data_token = explode("||", $data);
+						
+						// 必須有四個參數
+						if(sizeof($data_token) == 2){
+							$_sub = mysql_real_escape_string($data_token[0]);
+							$sql = "insert into main_slogan values(null, '".$_sub."', '".$data_token[1]."', null)";
+							$result = mysql_query($sql);
+
+							if($result && mysql_affected_rows() == 1){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 新增「最新消息」：'.$_sub.'。');
+								echo "0".$split_char;		// 傳送錯誤碼，成功							
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+						}else{
+
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+
+						}
+
+
+					// 最新消息 - 內容
+					}else if(strpos($_POST['id'], "p13_subject_mod") === 0 ){
+
+						$main_slogan_id = explode("_", $_POST['id']);
+						
+						$sql = "update main_slogan set subject='".$data."' where id='".$main_slogan_id[3]."'";
+						//echo($_POST['id'].",".$main_slogan_id[3]);
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「最新消息」內容。 (id: '.$main_slogan_id[3].')');
+							if(mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+								$sql = "select subject from main_slogan where id='".$main_slogan_id[3]."'";
+								$result2 = mysql_query($sql);
+
+								if($result2){
+									$row = mysql_fetch_row($result2);
+									echo $row[0];
+								}
+							}else{
+								echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+							}
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+					// 最新消息 - 刪除
+					}else if(strpos($_POST['id'], "p13_btn_del") === 0 ){
+					
+						
+						$sql = "delete from main_slogan where id='".$data."'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 刪除「最新消息」。 (id: '.$data.')');
+							if(mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+							}else{
+								echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+							}
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 最新消息 - 是否顯示
+					}else if(strpos($_POST['id'], "p13_btn_toggle_show") === 0 ){
+
+						$data_token = explode("||", $data);
+						$_sub = mysql_real_escape_string($data_token[0]);
+						if(sizeof($data_token) == 2){
+
+							$sql = "update main_slogan set visible='".$data_token[1]."' where id='".$_sub."'";
+							//echo $sql;
+							$result = mysql_query($sql);
+
+							if($result){
+								$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 修改「最新消息」顯示狀態。 (id: '.$_sub.')');
+								if(mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功
+								}else{
+									echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+								}
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+
+						}else{
+							echo "5".$split_char;				//傳送錯誤碼，未定義的名稱				
+						}
+					// 最新消息 - 建立日期
+					}else if(strpos($_POST['id'], "p13_date_mod") === 0 ){
+
+						$main_slogan_id = explode("_", $_POST['id']);
+						
+						$sql = "update main_slogan set post_time='".$data."' where id='".$main_slogan_id[3]."'";
+						//echo($_POST['id'].",".$main_slogan_id[3]);
+					//	echo $sql ;
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 修改「最新消息」建立日期。 (id: '.$main_slogan_id[3].')');
+							if(mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+								$sql = "select post_time from main_slogan where id='".$main_slogan_id[3]."'";
+								$result2 = mysql_query($sql);
+
+								if($result2){
+									$row = mysql_fetch_row($result2);
+									echo date("Y-m-d", strtotime($row[0]));
+								}
+							}else{
+								echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+							}
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}						
+					// 未知的 id
+					}else{
+						echo "6".$split_char;				//傳送錯誤碼，未定義的名稱				
+
+					}
+				}else{
+					echo "7".$split_char;				//傳送錯誤碼，使用不當				
+				}
+				
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+
+	}
+}
+?>

@@ -1,0 +1,334 @@
+<?
+session_start();
+
+
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && $_SESSION['pos'] == "panel_8"){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+	
+		$table_name_set = array("main_info",  "news", "contact", "research_area", "members", "publication", "resources", "downloads", "mmnet_user", "custom_page", "project","main_slogan");
+
+	    $total_table = sizeof($table_name_set);
+	    $exist_table = 0;
+	    $table_name = "";
+	    
+	    if($db_selected){
+	    	$sql = "show tables";
+			$result = mysql_query($sql);
+			while($row = mysql_fetch_row($result)){
+	        	$exist_table++;
+	            $table_name .= $row[0];
+	            $table_name .= ",";            
+	        } 
+	    }
+
+
+    
+
+// 寫入內容
+    
+?>
+
+資料庫：<span class="empx" >MMNET_WEB</span>
+
+<?
+if($db_selected){
+?>
+
+<span class="okok">(已建立)</span>
+<br />
+
+資料表 ( <? echo $exist_table ?> / <? echo $total_table ?> )：
+<table width="300" border="0">
+
+
+<?
+
+    
+		// main_info
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[0]."</span></td>";
+    	if(strpos($table_name, $table_name_set[0] ) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "create table main_info(lang VARCHAR(16) unique NOT NULL primary key, about TEXT, research VARCHAR(255), last_update TIMESTAMP DEFAULT 0 , last_update_res TIMESTAMP DEFAULT 0 );";
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";
+				$sql = "insert into main_info values('TC', 'about TC', 'research TC', NOW(), NOW());";
+				$result1 = mysql_query($sql);
+				$sql = "insert into main_info values('EN', 'about EN', 'research EN', NOW(), NOW());";
+				$result2 = mysql_query($sql);
+
+				if($result1 && $result2){
+					echo "<td><span class=\"okok\"> 設定成功</span></td>";
+				}else{
+					echo "<td><span class=\"fail\"> 設定失敗</span></td>";        				
+				}
+				
+			}else{
+					echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";
+		
+		// news
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[1]."</span></td>";
+    	if(strpos($table_name, $table_name_set[1] ) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "create table news(id INT(5) unsigned not null auto_increment primary key, lang VARCHAR(16) not null, subject VARCHAR(255) not null, link VARCHAR(255),  visible INT(1), top INT(1), post_time TIMESTAMP DEFAULT NOW());";
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";				
+			}else{
+				echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";
+
+		// contact
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[2]."</span></td>";
+    	if(strpos($table_name, $table_name_set[2] ) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "create table contact(lang VARCHAR(16) unique NOT NULL primary key, email VARCHAR(255), tel VARCHAR(64), fax VARCHAR(64), addr VARCHAR(255), last_update TIMESTAMP ON UPDATE CURRENT_TIMESTAMP);";
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";
+				$sql = "insert into contact values('TC', 'cychen@iis.sinica.edu.tw', '02-27883799 # 1476', '02-27824814', 'ADDR TC', NOW());";
+				$result1 = mysql_query($sql);
+				$sql = "insert into contact values('EN', 'cychen@iis.sinica.edu.tw', '02-27883799 # 1476', '02-27824814', 'ADDR EN', NOW());";
+				$result2 = mysql_query($sql);
+
+				if($result1 && $result2){
+					echo "<td><span class=\"okok\"> 設定成功</span></td>";
+				}else{
+					echo "<td><span class=\"fail\"> 設定失敗</span></td>";        				
+				}
+				
+			}else{
+					echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";		
+
+		// Research Area
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[3]."</span></td>";
+    	if(strpos($table_name, $table_name_set[3] ) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "create table research_area(lang VARCHAR(16) unique NOT NULL primary key, content TEXT, last_update TIMESTAMP ON UPDATE CURRENT_TIMESTAMP);";
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";
+				$sql = "insert into research_area values('TC', 'Research TC', NOW());";
+				$result1 = mysql_query($sql);
+				$sql = "insert into research_area values('EN', 'Research EN', NOW());";
+				$result2 = mysql_query($sql);
+				if($result1 && $result2){
+					echo "<td><span class=\"okok\"> 設定成功</span></td>";
+				}else{
+					echo "<td><span class=\"fail\"> 設定失敗</span></td>";        				
+				}				
+			}else{
+					echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";	
+
+		// Members
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[4]."</span></td>";
+    	if(strpos($table_name, $table_name_set[4] ) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "create table members(user_id VARCHAR(32) not null primary key, name_tc VARCHAR(32) not null, last_name_en VARCHAR(32), first_name_en VARCHAR(32) not null, aka_tc VARCHAR(32), aka_en VARCHAR(32), type INT(1)  not null, page_link VARCHAR(64), blog_link VARCHAR(64) , email VARCHAR(255) , tel VARCHAR(32) , cell VARCHAR(16), period_in_mon INT(2) not null, period_in_year INT(4) not null, period_out_mon INT(2) , period_out_year INT(4) ,study_tc VARCHAR(255), study_en VARCHAR(255) , work_tc VARCHAR(255) , work_en VARCHAR(255), research VARCHAR(255) , iis_id VARCHAR(32) , msn VARCHAR(255) , skype VARCHAR(255) , google VARCHAR(255) , last_update TIMESTAMP DEFAULT NOW(), title_tc VARCHAR(128), title_en VARCHAR(128), birthday DATE, email_stable VARCHAR(255));";
+
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";
+				$sql = "insert into members values('cychen', 'CHUN_TC', 'Chen', 'Chun-Yang', 'KUAN_TC', 'Kuan-Ta Chen', '0', 'http://www.iis.sinica.edu.tw/~cychen/index_c.html', '', 'cychen@iis.sinica.edu.tw', '02-27883799 # 1712', '', '0', '0', '0','0', '', '', '', '', 'Internet Measurement', 'cychen', 'kuan@ilife.cx', 'cychen11.work', 'cychen11', NOW(), 'Assistant Research Fellow tc', 'Assistant Research Fellow', '1970-1-1', '');";
+				$result1 = mysql_query($sql);
+				$sql = "insert into members values('congo', 'BB_TC', 'BB', 'Man', 'BAKA_TC', 'BMX', '2', 'http://www.google.com', '', 'bb@iis.sinica.edu.tw', '02-27883799 # 1476', '03303330', '7', '2007', '7', '2008', '', '', 'IBM_TC', 'IBM_EN', 'BB Security', 'bb', 'zealousage@hotmail.com', 'bbb', 'bbb', NOW(), '', '', '1970-1-1', '');";
+				$result2 = mysql_query($sql);
+				if($result1 && $result2){
+					echo "<td><span class=\"okok\"> 設定成功</span></td>";
+				}else{
+					echo "<td><span class=\"fail\"> 設定失敗</span></td>";        				
+				}				
+			}else{
+					echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";			
+
+		// publication
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[5]."</span></td>";
+    	if(strpos($table_name, $table_name_set[5]) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "CREATE TABLE publication2 ( id int(11) NOT NULL auto_increment primary key, entry_type varchar(255) NOT NULL default '', uniq_key varchar(255) NOT NULL default '', abstract mediumtext, `year` year(4) default NULL, groupes varchar(255) default NULL, publisher varchar(255) default NULL, page_start varchar(255) default NULL, page_end varchar(255) default NULL, pages varchar(55) default NULL, address varchar(255) default NULL, url varchar(255) default NULL, volume varchar(255) default NULL, chapter varchar(255) default NULL, journal text, author varchar(255) default NULL, raw text, title varchar(255) NOT NULL default '', booktitle varchar(255) default NULL, folder varchar(255) default NULL, `types` text, linebegin varchar(255) default NULL, lineend varchar(255) default NULL, visible INT(1) default 1, crossref varchar(255) default NULL, `key` varchar(255) default NULL, month varchar(255) default NULL, note varchar(255) default NULL, `number` varchar(255) default NULL, organization varchar(255) default NULL, domestic VARCHAR(255) default NULL, num_month INT(2) default 13, x_priority INT(3) default 999 )";
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";				
+			}else{
+				echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";
+
+		// Resources
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[6]."</span></td>";
+    	if( strpos($table_name,$table_name_set[6]) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "create table resources(id INT(5) unsigned not null auto_increment primary key, lang VARCHAR(16) not null, subject VARCHAR(255) not null, link VARCHAR(255),  visible INT(1), top INT(1), post_time TIMESTAMP DEFAULT NOW(), private INT(1));";
+            
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";
+			}else{
+				echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";	
+
+		// download
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[7]."</span></td>";
+    	if(strpos($table_name, $table_name_set[7] ) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "create table downloads(id INT(5) unsigned not null auto_increment primary key, lang VARCHAR(16) not null, subject VARCHAR(255) not null, link VARCHAR(255),  visible INT(1), top INT(1), post_time TIMESTAMP DEFAULT NOW());";
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";				
+			}else{
+				echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";	
+
+		// mmnet_user
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[8]."</span></td>";
+    	if(strpos($table_name, $table_name_set[8] ) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "create table mmnet_user(id INT(5) unsigned not null auto_increment primary key, user_id VARCHAR(32) unique not null, password VARCHAR(32) not null, activated INT(1));";
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";				
+			}else{
+				echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";	
+        	
+		// custom_page
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[9]."</span></td>";
+    	if(strpos($table_name, $table_name_set[9] ) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "create table custom_page(id INT(5) unsigned not null auto_increment primary key, get_id VARCHAR(32) unique not null, category VARCHAR(32) not null default 'default', html_tc TEXT, html_en TEXT, last_update TIMESTAMP ON UPDATE CURRENT_TIMESTAMP );";
+
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";				
+			}else{
+				echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";
+		
+		// Project
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[10]."</span></td>";
+    	if(strpos($table_name, $table_name_set[10] ) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "create table project(lang VARCHAR(16) unique NOT NULL primary key, content TEXT, last_update TIMESTAMP ON UPDATE CURRENT_TIMESTAMP);";
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";
+				$sql = "insert into project values('TC', 'Project TC', NOW());";
+				$result1 = mysql_query($sql);
+				$sql = "insert into project values('EN', 'Project EN', NOW());";
+				$result2 = mysql_query($sql);
+				if($result1 && $result2){
+					echo "<td><span class=\"okok\"> 設定成功</span></td>";
+				}else{
+					echo "<td><span class=\"fail\"> 設定失敗</span></td>";        				
+				}				
+			}else{
+					echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";	
+       	// Quote
+    	echo "<tr><td width=\"100\"><span class=\"empx\">".$table_name_set[11]."</span></td>";
+    	if(strpos($table_name, $table_name_set[11] ) !== false){
+        	echo "<td><span class=\"okok\">已建立</span></td>";
+        }else{
+			$sql = "CREATE TABLE `main_slogan` (
+					`id` int(5) unsigned NOT NULL,
+					  `subject` varchar(255) CHARACTER SET latin1 NOT NULL,
+					  `visible` int(1) DEFAULT NULL,
+					  `post_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+					) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;";
+			$result = mysql_query($sql);
+			if($result){
+				echo "<td><span class=\"okok\">建立成功</span></td>";
+			}else{
+					echo "<td><span class=\"fail\"> 建立失敗</span></td>";        				
+			}
+        }       
+       	echo "</tr>";	
+            
+?>
+
+</table>
+<?
+
+	if($total_table == $exist_table){
+?>
+	<img src="../pic/check.gif" alt="OK:" align="absmiddle" /> 資料庫與資料表均建立完成!
+<?
+	}
+?><br /><br />
+
+   <input type="submit" name="p8_create" id="p8_create" value=" 設定資料表 "  class="button" onclick="update_div('p8_status', 'lib/renew_8.html', 32)" />
+
+<?   
+}else{
+?>
+
+
+
+
+<span class="fail">(找不到資料庫)</span>
+<br />
+
+<img src="../pic/error.gif" alt="ERROR:" align="absmiddle" /> 資料庫未建立, 無法設定資料表。請檢查資料庫設定或建立資料庫
+<?
+}
+?>
+
+
+<?
+
+// 寫入完成
+
+		}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+	}else{
+			echo "參數錯誤";
+	}
+		
+}else{
+	echo "發生錯誤";
+}
+?>

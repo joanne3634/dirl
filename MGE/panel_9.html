@@ -1,0 +1,152 @@
+<?
+// 檔案：MGE/panel9.html
+// 說明：自訂頁面內容
+session_start();
+
+// 如果沒有通過認直接存取，則送到登入頁
+if($_SESSION['login_mmnet'] != "ok_mmnet"){
+	header("location:index.html");
+}
+
+
+$_SESSION['pos'] = "panel_9";	// 讓server端確認目前的位置，避免在頁外被呼叫
+
+// 初始化頁面內容
+include("lib/link.html");
+
+// 初始化所有變數
+$id_doc = array();
+$get_id = array();
+$cate = array();
+$last_update_doc = array();
+$total_doc = 0;
+
+// 抓取資料庫資料
+if($con){
+    if($db_selected){
+        
+        // 抓取資料表 research_area
+        $sql = "select id, get_id, category, last_update from custom_page ORDER BY last_update ASC, category ASC";
+        $result = mysql_query($sql);
+        
+        if($result){
+            while($row = mysql_fetch_row($result)){
+                    $id_doc[$total_doc] = $row[0];
+                    $get_id[$total_doc] = $row[1];
+                    $cate[$total_doc] = $row[2];
+                    $last_update_doc[$total_doc] = $row[3]; 
+                    $total_doc++;                      
+            }
+        }     
+
+    }else{
+
+    }
+}
+
+
+?>
+
+<img src="../images/title_mge_4.jpg" /><br />
+
+<div id="p9_all_doc" style="padding-left:30px;">
+
+<?
+	$i = 0;
+    while($i < $total_doc){
+?>    
+    <div id="p9_doc_item_<? echo $id_doc[$i] ?>" class="doc_item" onmousemove="toggle_bg(<? echo $id_doc[$i] ?>)" onmouseout="toggle_bg2(<? echo $id_doc[$i] ?>)" onclick="got_edit(<? echo $id_doc[$i] ?>);" title="類別：<? echo $cate[$i] ?>" >
+    	<div class="doc_title">
+			<? echo $get_id[$i] ?>
+        </div>
+
+    </div>   
+<?
+		$i++;
+     }
+?>
+        
+    <div style="width:60px;height:50px; float:left; text-align:center; " >
+   	<a href="#new_document" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('p9_new_doc','','../pic/doc_new_rol.png',1)" onclick="p9_add_go();">   
+    <img id="p9_new_doc" src="../pic/doc_new.png" alt="新增文件" title="新增文件" border="0" /></a><br />
+
+    </div>
+
+           
+</div>
+
+<br />
+<br />
+
+      <div id="p9_add_doc" style="padding-left:30px;float:left; display:none;clear:both">
+  			<form action="" method="post" >        
+             <table width="645" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+				<tr><td width="154">
+             
+                 識別字串：
+                 <input name="p9_add_id" type="text" id="p9_add_id" size="10" class="need_input" /> 
+				<td width="159">
+              類別： 
+              <input name="p9_add_cate" type="text" id="p9_add_cate" size="15" />			     
+              </td>
+              
+              <td width="146">
+              內容語言： 
+                <select name="p9_add_lang" id="p9_add_lang" onchange="toggle_div('p9_add_tc', 'p9_add_en')">
+                  <option value="TC" >中文</option>
+                  <option value="EN">英文</option>
+                </select>
+				</td>
+                <td width="166"><div align="center">
+                  <input type="button"  class="button" name="p9_cancel_add" id="p9_cancel_add" value="取消新增"  onclick="fin_add()"/>
+                </div></td>
+               </tr>
+                </table>
+               <div id="p9_add_tc" style="display:block">     
+             <table width="645" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+
+              <tr>
+                <td colspan="3">		
+					<textarea name="p9_add_content_tc" cols="100" rows="15" id="p9_add_content_tc" ><? echo $content_tc ?></textarea>							
+
+				</td>
+              </tr>
+              <tr>
+                <td width="261" height="40" colspan="2">
+                 </td>
+                <td width="291">
+				
+			      <div align="right">
+			        <input type="button" name="p9_add_submit_tc" id="p9_add_submit_tc" value="增加頁面"  class="button"  onclick="sync_input_group('p9_add_doc', 'lib/update_9.html',42);"  />                
+                  </div></td>
+              </tr>
+            </table>
+            </div>
+
+               <div id="p9_add_en" style="display:none">     
+              <table width="645" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+
+              <tr>
+                <td colspan="3"><textarea name="p9_add_content_en" cols="100" rows="15" id="p9_add_content_en" ><? echo $content_en ?></textarea></td>
+                </tr>
+              <tr>
+                <td width="261" height="40"  colspan="2">
+                
+                </td>
+                <td width="291">
+				
+			      <div align="right">
+			        <input type="button" name="p9_add_submit_en" id="p9_add_submit_en" value="增加頁面"  class="button"  onclick="sync_input_group('p9_add_doc', 'lib/update_9.html',42)" />                
+                  </div></td>
+              </tr>
+            </table>
+</form>
+            
+            </div>
+	</div>
+
+
+      <div id="p9_mod_doc" style="padding-left:30px;float:left; display:none; clear:both">
+
+	 </div>
+

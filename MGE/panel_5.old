@@ -1,0 +1,226 @@
+<?
+// 檔案：MGE/panel5.html
+// 說明：研究著作頁面內容
+session_start();
+
+// 如果沒有通過認直接存取，則送到登入頁
+if($_SESSION['login_mmnet'] != "ok_mmnet"){
+	header("location:index.html");
+}
+
+
+$_SESSION['pos'] = "panel_5";	// 讓server端確認目前的位置，避免在頁外被呼叫
+
+// 初始化頁面內容
+include("lib/link.html");
+
+// 載入 BIBTEX 程式庫
+include("lib/bibtex.html");
+
+// 初始化所有變數
+$total_publish = 0;
+
+$articles = array();
+
+if($con){
+    if($db_selected){
+        
+        // 抓取資料表 news 
+        //$sql = "select id, entry_type, uniq_key, title, author,journal, publisher, year, visible, booktitle, note, month, x_domestic, x_appear, x_priority  from publication ORDER BY year DESC, x_domestic ASC, entry_type ASC, x_priority ASC,  visible DESC, num_month ASC,  title ASC ";
+        $sql = "SELECT id,entry_type,uniq_key,title,author,journal,publisher,year,visible,booktitle,note,month,x_domestic,x_appear,x_priority,raw FROM publication ORDER BY year DESC, x_priority DESC, id DESC";
+        $result = mysql_query($sql);
+        
+        if($result){
+            while($row = mysql_fetch_row($result)){
+                $a_year = $row[7];
+                $bibtex = new BibTeX($row[15]);
+                
+                if( !isset($articles[$a_year]) ) { $articles[$a_year] = array(); }
+                $articles[$a_year][] = array(
+                    'id' => $row[0],
+                    'type' => $row[1],
+                    'uniq_key' => $row[2],
+                    'title' => $row[3],
+                    'author' => $row[4],
+                    'journal' => $row[5],
+                    'publisher' => $row[6],
+                    'year' => $row[7],   
+                    'visible' => $row[8],    
+                    'booktitle' => $row[9],    
+                    'note' => $row[10],
+                    'month' => $row[11],
+                    'domestic' => $row[12],
+                    'appear' => $row[13],
+                    'pri' => $row[14],
+                    'tag' => $bibtex->items['x_tag']
+                );
+                $total_publish++;                           
+            }
+        }     
+
+    }else{}
+}
+
+
+
+?>
+
+<img src="../images/title_6.jpg" /><br/>
+
+<div id="p5_add_publication_btn" style="padding-left:30px;">
+    <a href="#add_publication" onclick="switch_add2('p5_add_publication')" title="請點選此項來開啟/關閉表格">
+        <img src="../pic/add.gif" width="15" height="15" align="absmiddle" border="0" /> 新增著作
+    </a>
+</div>
+
+<div id="p5_add_publication" style="padding-left:30px; display:none">
+    <form action="" method="post">
+        <table width="650" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+            <tbody>
+                <tr bgcolor="#FFD78C">
+                    <td colspan="2" style="padding:3px; color:#AA5500; font-size:13px">
+                        <strong>新增著作</strong>
+                        <input type="button" name="p5_cancel" id="p5_cancel" class="button" value="取消新增" onclick="switch_add2('p5_add_publication')" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="41"><div align="right">摘要：</div></td>
+                    <td><textarea name="p5_add_abstract" cols="100" rows="7" id="p5_add_abstract"></textarea></td>
+                </tr>
+                <tr>
+                    <td height="40"><div align="right">BibTeX：</div></td>
+                    <td><textarea name="p5_add_bibtex" cols="70" rows="8" id="p5_add_bibtex" style="font-family:'Courier New', Courier, monospace;"></textarea></td>
+                </tr>
+                <tr>
+                    <td height="40" colspan="2">
+                        <div align="center">
+                            <input type="button" name="p5_submit_add" id="p5_submit_add" value="新增研究著作" class="button" onclick="create_publication(this.form.p5_add_abstract.value,this.form.p5_add_bibtex.value);" />
+                            <input type="reset" name="p5_clear_mod" id="p5_clear_mod" value="清空"  class="button"  />
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+<div id="p5_mod_publication" style="padding-left:30px; display:none"></div>
+<br/>
+
+<span style="padding-left:30px"><img src="../pic/icon2.jpg" width="8" height="8" /> 已存著作：</span><br />
+
+<div id="p5_public" style="padding-left:30px">
+    <table width="720" border="0">
+<?
+$fadding_script = false;
+foreach( $articles as $a_year => $article_list )
+{
+?>
+        <tbody>
+            <tr>
+                <td colspan="2"></td>
+                <td style="font-size:12pt;text-align:center;"><?=$a_year?></td>
+                <td style="font-size:10px;text-align:center;">[ <a href="lib/bibtex_writer.php?year=<?=$a_year?>" target="_blank">下載 BibTeX 檔案</a> ]</td>
+            </tr>
+            <tr>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">工具</div></td>              
+                <td width="70" bgcolor="#FFD193"><div align="center" class="tbsx">類型</div></td>
+                <td width="420" bgcolor="#FFD193"><div align="center" class="tbsx">主題</div></td>
+                <td width="150" bgcolor="#FFD193"><div align="center" class="tbsx">分類</div></td>
+                <!--<td width="73" bgcolor="#FFD193"><div align="center" class="tbsx">排序</div></td>-->
+                <!--<td width="62" bgcolor="#FFD193"><div align="center" class="tbsx">年份</div></td>-->
+                <!--<td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">修改</div></td>-->
+                <!--<td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>-->
+            </tr>
+<?
+    for($i=0;$i<count($article_list);$i++)
+    {
+        $article = $article_list[$i];
+        $a_id = $article['id'];
+        $fadding = '';
+        if( isset($_SESSION['target']) AND $a_id == $_SESSION['target'] )
+        {
+            //$fadding_script = true;
+            $fadding = ' fadding" ';
+        }
+        $visible = ($article['visible'] != 1) ? 'hide' : 'show';
+?>
+            <tr class="zebra<?=$fadding?>">
+                <td align="center">
+                    <div class="btn-like icon <?=$visible?>" onclick="mmnet.change('publication',<?=$a_id?>,'visible',<?=(($article['visible']+1)%2)?>);" title="隱藏或顯示著作"></div>
+                    <div class="btn-like icon remove" onclick="mmnet.remove('publication',<?=$a_id?>);" title="刪除著作"></div>
+                    <div class="btn-like icon edit" onclick="update_div('p5_mod_publication','lib/mod_5.html?id=<?=$a_id?>',17);show_div('p5_mod_publication');" title="修改著作內容"></div>
+                    <div class="btn-like icon detail" onclick="turn(this.parentNode.parentNode);" title="隱藏或顯示詳細內容"></div>
+                    <div class="btn-like icon top" <? if( $i > 0 ) { ?> onclick="mmnet.change('publication',<?=$a_id?>,'x_priority',<?=$article_list[0]['pri']?>+1);"<? } ?> title="置頂"></div>
+                    <div class="btn-like icon up" <? if( $i > 0 ) { ?> onclick="mmnet.switch('publication','x_priority',<?=$a_id?>,<?=$article_list[$i-1]['id']?>);"<? } ?> title="向前"></div>
+                    <div class="btn-like icon down" <? if( ($i+1) < count($article_list) ) { ?> onclick="mmnet.switch('publication','x_priority',<?=$a_id?>,<?=$article_list[$i+1]['id']?>);"<? } ?> title="向後"></div>
+                    <div class="btn-like icon bottom" <? if( ($i+1) < count($article_list) ) { ?> onclick="mmnet.change('publication',<?=$a_id?>,'x_priority',<?=$article_list[count($article_list)-1]['pri']?>-1);"<? } ?> title="置底"></div>
+                </td>
+                <td style="text-align:center">
+<?
+        $a_title = $article['title'];
+        switch (strtolower($article['type'])) {
+        case 'article':
+            $img_file = 'article';
+            $alt_title = '期刊論文';
+            $a_title .= '<br/>('.$article['journal'].')';
+            break;
+        case 'inproceedings':
+            $img_file = 'inproc';
+            $alt_title = '會議論文';
+            $a_title .= '<br/>('.$article['booktitle'].')';
+            break;
+        case 'media':
+            $img_file = 'media';
+            $alt_title = '大眾媒體';
+            break;
+        default:
+            $img_file = 'others';
+            $alt_title = '其它';
+            break;
+        }
+?>
+                    <img src="../pic/<?=$img_file?>.jpg" alt="<?=$alt_title?>" title="<?=$alt_title?>" />
+                    <? if ($article['domestic'] != "") { ?><img src="../pic/domestic.gif" alt="國內發表" title="國內發表" /><? } ?>
+                </td>
+                <td><?=$a_title?></td>
+                <td style="text-align:center;">
+                    <input type="text" value="<?=$article['tag']?>" style="width:120px;" readonly
+                        title="點擊以改變分類" onclick="this.removeAttribute('readonly');"
+                        onblur="update_publication_bibtex_tag(<?=$a_id?>,this);this.setAttribute('readonly','readonly');" />
+                </td>
+            </tr>
+
+            <tr style="display:none;">
+                <td colspan="4" class="-content">
+                    <strong>作者：</strong> <?=$article['author']?><br />
+                    <? if ($article['journal'] != "") { ?><strong>期刊：</strong> <?=$article['journal']?><br /><? } ?>
+                    <? if ($article['booktitle'] != "") { ?><strong>BOOK TITLE：</strong> <?=$article['booktitle']?><br /><? } ?>
+                    <? if ($article['publisher'] != "") { ?><strong>出版：</strong> <?=$article['publisher']?><br /><? } ?>
+                    <? if ($article['month'] != "") { ?><strong>月份：</strong> <?=$article['month']?><br /><? } ?>
+                    <? if ($article['appear'] != "") { ?><strong>Appear：</strong> <?=$article['appear']?><br /><? } ?>
+                    <? if ($article['note'] != "") { ?><strong>Note：</strong> <?=$article['note']?><br /><? } ?>
+                    <br />
+<?
+        $key = $article['uniq_key'];
+        $files = array(
+            array( 'ext' => '.pdf', 'image' => 'pdf_btn.gif' ),
+            array( 'ext' => '.ppt', 'image' => 'ppt_btn.gif' ),
+            array( 'ext' => '_slides.pdf', 'image' => 'ppt_btn.gif' ),
+            array( 'ext' => '_poster.pdf', 'image' => 'poster_btn.gif' )
+        );
+        foreach( $files as $ext ) {
+            $file = '../pub/' . $key . $ext['ext'];
+            if( !file_exists($file) ) { continue; }
+            echo '<a href="'.$file.'" target="_blank"><img src="../pic/'.$ext['image'].'" border="0" /></a>';
+        }
+?>
+                </td>
+            </tr>
+<?
+    }
+    echo '</tbody>';
+}
+?>
+    </table>
+</div>

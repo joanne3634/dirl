@@ -1,0 +1,447 @@
+/*-------------------------------------------------------------\
+ * General
+\-------------------------------------------------------------*/
+body {
+    padding: 0px;
+    margin: 0px;
+    font-size: 12px;
+    font-family: "Times New Roman", "微軟正黑體";
+    color: rgb(102,102,102);
+}
+
+div.-block {
+    display: block;
+    max-width: 250px;
+    border: 1px solid rgb(150,150,150);
+    border-radius: 4px;
+    margin: 3px;
+    padding: 7px 22px 5px 20px;
+    font-size: 1em;
+    text-align: right;
+    background-color: white;
+    /*box-shadow: -2px -2px 2px rgba(150,150,150,0.5) inset;*/
+}
+div.-block:hover { background-color: rgb(200,250,255); }
+
+div.-block a {
+    color: rgb(120,120,120);
+    text-decoration: none;
+}
+
+.-tac { text-align: center; }
+.-tar {
+    padding-right: 5px;
+    text-align: right;
+}
+
+.-small { font-size: 0.3em; }
+.-clickable { cursor: pointer; }
+
+datalist { display: none; }
+
+
+/*-------------------------------------------------------------\
+ * General: Table
+\-------------------------------------------------------------*/
+table {
+    border-collapse: separate;
+    border-spacing: 2px;
+    width: 100%;
+    font-size: 14px;
+    line-height: 1.2em;
+}
+
+table > caption {
+    padding: 2px;
+    margin: 5px 2px 0px;
+    caption-side: top;
+    background-color: rgb(200,250,255);
+    border-radius: 5px;
+    font-size: 1.5em;
+    line-height: 1.5em;
+}
+
+th {
+    padding: 4px 0px;
+    border: 1px solid transparent;
+    background-color: rgb(120,200,255);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+thead th {
+    min-width: 50px;
+    border-radius: 4px 4px 0px 0px;
+}
+tbody > tr > th:first-child {
+    border-radius: 4px 0px 0px 4px;
+    background-color: rgb(120,200,255);
+    color: white;
+    max-width: 150px;
+}
+tbody > tr > th:only-child {
+    border-radius: 4px;
+}
+
+td {
+    background-color: rgb(255,255,255);
+    padding: 2px 0px;
+    border: 1px solid lightgray;
+}
+td:empty {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+td.field {
+    padding-left: 5px;
+    font-family: "Courier New";
+}
+
+td.no-border { border: 0px solid transparent; }
+
+
+    /*-----------------------------------------------------\
+     * TABLE TD.btn-like
+    \-----------------------------------------------------*/
+td.btn-like {
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    min-width: 60px;
+    cursor: pointer;
+}
+td.btn-like:hover {
+    background-color: lightgray;
+}
+
+    /*-----------------------------------------------------\
+     * TABLE.foldable
+    \-----------------------------------------------------*/
+table.foldable > caption {
+    cursor: pointer;
+}
+
+table.foldable.-fold > *:not(caption) {
+    display: none;
+}
+
+/*-------------------------------------------------------------\
+ * Header Bar
+\-------------------------------------------------------------*/
+div.header {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    display: block;
+    height: 49px;
+    border-bottom: 1px solid rgb(150,150,150);
+    /*background-color: blue;*/
+}
+
+div.header > a.btn-like {
+    float: left;
+    min-width: 120px;
+    height: 28px;
+    line-height: 28px;
+}
+
+div.header > a.btn-like.-right
+{
+    float: right;
+    min-width: 80px;
+}
+
+
+/*-------------------------------------------------------------\
+ * Footer Controller
+\-------------------------------------------------------------*/
+div#footer-controller {
+    position: fixed;
+    top: 100%;
+    left: 301px;
+    right: 0px;
+    bottom: 0px;
+    display: block;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: rgba(120,200,255,0.75);
+    transition: top 0.2s;
+}
+div#footer-controller.show { top: 50px; }
+div#footer-controller.submiting { top: 50%; }
+
+
+div#footer-controller button
+{
+    display: inline-block;
+    width: 240px;
+    margin: 10px 5px 0px;
+    padding: 4px;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    background-color: white;
+    cursor: pointer;
+    color: black;
+    font-size: 14px;
+    font-family: "Times New Roman", "微軟正黑體";
+    text-align: center;
+    line-height: 20px;
+}
+div#footer-controller button:hover
+{
+    border-color: white;
+    background-color: lightgray;
+}
+
+/*-------------------------------------------------------------\
+ * Menu
+\-------------------------------------------------------------*/
+nav#menu-container {
+    position: fixed;
+    top: 50px;
+    left: 0px;
+    bottom: 0px;
+    display: block;
+    width: 300px;
+    padding: 0px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+nav#menu-container .-block {
+    font-size: 2em;
+    line-height: 30px;
+}
+
+nav#menu-container > form {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    display: block;
+    height: 50px;
+    padding: 0px;
+    overflow: hidden;
+}
+
+nav#menu-container > form > div.textfield {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 50px;
+    bottom: 0px;
+    display: block;
+    margin: 2px;
+    padding: 2px;
+    border: 1px solid lightgray;
+}
+
+div.textfield > input {
+    display: block;
+    padding: 0px;
+    border: 0px solid transparent;
+    font-size: 30px;
+    line-height: 40px;
+    width: 100%;
+}
+div.textfield:hover { border-color: gray; }
+div.textfield > input:focus { outline: none; }
+
+nav#menu-container > form > button[type="submit"] {
+    float: right;
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: 4px;
+    padding: 0px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+
+
+/*-------------------------------------------------------------\
+ * Main Content
+\-------------------------------------------------------------*/
+#main-content {
+    position: fixed;
+    top: 50px;
+    left: 300px;
+    right: 0px;
+    bottom: 0px;
+    display: block;
+    padding: 5px;
+    border-left: 1px solid rgb(150,150,150);
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+#main-content > aside {
+    float: right;
+}
+
+#main-content > aside ~ div.end {
+    clear: both;
+}
+
+#main-content div.end-of-line {
+    clear: both;
+}
+
+#main-content table tbody tr:hover > td
+{
+    background-color: rgba(120,200,255,0.3) !important;
+}
+
+#remote {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    display: block;
+    padding: 5px 10px;
+    background-color: transparent;
+}
+#remote.floating {
+    left: 0px;
+    right: 0px;
+    z-index: 10;
+    background-color: rgba(255,255,255,0.85);
+    border-bottom: 5px solid rgb(150,150,150);
+}
+
+
+/*-------------------------------------------------------------\
+ * DragDropList
+\-------------------------------------------------------------*/
+ul.list {
+    margin: 6px 0px 6px 6px;
+    padding: 0px;
+}
+
+ul.list > li {
+    list-style: none;
+}
+
+ul.sortable > li > div.-block {
+    border-left-width: 10px;
+    padding-left: 11px;
+}
+
+li.dragdrop-placeholder {
+    display: block;
+    height: 30px;
+    width: 290px;
+    margin: 3px 0px;
+    padding: 6px 0px;
+    border: 1px dashed rgb(255,200,150);
+    border-radius: 4px;
+    background-color: rgb(255,250,200);
+}
+
+tbody.sortable tr > td {
+    padding: 3px 5px;
+    background-color: white;
+    vertical-align: middle;
+}
+tbody.sortable tr > td:first-child {
+    border-radius: 4px 0px 0px 4px;
+    border-left-width: 6px;
+    /*padding-left: 5px;*/
+}
+tbody.sortable tr > td:last-child {
+    border-radius: 0px 4px 4px 0px;
+}
+
+tbody.sortable tr.dragdrop-placeholder > td {
+    background-color: rgb(255,250,200);
+    border: 1px dashed rgb(255,200,150);
+}
+
+
+/*-------------------------------------------------------------\
+ * TABLE TD.dome
+\-------------------------------------------------------------*/
+td.dome {
+    border-radius: 0px 20px 0px 0px;
+}
+
+
+/*-------------------------------------------------------------\
+ * DIV.btn-like
+\-------------------------------------------------------------*/
+div.btn-like {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin: 1px;
+    /*border-radius: 2px;*/
+    background-color: transparent;
+    background-size: 15px 15px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+div.edit-icon { background-image: url(/_images/icon/edit.gif); }
+
+div.remove-icon { background-image: url(/_images/icon/no-remove.gif); }
+div.remove-icon[onclick] { background-image: url(/_images/icon/remove.gif); }
+
+div.display-icon { background-image: url(/_images/icon/show-hide.gif); }
+div.no-display-icon { background-image: url(/_images/icon/hide-show.gif); }
+
+div.-working { background-image: url(/_images/icon/show-hide.gif); }
+div.-disabled { background-image: url(/_images/icon/hide-show.gif); }
+
+
+/*-------------------------------------------------------------\
+ * A.btn-like
+\-------------------------------------------------------------*/
+a.btn-like {
+    float: right;
+    display: block;
+    min-width: 120px;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    background-color: lightgray;
+    color: black;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1em;
+}
+a.btn-like:hover {
+    background-color: gray;
+    color: white;
+}
+
+
+/*-------------------------------------------------------------\
+ * DIV.page-bar
+\-------------------------------------------------------------*/
+div.page-bar
+{
+    display: block;
+    margin: 3px auto;
+    text-align: center;
+}
+
+div.page-bar > span,
+div.page-bar > a
+{
+    display: inline-block;
+    margin: 2px;
+    border: 1px solid lightgray;
+    border-radius: 2px;
+    padding: 2px;
+    min-width: 40px;
+    text-align: center;
+    text-decoration: none;
+}
+
+div.page-bar > span,
+div.page-bar > a:hover
+{
+    border-color: gray;
+}

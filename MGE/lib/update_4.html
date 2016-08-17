@@ -1,0 +1,336 @@
+<?
+require_once('/home/kj/mmnet-manager-2015/mod_database.php');
+$dba = new Accessor();
+session_start();
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 進行人員修改。');
+
+$split_char = "&&&";
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && isset($_POST['id']) && isset($_POST['data'])){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+			
+				$data = $_POST['data'];
+			//	filter_var($data, FILTER_SANITIZE_STRING);
+
+				// 判別是哪一個panel (只允許指定傳送)
+				if($_SESSION['pos'] == "panel_4"){
+					
+					// 判別是那一個id需要更新
+					// 新增博士後研究員 (快)
+					if($_POST['id'] == "p4_add_pd_fast"){	
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) >= 9){
+							// 確認所有欄位都有填
+							if($data_token[0] != "" && $data_token[1] != "" && $data_token[2] != "" && $data_token[3] != "" && $data_token[4] != "" && $data_token[5] != "" && $data_token[8] != ""){
+								$name_en = explode(" ", $data_token[2]);
+								if(!isset($name_en[1])){
+									$name_en[1] = "";
+								}
+								$sql = "insert into members values('".$data_token[0]."', '".$data_token[1]."', '".$name_en[1]."', '".$name_en[0]."', '', '', '1', '', '', '".$data_token[3]."', '', '', '".$data_token[5]."', '".$data_token[4]."', '','', '".$data_token[6]."', '".$data_token[7]."', '', '', '".$data_token[8]."', '', '', '', '', NOW(), '', '','', '', '')";
+								$result = mysql_query($sql);
+								if($result && mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{
+									//echo mysql_error();
+									echo "3".$split_char;		//傳送錯誤碼，sql失敗
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+
+					// 新增博士後研究員 (詳)
+					}else if($_POST['id'] == "p4_add_pd_full"){	
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) >= 18){
+							// 確認所有必須欄位都有填
+							if($data_token[0] != "" && $data_token[1] != "" && $data_token[2] != "" && $data_token[7] != "" && $data_token[10] != "" && $data_token[11] != "" && $data_token[14] != "" && $data_token[22] != ""  ){
+								$name_en = explode(" ", $data_token[2]);
+								if(!isset($name_en[1])){
+									$name_en[1] = "";
+								}
+								$sql = "insert into members values('".$data_token[0]."', '".$data_token[1]."', '".$name_en[1]."', '".$name_en[0]."', '".$data_token[3]."', '".$data_token[4]."', '1', '".$data_token[5]."', '".$data_token[6]."', '".$data_token[7]."', '".$data_token[8]."', '".$data_token[9]."', '".$data_token[10]."', '".$data_token[11]."', '','', '".$data_token[12]."', '".$data_token[13]."', '', '', '".$data_token[14]."', '', '".$data_token[15]."', '".$data_token[16]."', '".$data_token[17]."', NOW(), '".$data_token[18]."', '".$data_token[19]."', '".$data_token[20]."', '".$data_token[21]."', '".$data_token[22]."' )";
+								$result = mysql_query($sql);
+								if($result && mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{								
+									echo "3".$split_char;		//傳送錯誤碼，sql失敗
+									echo mysql_error();
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+					
+					// 新增研究助理 (快)
+					}else if($_POST['id'] == "p4_add_ra_fast"){	
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) >= 9){
+							// 確認所有欄位都有填
+							if($data_token[0] != "" && $data_token[1] != "" && $data_token[2] != "" && $data_token[3] != "" && $data_token[4] != "" && $data_token[5] != "" && $data_token[8] != ""){
+								$name_en = explode(" ", $data_token[2]);
+								if(!isset($name_en[1])){
+									$name_en[1] = "";
+								}
+								$sql = "insert into members values('".$data_token[0]."', '".$data_token[1]."', '".$name_en[1]."', '".$name_en[0]."', '', '', '2', '', '', '".$data_token[3]."', '', '', '".$data_token[5]."', '".$data_token[4]."', '','', '".$data_token[6]."', '".$data_token[7]."', '', '', '".$data_token[8]."', '', '', '', '', NOW(), '', '','', '', '')";
+								$result = mysql_query($sql);
+								if($result && mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{
+									//echo mysql_error();
+									echo "3".$split_char;		//傳送錯誤碼，sql失敗
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+
+					// 新增研究助理 (詳)
+					}else if($_POST['id'] == "p4_add_ra_full"){	
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) >= 18){
+							// 確認所有必須欄位都有填
+							if($data_token[0] != "" && $data_token[1] != "" && $data_token[2] != "" && $data_token[7] != "" && $data_token[10] != "" && $data_token[11] != "" && $data_token[14] != "" && $data_token[22] != ""  ){
+								$name_en = explode(" ", $data_token[2]);
+								if(!isset($name_en[1])){
+									$name_en[1] = "";
+								}
+								$sql = "insert into members values('".$data_token[0]."', '".$data_token[1]."', '".$name_en[1]."', '".$name_en[0]."', '".$data_token[3]."', '".$data_token[4]."', '2', '".$data_token[5]."', '".$data_token[6]."', '".$data_token[7]."', '".$data_token[8]."', '".$data_token[9]."', '".$data_token[10]."', '".$data_token[11]."', '','', '".$data_token[12]."', '".$data_token[13]."', '', '', '".$data_token[14]."', '', '".$data_token[15]."', '".$data_token[16]."', '".$data_token[17]."', NOW(), '".$data_token[18]."', '".$data_token[19]."', '".$data_token[20]."', '".$data_token[21]."', '".$data_token[22]."' )";
+								$result = mysql_query($sql);
+								if($result && mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{								
+									echo "3".$split_char;		//傳送錯誤碼，sql失敗
+									echo mysql_error();
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+						
+					// 新增ALUMNI (快)
+					}else if($_POST['id'] == "p4_add_al_fast"){	
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) >= 10){
+							// 確認所有必須欄位都有填
+							if($data_token[0] != "" && $data_token[1] != "" && $data_token[2] != "" && $data_token[3] != "" && $data_token[4] != "" && $data_token[5] != "" && $data_token[6] != "" && $data_token[7] != ""){
+								$name_en = explode(" ", $data_token[2]);
+								if(!isset($name_en[1])){
+									$name_en[1] = "";
+								}
+								//$sql = "insert into members values('".$data_token[0]."', '".$data_token[1]."', '".$name_en[1]."', '".$name_en[0]."', '', '', '3', '', '', '".$data_token[3]."', '', '', '".$data_token[4]."', '".$data_token[5]."', '".$data_token[6]."','".$data_token[7]."', '', '', '".$data_token[8]."', '".$data_token[9]."', '', '', '', '', '', NOW(), '', '','')";
+								$sql = "insert into members values('".$data_token[0]."', '".$data_token[1]."', '".$name_en[1]."', '".$name_en[0]."', '', '', '3', '', '', '".$data_token[3]."', '', '', '".$data_token[4]."', '".$data_token[5]."', '".$data_token[6]."','".$data_token[7]."', '', '', '".$data_token[8]."', '".$data_token[9]."', '', '', '', '', '', NOW(), '', '','', '', '')";
+								//$sql = "insert into members values('".$data_token[0]."', '".$data_token[1]."', '".$name_en[1]."', '".$name_en[0]."', '', '', '3', '', '', '".$data_token[5]."', '', '', '".$data_token[8]."', '".$data_token[9]."', '".$data_token[10]."','".$data_token[11]."', '', '', '', '', '', '', '', '', '', NOW(), '', '', '', '', '".$data_token[16]."')";
+								$result = mysql_query($sql);
+								if($result && mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{
+									echo "3".$split_char;		//傳送錯誤碼，sql失敗
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+
+					// 新增ALUMNI (詳)
+					}else if($_POST['id'] == "p4_add_al_full"){	
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) >= 15){
+							// 確認所有必須欄位都有填
+							if($data_token[0] != "" && $data_token[1] != "" && $data_token[2] != "" && $data_token[5] != "" && $data_token[8] != "" && $data_token[9] != "" && $data_token[10] != "" && $data_token[11] != "" && $data_token[16] != ""){
+								$name_en = explode(" ", $data_token[2]);
+								if(!isset($name_en[1])){
+									$name_en[1] = "";
+								}
+								$sql = "insert into members values('".$data_token[0]."', '".$data_token[1]."', '".$name_en[1]."', '".$name_en[0]."', '".$data_token[3]."', '".$data_token[4]."', '3', '', '', '".$data_token[5]."', '".$data_token[6]."', '".$data_token[7]."', '".$data_token[8]."', '".$data_token[9]."', '".$data_token[10]."','".$data_token[11]."', '', '', '".$data_token[12]."', '".$data_token[13]."', '".$data_token[14]."', '', '', '', '', NOW(), '', '', '".$data_token[15]."', '', '".$data_token[16]."')";
+								$result = mysql_query($sql);
+								if($result && mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{
+									echo "3".$split_char;		//傳送錯誤碼，sql失敗
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+
+
+					// 新增Summer Intern (快)
+					}else if($_POST['id'] == "p4_add_si_fast"){	
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) >= 10){
+							// 確認所有必須欄位都有填
+							if($data_token[0] != "" && $data_token[1] != "" && $data_token[2] != "" && $data_token[3] != "" && $data_token[4] != "" && $data_token[5] != "" && $data_token[6] != "" && $data_token[7] != ""){
+								$name_en = explode(" ", $data_token[2]);
+								if(!isset($name_en[1])){
+									$name_en[1] = "";
+								}
+								$sql = "insert into members values('".$data_token[0]."', '".$data_token[1]."', '".$name_en[1]."', '".$name_en[0]."', '', '', '4', '', '', '".$data_token[3]."', '', '', '".$data_token[4]."', '".$data_token[5]."', '".$data_token[6]."','".$data_token[7]."', '', '', '".$data_token[8]."', '".$data_token[9]."', '', '', '', '', '', NOW(), '', '','', '', '')";
+								$result = mysql_query($sql);
+								if($result && mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{
+									echo "3".$split_char;		//傳送錯誤碼，sql失敗
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+
+					// 新增Summer Intern (詳)
+					}else if($_POST['id'] == "p4_add_si_full"){	
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) >= 15){
+							// 確認所有必須欄位都有填
+							if($data_token[0] != "" && $data_token[1] != "" && $data_token[2] != "" && $data_token[5] != "" && $data_token[8] != "" && $data_token[9] != "" && $data_token[10] != "" && $data_token[11] != "" && $data_token[16] != ""){
+								$name_en = explode(" ", $data_token[2]);
+								if(!isset($name_en[1])){
+									$name_en[1] = "";
+								}
+								$sql = "insert into members values('".$data_token[0]."', '".$data_token[1]."', '".$name_en[1]."', '".$name_en[0]."', '".$data_token[3]."', '".$data_token[4]."', '4', '', '', '".$data_token[5]."', '".$data_token[6]."', '".$data_token[7]."', '".$data_token[8]."', '".$data_token[9]."', '".$data_token[10]."','".$data_token[11]."', '', '', '".$data_token[12]."', '".$data_token[13]."', '".$data_token[14]."', '', '', '', '', NOW(), '', '', '".$data_token[15]."', '', '".$data_token[16]."')";
+								$result = mysql_query($sql);
+								if($result && mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{
+									echo "3".$split_char;		//傳送錯誤碼，sql失敗
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+
+					// 實驗室成員 - 刪除
+					}else if(strpos($_POST['id'], "p4_btn_del_member") === 0 ){
+						$sql = "delete from members where user_id='".$data."'";
+						$result = mysql_query($sql);
+						if($result){
+							if(mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+							}else{
+								echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+							}
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 修改研究助理 (詳)
+					}else if($_POST['id'] == "p4_mod_ra_full"){	
+						$data_token = explode("||", $data);
+						// 必須有參數
+						if(sizeof($data_token) >= 18){
+							// 確認所有必須欄位都有填
+							if($data_token[24] != "" && $data_token[19] != "" && $data_token[0] != "" && $data_token[1] != "" && $data_token[2] != "" && $data_token[7] != "" && $data_token[10] != "" && $data_token[11] != "" && $data_token[14] != "" ){
+								$name_en = explode(" ", $data_token[2]);
+								if(!isset($name_en[1])){
+									$name_en[1] = "";
+								}
+								$sql = "update members set period_out_mon = '', period_out_year='', user_id = '".$data_token[0]."', name_tc = '".$data_token[1]."', first_name_en = '".$name_en[0]."', last_name_en = '".$name_en[1]."', aka_tc = '".$data_token[3]."', aka_en = '".$data_token[4]."', page_link = '".$data_token[5]."', blog_link = '".$data_token[6]."', email = '".$data_token[7]."', tel = '".$data_token[8]."', cell = '".$data_token[9]."', period_in_mon = '".$data_token[10]."', period_in_year = '".$data_token[11]."', study_tc = '".$data_token[12]."', study_en = '".$data_token[13]."', research = '".$data_token[14]."', msn = '".$data_token[15]."', skype = '".$data_token[16]."', google = '".$data_token[17]."', type = '".$data_token[18]."', title_tc='".$data_token[20]."', title_en='".$data_token[21]."', birthday='".$data_token[22]."', page_link_en='".$data_token[23]."', email_stable='".$data_token[24]."' where user_id='".$data_token[19]."' ";
+								$result = mysql_query($sql);
+								if($result && mysql_affected_rows() >= 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{
+								//	echo $data_token[24];
+                                    //echo mysql_error();
+									echo "3".$split_char;		//傳送錯誤碼，sql失敗
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+
+					// 修改ALUMNI (詳)
+					}else if($_POST['id'] == "p4_mod_al_full"){	
+						$data_token = explode("||", $data);
+						// 必須有參數
+						if(sizeof($data_token) >= 16){
+							// 確認所有必須欄位都有填
+							if($data_token[16] != "" && $data_token[0] != "" && $data_token[1] != "" && $data_token[2] != "" && $data_token[5] != "" && $data_token[8] != "" && $data_token[9] != "" && $data_token[10] != "" && $data_token[11] != "" && $data_token[18] != "" ){
+								$name_en = explode(" ", $data_token[2]);
+								if(!isset($name_en[1])){
+									$name_en[1] = "";
+								}
+								$sql = "update members set user_id = '".$data_token[0]."', name_tc = '".$data_token[1]."', first_name_en = '".$name_en[0]."', last_name_en = '".$name_en[1]."', aka_tc = '".$data_token[3]."', aka_en = '".$data_token[4]."', email = '".$data_token[5]."', tel = '".$data_token[6]."', cell = '".$data_token[7]."', period_in_mon = '".$data_token[8]."', period_in_year = '".$data_token[9]."', period_out_mon = '".$data_token[10]."', period_out_year = '".$data_token[11]."', work_tc = '".$data_token[12]."', work_en = '".$data_token[13]."', research = '".$data_token[14]."', type = '".$data_token[15]."', birthday='".$data_token[17]."', email_stable='".$data_token[18]."' where user_id='".$data_token[16]."'";
+								$result = mysql_query($sql);
+								if($result && mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{
+									echo "3".$split_char;		//傳送錯誤碼，sql失敗
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}
+
+					// 修改Summer Intern (詳)
+					}else if($_POST['id'] == "p4_mod_si_full"){	
+						$data_token = explode("||", $data);
+						// 必須有參數
+						if(sizeof($data_token) >= 16){
+							// 確認所有必須欄位都有填
+							if($data_token[16] != "" && $data_token[0] != "" && $data_token[1] != "" && $data_token[2] != "" && $data_token[5] != "" && $data_token[8] != "" && $data_token[9] != "" && $data_token[10] != "" && $data_token[11] != "" && $data_token[18] != "" ){
+								$name_en = explode(" ", $data_token[2]);
+								if(!isset($name_en[1])){
+									$name_en[1] = "";
+								}
+								$sql = "update members set user_id = '".$data_token[0]."', name_tc = '".$data_token[1]."', first_name_en = '".$name_en[0]."', last_name_en = '".$name_en[1]."', aka_tc = '".$data_token[3]."', aka_en = '".$data_token[4]."', email = '".$data_token[5]."', tel = '".$data_token[6]."', cell = '".$data_token[7]."', period_in_mon = '".$data_token[8]."', period_in_year = '".$data_token[9]."', period_out_mon = '".$data_token[10]."', period_out_year = '".$data_token[11]."', work_tc = '".$data_token[12]."', work_en = '".$data_token[13]."', research = '".$data_token[14]."', type = '".$data_token[15]."', birthday='".$data_token[17]."', email_stable='".$data_token[18]."' where user_id='".$data_token[16]."'";
+								$result = mysql_query($sql);
+								if($result && mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{
+									echo "3".$split_char;		//傳送錯誤碼，sql失敗
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+						}						
+						
+					// 未知的 id
+					}else{
+						echo "6".$split_char;				//傳送錯誤碼，未定義的名稱				
+					}
+				}else{
+					echo "7".$split_char;				//傳送錯誤碼，使用不當				
+				}
+			}else{
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+	}
+}
+?>

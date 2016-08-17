@@ -1,0 +1,178 @@
+<?
+// 檔案：MGE/panel1.html
+// 說明：更新首頁內容﹐包括關於我們、研究領域 (要點) 及聯絡我們.
+session_start();
+
+// 如果沒有通過認直接存取，則送到登入頁
+if($_SESSION['login_mmnet'] != "ok_mmnet"){
+	header("location:index.html");
+}
+
+
+$_SESSION['pos'] = "panel_1";	// 讓server端確認目前的位置，避免在頁外被呼叫.
+
+// 初始化頁面內容
+include("lib/link.html");
+
+// 初始化所有變數
+$about_tc = "";
+$last_about_tc = "";
+$res_tc = "";
+$last_res_tc = "";
+
+$about_en = "";
+$last_about_en = "";
+$res_en = "";
+$last_res_en = "";
+
+$email_tc = "";
+$tel_tc = "";
+$fax_tc = "";
+$addr_tc = "";
+$last_contact_tc = "";
+
+$email_en = "";
+$tel_en = "";
+$fax_en = "";
+$addr_en = "";
+$last_contact_en = "";
+
+// 抓取資料庫資料
+if($con){
+    if($db_selected){
+        
+        // 抓取資料表 main_info
+        $sql = "select * from main_info";
+        $result = mysql_query($sql);
+
+        if($result){
+            while($row = mysql_fetch_row($result)){
+                if($row[0] == "TC"){
+                    $about_tc = $row[1];
+                    $last_about_tc = " ( ".$row[3]." )";
+                    $res_tc = $row[2];
+                    $last_res_tc = " ( ".$row[4]." )";
+                }else if($row[0] == "EN"){
+                    $about_en = $row[1];
+                    $last_about_en = " ( ".$row[3]." )";
+                    $res_en = $row[2];
+                    $last_res_en = " ( ".$row[4]." )";                   
+                }                    
+          
+            }
+        }
+
+        // 抓取資料表 contact        
+        $sql = "select * from contact";
+        $result = mysql_query($sql);
+        if($result){
+            while($row = mysql_fetch_row($result)){
+                if($row[0] == "TC"){
+                    $email_tc = $row[1];
+                    $tel_tc = $row[2];
+                    $fax_tc = $row[3];
+                    $addr_tc = $row[4];
+                    $last_contact_tc = " ( ".$row[5]." )";                        
+                    
+                }else if($row[0] == "EN"){
+                    $email_en = $row[1];
+                    $tel_en = $row[2];
+                    $fax_en = $row[3];
+                    $addr_en = $row[4];
+                    $last_contact_en = " ( ".$row[5]." )";                   
+                }                   
+            }
+        }            
+
+    }else{
+
+    }
+}
+
+?>
+	        <img src="../images/title_1.jpg" /><br />
+			<form action="" method="post" >        
+              <div style="padding-left:30px">
+            
+                 中文版 <span id="p1_about_tc_t" class="datex" title="最後更新時間"><? echo $last_about_tc ?></span>：<br />
+	            <textarea name="p1_about_tc" id="p1_about_tc"  cols="100" rows="5"  onchange="sync_input(this.id, 'lib/update_1.html',1)"  ><? echo $about_tc ?></textarea>
+
+           	     <br />
+				<input type="button" name="p1_submit_about_tc" id="p1_submit_about" value="更新"  class="button"  onclick="sync_input('p1_about_tc', 'lib/update_1.html',1)"/>
+
+	            <br /><br />
+
+
+                 英文版 <span id="p1_about_en_t" class="datex" title="最後更新時間"><? echo $last_about_en ?></span>：<br />
+   	          	<textarea name="p1_about_en" id="p1_about_en" cols="100" rows="5" onchange="sync_input(this.id, 'lib/update_1.html',2)"><? echo $about_en ?></textarea>
+           	    <br /><input type="button" name="p1_submit_about_en" id="p1_submit_about" value="更新"  class="button" onclick="sync_input('p1_about_en', 'lib/update_1.html',2)" />
+            
+             </div>
+            </form>
+<br />
+
+			<form action="" method="post">        
+
+	        <img src="../images/title_2.jpg" /><br />
+                          <div style="padding-left:30px">
+            				請填寫研究領域，一行為一項.<br />
+
+                            <table width="400" border="0">
+                              <tr>
+                                <td>中文版 <span id="p1_research_tc_t" class="datex" title="最後更新時間"><? echo $last_res_tc ?></span>：</td>
+                                <td>英文版 <span id="p1_research_en_t" class="datex" title="最後更新時間"><? echo $last_res_en ?></span>：</td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <textarea name="p1_research_tc" id="p1_research_tc" cols="45" rows="6" onchange="sync_input(this.id, 'lib/update_1.html',3)"><? echo $res_tc ?></textarea>
+                                  <input type="button" name="p1_submit_research_tc" id="p1_submit_research_tc" value="更新"  class="button" onclick="sync_input('p1_research_tc', 'lib/update_1.html',3)" />
+                                  
+                                </td>
+                                <td>
+                                  <textarea name="p1_research_en" id="p1_research_en" cols="45" rows="6" onchange="sync_input(this.id, 'lib/update_1.html',4)"><? echo $res_en ?></textarea>
+                                  <input type="button" name="p1_submit_research_en" id="p1_submit_research_en" value="更新"  class="button"  onclick="sync_input('p1_research_en', 'lib/update_1.html',4)" />
+                                </td>
+                              </tr>
+                            </table>
+                            <br />
+			  </div>         
+            </form>
+
+			<form action="" method="post">        
+	        <img src="../images/title_4.jpg" /><br />
+                          <div style="padding-left:30px">
+                            <table width="400" border="0">
+                              <tr>
+                                <td width="58">&nbsp;</td>
+                                <td width="158">中文版 <span id="p1_contact_tc_t" class="datex" title="最後更新時間"><? echo $last_contact_tc ?></span></td>
+                                <td width="170">英文版 <span id="p1_contact_en_t" class="datex" title="最後更新時間"><? echo $last_contact_en ?></span></td>
+                              </tr>
+                              <tr>
+                                <td><img src="../pic/email.jpg" width="37" height="16" /></td>
+                                <td><input name="p1_contact_email_tc" type="text" id="p1_contact_email_tc" size="40" onchange="sync_input(this.id, 'lib/update_1.html',5, 'p1_contact_tc_t')" value="<? echo $email_tc ?>" /></td>
+                                <td><input name="p1_contact_email_en" type="text" id="p1_contact_email_en" size="40" onchange="sync_input(this.id, 'lib/update_1.html',5, 'p1_contact_en_t')" value="<? echo $email_en ?>"/></td>
+                              </tr>
+                              <tr>
+                                <td><img src="../pic/tel.jpg" alt="" width="37" height="16" /></td>
+                                <td><input name="p1_contact_tel_tc" type="text" id="p1_contact_tel_tc" size="40" onchange="sync_input(this.id, 'lib/update_1.html',5, 'p1_contact_tc_t')" value="<? echo $tel_tc ?>"/></td>
+                                <td><input name="p1_contact_tel_en" type="text" id="p1_contact_tel_en" size="40" onchange="sync_input(this.id, 'lib/update_1.html',5, 'p1_contact_en_t')" value="<? echo $tel_en ?>"/></td>
+                              </tr>
+                              <tr>
+                                <td><img src="../pic/fax.jpg" alt="" width="37" height="16" /></td>
+                                <td><input name="p1_contact_fax_tc" type="text" id="p1_contact_fax_tc" size="40" onchange="sync_input(this.id, 'lib/update_1.html',5, 'p1_contact_tc_t')" value="<? echo $fax_tc ?>"/></td>
+                                <td><input name="p1_contact_fax_en" type="text" id="p1_contact_fax_en" size="40" onchange="sync_input(this.id, 'lib/update_1.html',5, 'p1_contact_en_t')" value="<? echo $fax_en ?>"/></td>
+                              </tr>
+                              <tr>
+                                <td><img src="../pic/addr.jpg" alt="" width="37" height="16" /></td>
+                                <td><textarea name="p1_contact_addr_tc" id="p1_contact_addr_tc" cols="38" rows="3" onchange="sync_input(this.id, 'lib/update_1.html',5, 'p1_contact_tc_t')"><? echo $addr_tc ?></textarea></td>
+                                <td><textarea name="p1_contact_addr_en" id="p1_contact_addr_en" cols="38" rows="3" onchange="sync_input(this.id, 'lib/update_1.html',5, 'p1_contact_en_t')"><? echo $addr_en ?></textarea></td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                                <td><input type="button" name="p1_submit_contact_tc" id="p1_submit_contact_tc" value="更新"  class="button"  onclick="sync_input_group('p1_contact_group_tc', 'lib/update_1.html',5, 'p1_contact_tc_t')" /></td>
+                                <td><input type="button" name="p1_submit_contact_en" id="p1_submit_contact_en" value="更新"  class="button"  onclick="sync_input_group('p1_contact_group_en', 'lib/update_1.html',6, 'p1_contact_en_t')" /></td>
+                              </tr>
+                            </table>
+                            <br />
+			  </div>         
+            </form>

@@ -1,0 +1,160 @@
+<?
+// 檔案：address_book.html
+// 說明：通訊錄
+require_once('kj-manager/mod_general.php');
+if ( !checkAdministrator() )
+{
+    header('location: login.html');
+    die();
+}
+
+require_once('kj-manager/mod_database.php');
+$subtitle = array(
+    'TC' => '實驗室通訊錄',
+    'EN' => 'Address Book',
+);
+
+include('_template/header.php');
+include('_template/menu.php'); 
+
+$dba = new Accessor();
+?>
+<link href="form.css" rel="stylesheet" type="text/css" />
+<!-- wrap-content start -->
+<!-- ================ -->
+<div class="wrap-content">
+    <!-- banner start -->
+    <!-- ================ -->
+    <div class="banner">
+        <div class="container">
+            <div class="row bannerbg">
+                <div class="col-md-12 pagebannerbg"></div>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+    <section class="mtt-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- block 1 -->
+                    <div class="feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                        <div class="maintitle"><?=$subtitle[$lang]?></div>
+<?
+$members = $dba->query(
+    'member_list',
+    array( 'v_state' => array( 'value' => 'working' ) ),
+    array(
+        'name' => 'json:language',
+        'iis_user' => 'string',
+        'contact' => 'json',
+        'others' => 'json'
+    )
+);
+?>
+        <table class="table table-striped address-table table-hover">
+            <caption></caption>
+            <thead>
+                <tr>
+                    <td>中文姓名</td>
+                    <td>生日</td>
+                    <td>IIS帳號</td>
+                    <td>手機</td>
+                    <td>Skype</td>
+                    <td>E-Mail</td>
+                </tr>
+            </thead>
+            <tbody>
+<?
+foreach( $members as $i => $member )
+{
+    $ocn = ($i % 2) ? 'tbs' : 'tbs3';
+    //$hcn = 'tbs2';
+    $bdays = preg_split('/[-\/]/',$member['others']['birthday']);
+    $bday = ( $bdays[0] == '0000' ) ? '未公開' : sprintf('%d 月 %d 日',intval($bdays[1]),intval($bdays[2]));
+    $cellphone = isset($member['contact']['cellphone']) ? $member['contact']['cellphone'] : 'N/A';
+    if( count($cellphone) > 1 ) { $cellphone = implode('<br/>',$cellphone); }
+    $email = $member['contact']['email'];
+    if( count($email) > 1 ) { $email = implode('<br/>',$email); }
+?>
+                <tr>
+                    <td><?=$member['name']['TC']?></td>
+                    <td><?=$bday?></td>
+                    <td><?=$member['iis_user']?></td>
+                    <td><?=$cellphone?></td>
+                    <td><?=isset($member['contact']['skype'])?$member['contact']['skype']:''?></td>
+                    <td><?=$email?></td>
+                </tr>
+<?
+}
+?>
+            </tbody>
+<?
+$alumni = $dba->query(
+    'member_list',
+    array(
+        'v_state' => array( 'type' => 'NOT', 'value' => 'working' )
+    ),
+    array(
+        'name' => 'json:language',
+        'iis_user' => 'string',
+        'contact' => 'json',
+        'others' => 'json'
+    )
+);
+?>
+            <tbody><tr><td colspan="6">Alumni</td></tr></tbody>
+            <tbody>
+<?
+require_once('kj-manager/plugins/big5_func/big5_func.inc');
+function ncmp($s1, $s2)
+{
+    $n1 = iconv('UTF-8','big5',$s1['name']['TC']);
+    $n2 = iconv('UTF-8','big5',$s2['name']['TC']);
+    //$fn1 = substr($n1,0,1);
+    //$fn2 = substr($n2,0,1);
+    $on1 = big5_stroke($n1);
+    $on2 = big5_stroke($n2);
+
+    if( $on1 == $on2 )
+    {
+        return ( $n1 < $n2 ) ? -1 : 1;
+    }
+    return ($on1 < $on2) ? -1 : 1; 
+} 
+uasort($alumni,'ncmp');
+foreach( $alumni as $i => $member )
+{
+    $ocn = ($i % 2) ? 'tbs' : 'tbs3';
+    //$hcn = 'tbs2';
+    $bdays = preg_split('/[-\/]/',$member['others']['birthday']);
+    $bday = ( $bdays[0] == '0000' ) ? '未公開' : sprintf('%d 月 %d 日',intval($bdays[1]),intval($bdays[2]));
+    $cellphone = isset($member['contact']['cellphone']) ? $member['contact']['cellphone'] : 'N/A';
+    if( count($cellphone) > 1 ) { $cellphone = implode('<br/>',$cellphone); }
+    $email = $member['contact']['email'];
+    if( count($email) > 1 ) { $email = implode('<br/>',$email); }
+?>
+                <tr>
+                    <td><?=$member['name']['TC']?></td>
+                    <td><?=$bday?></td>
+                    <td><?=$member['iis_user']?></td>
+                    <td><?=$cellphone?></td>
+                    <td><?=isset($member['contact']['skype'])?$member['contact']['skype']:''?></td>
+                    <td><?=$email?></td>
+                </tr>
+<?
+}
+?>
+            </tbody>
+        </table>
+    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- section end -->
+</div>
+<!-- wrap-content end -->
+<?
+// 統一使用footer.html作為結尾 
+include('_template/footer.php');

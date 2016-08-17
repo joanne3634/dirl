@@ -1,0 +1,209 @@
+<?
+// 檔案：MGE/panel_0.html
+// 說明： 資訊庫設定頁
+// 使用 main.html 已產生的變數.
+session_start();
+
+if ($_SESSION['login_mmnet'] == "ok_mmnet")
+{
+
+    $_SESSION['pos'] = "panel_8";	// 讓server端確認目前的位置，避免在頁外被呼叫
+
+    include("lib/link.html");
+
+	$table_name_set = array(
+        'main_info',
+        'news',
+        'contact',
+        'research_area',
+        'members',
+        'publication',
+        'resources',
+        'downloads',
+        'mmnet_user',
+        'custom_page',
+        'project',
+        'collaborators'     // 2014.10.03 ADD by kj, 合作夥伴資料表
+    );
+    
+    $total_table = sizeof($table_name_set);
+    $exist_table = 0;
+    $table_name = "";
+    
+    if($db_selected){
+    	$sql = "show tables";
+		$result = mysql_query($sql);
+		while($row = mysql_fetch_row($result)){
+        	$exist_table++;
+            $table_name .= $row[0];
+            $table_name .= ",";            
+        } 
+    }
+
+?>
+
+<img src="../images/title_16.jpg" alt="" width="460" height="35" /><br />
+<div id="p8_web_log" style="padding-left:32px" >
+    <ul>
+        <li><img src="../pic/icon.jpg"  align="absmiddle"/>&nbsp;&nbsp;<a href="http://mmnet.iis.sinica.edu.tw/cgi-bin/awstats.pl?config=mmnet" target="_blank">AWStats Web Log Analysis</a></li>
+        <li><img src="../pic/icon.jpg"  align="absmiddle"/>&nbsp;&nbsp;<a href="../webalizer/index.html" target="_blank">Webalizer</a></li>
+    </ul>
+</div><br/>
+
+<img src="../images/title_mge_2.jpg" alt="" width="460" height="35" />
+<div id="p8_status" style="padding-left:32px" >
+    資料庫：<span class="empx" >MMNET_WEB</span>
+
+<?
+    if ($db_selected)
+    {
+?>
+
+    <span class="okok">(已建立)</span><br/>
+
+    資料表 ( <? echo $exist_table ?> / <? echo $total_table ?> )：
+    <table width="300" border="0">
+
+<?
+        foreach($table_name_set as $table_n)
+        {
+            echo "<tr><td width=\"100\"><span class=\"empx\">".$table_n."</span></td>";
+            if(strpos($table_name, $table_n ) !== false){
+                echo "<td><span class=\"okok\">已建立</span></td>";
+            }else{
+                echo "<td><span class=\"fail\">未建立</span></td>";        
+            }
+            echo "</tr>";
+        }
+?>
+    </table>
+<?
+        if ($total_table <= $exist_table)
+        {
+?>
+	<img src="../pic/check.gif" alt="OK:" align="absmiddle" /> 資料庫與資料表均建立完成!
+<?
+        }
+?>
+    <br/><br/>
+    <input type="submit" name="p8_create" id="p8_create" value=" 設定資料表 "  class="button" onclick="update_div('p8_status', 'lib/renew_8.html', 32)" />
+<?   
+    }
+    else
+    {
+?>
+    <span class="fail">(找不到資料庫)</span><br/><br/>
+    <img src="../pic/error.gif" alt="ERROR:" align="absmiddle" />
+    資料庫未建立, 無法設定資料表。請檢查資料庫設定或建立資料庫
+<?
+    }
+?>
+</div>
+<?
+} else { header("location:index.html"); }
+?>
+
+<?
+if($total_table <= $exist_table) {
+    $idu = array();    
+	$user_id = array();
+	$password = array();
+	$activated = array();
+    $total_user = 0;
+ 
+    // 抓取資料庫資料
+    if($con)
+    {
+        if($db_selected)
+        {
+            // 抓取資料表 downloads 
+            $sql = "select * from mmnet_user ORDER BY user_id";
+            $result = mysql_query($sql);
+
+            if($result){
+                while($row = mysql_fetch_row($result)){            
+                        $idu[$total_user] = $row[0];
+                        $user_id[$total_user] = $row[1];
+                        $password[$total_user] = $row[2];
+                        $activated[$total_user] = $row[3];
+                        $total_user++;                          
+                }
+            }     
+        } else {}
+    }
+?>
+<br/>
+
+<img src="../images/title_mge_3.jpg" alt="" width="460" height="35" />
+
+<div id="p8_add_users" style="padding-left:32px" >
+<table width="470" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+  <tr>
+    <td> <img src="../pic/add.gif" alt="ADD" width="15" height="15" align="absmiddle" /> 帳號：
+      <input name="p8_user_id_add" type="text" id="p8_user_id_add" size="15"  value="" />
+      密碼：
+        <input name="p8_password_add" type="password" id="p8_password_add" size="15"  value="" />
+        <input type="button" name="p8_submit_add" id="p8_submit_add" value="新增使用者"  class="button"  onclick="sync_input_group('p8_news_group', 'lib/update_8.html',40)" /></td>
+    </tr>
+</table>
+</div>
+<br />
+ <span style="padding-left:30px"><img src="../pic/icon2.jpg" width="8" height="8" /> 已有使用者：</span><br />
+
+<div id="p8_users" style="padding-left:32px" >
+            <table width="300" border="0">
+              <tr>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">啟用</div></td>
+                <td width="120" bgcolor="#FFD193"><div align="center" class="tbsx">帳號</div></td>
+                <td width="120" bgcolor="#FFD193"><div align="center" class="tbsx">密碼</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>
+              </tr>
+              
+
+<? 
+	$i = 0;
+    while($i < $total_user)
+    {
+?>             
+              <tr  class="tbs" onmouseover="this.className = 'tbs2'" onmouseout="this.className = 'tbs'">
+                <td align="center">
+                    <? if($activated[$i] == 1){ ?>
+                    <a href="#download_toggle_show"><img id="p8_btn_toggle_show_<? echo $idu[$i] ?>"  border="0" src="../pic/show.gif"  onclick="sync_toggle(this.id,'lib/update_8.html',37,<? echo $idu[$i] ?>, '../pic/show')"  alt="是否啟用" title="是否啟用" /></a>
+                    <? }else{ ?>                
+                    <a href="#download_toggle_show"><img id="p8_btn_toggle_show_<? echo $idu[$i] ?>" border="0" src="../pic/show_n.gif" onclick="sync_toggle(this.id,'lib/update_8.html',37,<? echo $idu[$i] ?>,  '../pic/show')" alt="是否啟用" title="是否啟用" /></a>
+                    <? }?>                  
+                </td>
+                <td align="center" onclick="toggle_edit('p8_user_id_<? echo $idu[$i] ?>', 'p8_user_id_mod_<? echo $idu[$i] ?>');">
+                	<div id="p8_user_id_<? echo $idu[$i] ?>">
+                    	<? echo $user_id[$i] ?>
+                    </div>
+                	<div id="p8_user_id_mod_<? echo $idu[$i] ?>" style="display:none">
+	                    <input name="p8_user_id_mod_<? echo $idu[$i] ?>_field" type="text" id="p8_user_id_mod_<? echo $idu[$i] ?>_field" size="15"  value="<? echo $user_id[$i] ?>"  onblur="toggle_edit( 'p8_user_id_mod_<? echo $idu[$i] ?>','p8_user_id_<? echo $idu[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_8.html',38, '', 'p8_user_id_<? echo $idu[$i] ?>')" />
+                    </div>
+                
+                </td>
+
+                <td align="center" onclick="toggle_edit('p8_password_<? echo $idu[$i] ?>', 'p8_password_mod_<? echo $idu[$i] ?>');">
+                	<div id="p8_password_<? echo $idu[$i] ?>">
+                    	<img src="../pic/mod_pas.gif"  alt="修改密碼" title="修改密碼" align="absmiddle"/>
+                    </div>
+                	<div id="p8_password_mod_<? echo $idu[$i] ?>" style="display:none">
+	                    <input name="p8_password_mod_<? echo $idu[$i] ?>_field" type="password" id="p8_password_mod_<? echo $idu[$i] ?>_field" size="15"  value="<? echo $password[$i] ?>"  onblur="toggle_edit( 'p8_password_mod_<? echo $idu[$i] ?>','p8_password_<? echo $idu[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_8.html',39, '', '')" />
+                    </div>
+                
+                </td>                
+
+                <td align="center"><a href="#download_del"><img id="p8_btn_del_<? echo $idu[$i] ?>"  border="0" src="../pic/del.gif" width="15" height="15" onclick="sync_delete(this.id, 'lib/update_8.html', 40,'<? echo $idu[$i] ?>', 'p8_users')"  alt="刪除此使用者" title="刪除此使用者"/></a></td>
+                
+              </tr>
+<?
+		$i++;
+	}
+?>
+              
+
+</table>
+</div>
+<?
+}
+?>

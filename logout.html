@@ -1,0 +1,9 @@
+<?
+session_start();
+// 刪除登入session
+$_SESSION['login'] = '';
+unset($_SESSION['login']);
+$refer = $_SERVER['HTTP_REFERER'];
+header('location: '.$refer);
+die();
+?>

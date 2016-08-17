@@ -1,0 +1,128 @@
+<?php
+/*-------------------------------------------------------------\
+ * 檔案：resources.html
+ - 說明：實驗室資源
+ - modified by joanne 2016.7.27
+\-------------------------------------------------------------*/
+$subtitle = array(
+    'TC' => '實驗室資源',
+    'EN' => 'Resources'
+);
+
+include('_template/header.php');
+include('_template/menu.php'); 
+
+$main_title[0] = "研究資源";
+$main_title[1] = "教學資源";
+$main_title[2] = "內部資源";
+$main_title[3] = "學會資源";
+
+if($lang == "EN"){
+    $main_title[0] = "Research Resources";
+    $main_title[1] = "Education Resources";
+    $main_title[2] = "Internal Resources";
+    $main_title[3] = "Association Resources";
+}
+
+for( $i = 0; $i < 4; $i++ ){
+    $res[$i] = array();
+    $res_link[$i] = array();
+    $res_img_link[$i] = array();
+    $res_time[$i] = array();
+    $total_res[$i] = 0;
+}
+
+include("MGE/lib/link.html");
+
+if($con){
+    if($db_selected){
+
+        $sql = "SELECT subject, link, post_time, private, img_link, lang FROM resources WHERE visible='1' and lang = '$lang' ORDER BY lang DESC, top DESC, post_time DESC";    
+		
+        $result = mysql_query($sql);
+        
+        if($result){
+        	while($row = mysql_fetch_row($result)){
+				$res[ $row[3] ][ $total_res[ $row[3] ] ] = $row[0];
+				$res_link[ $row[3] ][ $total_res[ $row[3] ] ] = $row[1];
+				$res_time[ $row[3] ][ $total_res[ $row[3] ] ] = $row[2];
+				$res_img_link[ $row[3] ][ $total_res[ $row[3] ] ] = $row[4];
+				$total_res[ $row[3] ]++;
+            }
+        }     
+
+    }else{
+
+    }
+}
+
+?>
+
+<!-- wrap-content start -->
+<!-- ================ -->
+<div class="wrap-content">
+    <!-- banner start -->
+    <!-- ================ -->
+    <div class="banner">
+        <div class="container">
+            <div class="row bannerbg">
+                <div class="col-md-12 pagebannerbg"></div>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+    <section class="mtt-30">
+        <div class="container">
+            <div class="row">
+                
+                <?
+                    if ( checkAdministrator() )
+                    {
+                        for( $res_index = 0; $res_index < 4; $res_index++ ){
+                            if( $total_res[ $res_index ] > 0 ){
+                ?>
+                <div class="col-md-12">
+                    <div class="feature-box bordered shadow">
+                        <div class="maintitle"><?echo $main_title[$res_index]; ?></div>
+                        <div class="pv-30 ph-20 mcontent">
+                            <ul class="labList">
+                            <?
+                                $i = 0;
+                                while($i < $total_res[$res_index])
+                                {   
+                                    $http = (strpos($res_link[$res_index][$i], "http:") === 0) ? ' target="_blank"' : '';
+                           
+                                    if($res_link[$res_index][$i] != "")
+                                    {
+                            ?>
+                                <li><a href="<?=$res_link[$res_index][$i]?>"<?=$http?>>
+                            <?
+                                    }
+                                    echo $res[$res_index][$i];
+                                    if($res_link[$res_index][$i] != "")
+                                    {
+                            ?>
+                                        </a></li>
+                            <?
+                                    }
+                                    $i++;
+                                }
+                            ?>
+                            </ul>
+                        </div>
+                    </div></div>
+               
+                <?
+                            }
+                        }
+                    }
+                ?>                
+                    
+                    
+            </div>
+        </div>
+    </section>
+    <!-- section end -->
+</div>
+<!-- wrap-content end -->
+<? include('_template/footer.php'); ?>

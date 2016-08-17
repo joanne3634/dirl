@@ -1,0 +1,236 @@
+<?
+require_once('/home/kj/mmnet-manager-2015/mod_database.php');
+$dba = new Accessor();
+session_start();
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 修改「資源」。');
+
+$split_char = "&&&";
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && isset($_POST['id']) && isset($_POST['data'])){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+			
+				$data = $_POST['data'];
+			//	filter_var($data, FILTER_SANITIZE_STRING);
+
+				// 判別是哪一個panel (只允許指定傳送)
+				if($_SESSION['pos'] == "panel_6"){
+					
+					// 判別是那一個id需要更新
+
+					// 新增消息
+					if($_POST['id'] == "p6_news_group"){	
+					
+						$data_token = explode("||", $data);
+						
+						// 必須有四個參數
+						if(sizeof($data_token) >= 7){
+
+							$sql = "insert into resources values(null, '".$data_token[4]."', '".$data_token[0]."', '".$data_token[1]."', '".$data_token[2]."', '".$data_token[3]."', null, '".$data_token[5]."', '".$data_token[6]."' )";
+							$result = mysql_query($sql);
+
+							if($result && mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功							
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+						}else{
+
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+
+						}
+
+
+					// 資源 - 內容
+					}else if(strpos($_POST['id'], "p6_subject_mod") === 0 ){
+
+						$news_id = explode("_", $_POST['id']);
+						
+						$sql = "update resources set subject='".$data."' where id='".$news_id[4]."'";
+						//echo($_POST['id'].",".$news_id[4]);
+						$result = mysql_query($sql);
+
+						if($result){
+							if(mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+								$sql = "select subject from resources where id='".$news_id[4]."'";
+								$result2 = mysql_query($sql);
+
+								if($result2){
+									$row = mysql_fetch_row($result2);
+									echo $row[0];
+								}
+							}else{
+								echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+							}
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 資源 - 連結
+					}else if(strpos($_POST['id'], "p6_link_mod") === 0 ){
+
+						$news_id = explode("_", $_POST['id']);
+						
+						$sql = "update resources set link='".$data."' where id='".$news_id[4]."'";
+						//echo($_POST['id'].",".$news_id[4]);
+						$result = mysql_query($sql);
+
+						if($result){
+							if(mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+								$sql = "select link from resources where id='".$news_id[4]."'";
+								$result2 = mysql_query($sql);
+
+								if($result2){
+									$row = mysql_fetch_row($result2);
+									echo $row[0];
+								}
+							}else{
+								echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+							}
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 資源 - 圖片連結
+					}else if(strpos($_POST['id'], "p6_img_link_mod") === 0 ){
+
+						$news_id = explode("_", $_POST['id']);
+						
+						$sql = "update resources set img_link='".$data."' where id='".$news_id[5]."'";
+						//echo($_POST['id'].",".$news_id[4]);
+						$result = mysql_query($sql);
+
+						if($result){
+							if(mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+								$sql = "select img_link from resources where id='".$news_id[5]."'";
+								$result2 = mysql_query($sql);
+
+								if($result2){
+									$row = mysql_fetch_row($result2);
+									echo $row[0];
+								}
+							}else{
+								echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+							}
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 資源 - 刪除
+					}else if(strpos($_POST['id'], "p6_btn_del") === 0 ){
+					
+						
+						$sql = "delete from resources where id='".$data."'";
+						$result = mysql_query($sql);
+
+						if($result){
+							if(mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+							}else{
+								echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+							}
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 資源 - 是否顯示
+					}else if(strpos($_POST['id'], "p6_btn_toggle_show") === 0 ){
+
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) == 2){
+
+							$sql = "update resources set visible='".$data_token[1]."' where id='".$data_token[0]."'";
+							//echo $sql;
+							$result = mysql_query($sql);
+
+							if($result){
+								if(mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功
+								}else{
+									echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+								}
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+
+						}else{
+							echo "5".$split_char;				//傳送錯誤碼，未定義的名稱				
+						}
+						
+					// 資源 - 是否置頂
+					}else if(strpos($_POST['id'], "p6_btn_toggle_top") === 0 ){
+
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) == 2){
+
+							$sql = "update resources set top='".$data_token[1]."' where id='".$data_token[0]."'";
+							//echo $sql;
+							$result = mysql_query($sql);
+
+							if($result){
+								if(mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功
+								}else{
+									echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+								}
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+
+						}else{
+							echo "5".$split_char;				//傳送錯誤碼，未定義的名稱				
+						}
+
+					// 資源 - 類型設定
+					}else if(strpos($_POST['id'], "p6_btn_private") === 0 ){
+
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) == 2){
+
+							$sql = "update resources set private='".$data_token[1]."' where id='".$data_token[0]."'";
+							//echo $sql;
+							$result = mysql_query($sql);
+
+							if($result){
+								if(mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功
+								}else{
+									echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+								}
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+
+						}else{
+							echo "5".$split_char;				//傳送錯誤碼，未定義的名稱				
+						}
+					// 未知的 id
+					}else{
+						echo "6".$split_char;				//傳送錯誤碼，未定義的名稱				
+
+					}
+				}else{
+					echo "7".$split_char;				//傳送錯誤碼，使用不當				
+				}
+				
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+
+	}
+}
+?>

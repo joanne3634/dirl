@@ -1,0 +1,49 @@
+<?
+// 檔案：address_book.html
+// 說明：提供下載通訊錄
+session_start();
+header("Content-Type:  application/vnd.ms-excel");
+header("Content-Disposition: attachment; filename=address_book.xls");
+header("Expires: 0");
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+if(isset($_SESSION['login']) && $_SESSION['login'] == "ok_mmnet" && isset($_SESSION['login_user']) && $_SESSION['login_user'] != ""){
+
+     	include("MGE/lib/link.html");
+		$sql = "select name_tc, first_name_en, last_name_en, user_id, email, tel, cell, period_in_year, period_in_mon, period_out_year,  period_out_mon,  study_tc,  research, page_link, blog_link from members ORDER BY type ASC, period_in_year ASC, period_in_mon ASC, name_tc ASC";
+		$result = mysql_query($sql);
+        
+		if($result){
+    	   	echo "<table border=\"1\">";
+?>
+			<tr>
+            <td>中文姓名</td>
+            <td>英文姓名</td>
+            <td></td>
+            <td>IIS帳號</td>
+            <td>E-Mail</td>
+            <td>電話</td>
+            <td>手機</td>
+            <td>加入年份</td>
+            <td>加入月份</td>
+            <td>離開年份</td>
+            <td>離開月份</td>
+            <td>現在就讀</td>
+            <td>研究領域/主題</td>
+            <td>個人網頁</td>
+            <td>個人部落格</td>
+            </tr>
+<?
+			while($row = mysql_fetch_row($result)){
+            	$row[6]  = "'".$row[6];
+                $row[12] = str_replace("\n", ", ", $row[12]);
+            	echo "<tr>";
+            	echo "<td>";
+            	echo join("</td><td>", $row);
+                echo "</tr>";
+            }
+            echo "</table>";
+        }
+    
+}else{
+	header("location:login.html");
+}

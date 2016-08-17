@@ -1,0 +1,162 @@
+<?
+session_start();
+
+$split_char = "&&&";
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && isset($_POST['id']) && isset($_POST['data'])){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+			
+				$data = $_POST['data'];
+			//	filter_var($data, FILTER_SANITIZE_STRING);
+
+				// 判別是哪一個panel (只允許指定傳送)
+				if($_SESSION['pos'] == "panel_5"){
+					
+					// 判別是那一個id需要更新
+					// 新增研究著作
+					if ($_POST['id'] == "p5_add_publication") {
+						$data_token = explode("||", $data);
+						// 必須有四個參數
+						if(sizeof($data_token) >= 2){
+
+							// 確認所有欄位都有填
+							if($data_token[1] != "" ){
+									
+								include("bibtex.html");
+								
+								$data_token[0] = str_replace("'", "\'", $data_token[0]);
+								$data_token[0] = str_replace("\"", "\\\"", $data_token[0]);
+								
+								$bib = new BibTeX($data_token[1]);
+								$bib->uniq_key = str_replace(":", "_", $bib->uniq_key);
+								$bib->items['title'] = str_replace("{", "", $bib->items['title']);
+								$bib->items['title'] = str_replace("}", "", $bib->items['title']);
+
+                                $status = mysql_query("SHOW TABLE STATUS LIKE 'publication'");
+                                $status_row = mysql_fetch_array($status);
+                                $status_next = $status_row['Auto_increment'];
+                                mysql_free_result($status);
+
+								//$sql = "INSERT INTO publication values( null, '".$bib->type."', '".$bib->uniq_key."', '".$data_token[0]."', '".$bib->items['year']."', '".$bib->items['group']."',  '".$bib->items['publisher']."','".$bib->items['page-start']."', '".$bib->items['page-end']."', '".$bib->items['pages']."', '".$bib->items['address']."', '".$bib->items['url']."', '".$bib->items['volume']."', '".$bib->items['chapter']."',  '".$bib->items['journal']."', '".$bib->items['author']."',  '".$bib->items['raw']."', '".$bib->items['title']."', '".$bib->items['booktitle']."', '".$bib->items['folder']."', '".$bib->items['type']."', '".$bib->items['linebegin']."', '".$bib->items['lineend']."', 	1, '".$bib->items['crossref']."', '".$bib->items['key']."', '".$bib->items['month']."', '".$bib->items['note']."', '".$bib->items['number']."', '".$bib->items['organization']."', '".$bib->items['x_domestic']."', '".$bib->items['x_appear']."', '".$bib->items['num_month']."', '".$bib->items['x_priority']."' )";
+                                $sql = "INSERT INTO publication VALUES( null, '{$bib->type}', '{$bib->uniq_key}', '{$data_token[0]}', '{$bib->items['year']}', '{$bib->items['group']}',  '{$bib->items['publisher']}','{$bib->items['page-start']}', '{$bib->items['page-end']}', '{$bib->items['pages']}', '{$bib->items['address']}', '{$bib->items['url']}', '{$bib->items['volume']}', '{$bib->items['chapter']}',  '{$bib->items['journal']}', '{$bib->items['author']}',  '{$bib->items['raw']}', '{$bib->items['title']}', '{$bib->items['booktitle']}', '{$bib->items['folder']}', '{$bib->items['type']}', '{$bib->items['linebegin']}', '{$bib->items['lineend']}', 	1, '{$bib->items['crossref']}', '{$bib->items['key']}', '{$bib->items['month']}', '{$bib->items['note']}', '{$bib->items['number']}', '{$bib->items['organization']}', '{$bib->items['x_domestic']}', '{$bib->items['x_appear']}', '{$bib->items['num_month']}', '{$status_next}' )";
+								$result = mysql_query($sql);
+
+								if ($result && mysql_affected_rows() == 1) {
+									echo "0".$split_char;		                // 傳送錯誤碼，成功							
+								} else { echo "3".$split_char.mysql_error(); }  // 傳送錯誤碼，sql失敗
+							} else { echo "9".$split_char; }                    // 傳送錯誤碼，未填必須欄位
+						} else { echo "5".$split_char; }                        // 傳送錯誤碼，參數錯誤
+
+					// 研究著作 - 是否顯示
+					} else if (strpos($_POST['id'], "p5_btn_toggle_show") === 0 ) {
+
+						$data_token = explode("||", $data);
+						// 必須有2個參數
+						if(sizeof($data_token) == 2){
+
+							$sql = "UPDATE publication SET visible='{$data_token[1]}' WHERE id='{$data_token[0]}'";
+							//echo $sql;
+							$result = mysql_query($sql);
+
+							if($result){
+								if(mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功
+								}else{
+									echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+								}
+							}else{
+								echo "3".$split_char;		//傳送錯誤碼，sql失敗
+							}
+
+						}else{
+							echo "5".$split_char;				//傳送錯誤碼，未定義的名稱				
+						}
+
+					// 研究著作 - 刪除
+					}else if(strpos($_POST['id'], "p5_btn_del_publication") === 0 ){
+					
+						
+						$sql = "delete from publication where id='".$data."' ";
+						$result = mysql_query($sql);
+						
+                       // echo $sql;
+
+						if($result){
+							if(mysql_affected_rows() == 1){
+								echo "0".$split_char;		// 傳送錯誤碼，成功
+							}else{
+								echo "8".$split_char;		//傳送錯誤碼，sql 沒有產生任何效果								
+							}
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+					// 修改研究著作
+					}else if($_POST['id'] == "p5_mod_publication"){	
+					
+						$data_token = explode("||", $data);
+						
+                        //echo "ID=".$data_token[2]." ";
+                        
+						// 必須有3個參數
+						if(sizeof($data_token) >= 3){
+
+							// 確認所有欄位都有填
+							if($data_token[1] != "" ){
+									
+								include("bibtex.html");
+								
+								$data_token[0] = str_replace("'", "\'", $data_token[0]);
+								$data_token[0] = str_replace("\"", "\\\"", $data_token[0]);
+								
+								$bib = new BibTeX($data_token[1]);								
+								$bib->uniq_key = str_replace(":", "_", $bib->uniq_key);
+								$bib->items['title'] = str_replace("{", "", $bib->items['title']);
+								$bib->items['title'] = str_replace("}", "", $bib->items['title']);								
+
+								$sql = "update publication set entry_type='".$bib->type."', uniq_key='".$bib->uniq_key."', abstract='".$data_token[0]."', year='".$bib->items['year']."', groupes='".$bib->items['group']."',  publisher='".$bib->items['publisher']."', page_start='".$bib->items['page-start']."', page_end='".$bib->items['page-end']."', pages='".$bib->items['pages']."', address='".$bib->items['address']."', url='".$bib->items['url']."', volume='".$bib->items['volume']."', chapter='".$bib->items['chapter']."',  journal='".$bib->items['journal']."', author='".$bib->items['author']."',  raw='".$bib->items['raw']."', title='".$bib->items['title']."', booktitle='".$bib->items['booktitle']."', folder='".$bib->items['folder']."', types='".$bib->items['type']."', linebegin='".$bib->items['linebegin']."', lineend='".$bib->items['lineend']."', crossref='".$bib->items['crossref']."', `key`='".$bib->items['key']."', month='".$bib->items['month']."', note='".$bib->items['note']."', number='".$bib->items['number']."', organization='".$bib->items['organization']."', x_domestic='".$bib->items['x_domestic']."', x_appear='".$bib->items['x_appear']."', num_month='".$bib->items['num_month']."', x_priority='".$bib->items['x_priority']."' where id='".$data_token[2]."'";
+								$result = mysql_query($sql);
+								echo mysql_error();
+
+                                //echo $sql;
+                                
+                                //echo ">>".$bib->items['num_month'];
+
+								if($result && mysql_affected_rows() == 1){
+									echo "0".$split_char;		// 傳送錯誤碼，成功							
+								}else{
+									echo "0".$split_char;		//傳送錯誤碼，sql失敗
+								}
+							}else{
+								echo "9".$split_char;		//傳送錯誤碼，未填必須欄位								
+							}
+						}else{
+
+							echo "5".$split_char;		//傳送錯誤碼，參數錯誤
+
+						}						
+					// 未知的 id
+					}else{
+						echo "6".$split_char;				//傳送錯誤碼，未定義的名稱				
+
+					}
+				}else{
+					echo "7".$split_char;				//傳送錯誤碼，使用不當				
+				}
+				
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+
+	}
+}
+?>

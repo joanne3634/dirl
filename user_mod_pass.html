@@ -1,0 +1,134 @@
+<?
+// 檔案：user_mod_pass.html
+// 說明：提供使用者修改密碼
+
+session_start();
+if(isset($_SESSION['login']) && $_SESSION['login'] == "ok_mmnet" && isset($_SESSION['login_user']) && $_SESSION['login_user'] != ""){
+	if(isset($_POST['change_pass']) && $_POST['change_pass'] == "yes" && isset($_POST['old_pass']) && isset($_POST['new_pass']) && isset($_POST['con_new_pass'])){
+    	if($_POST['new_pass'] == $_POST['con_new_pass']){
+        	if($_POST['new_pass'] != ""){
+
+                // 初始化頁面內容
+                include("MGE/lib/link.html");
+                if($con){
+                    if($db_selected){
+                        
+                        // 抓取資料表 news 
+                        $sql = "update mmnet_user set password='".$_POST['con_new_pass']."' where password='".$_POST['old_pass']."' and user_id='".$_SESSION['login_user']."' ";
+                        $result = mysql_query($sql);
+                        if($result && mysql_affected_rows() == 1){
+                           $_SESSION['msg'] = "密碼更新成功";            
+                           $_SESSION['msg_type'] = "1";                                                                                                
+                        }else{
+                           $_SESSION['msg'] = "密碼更新失敗";            
+                           $_SESSION['msg_type'] = "-1";                                                                        
+                        }
+                     }else{
+                       $_SESSION['msg'] = "資料庫連接失敗";            
+                       $_SESSION['msg_type'] = "-1";                                                
+                     }
+                }else{
+                   $_SESSION['msg'] = "資料庫連接失敗";            
+                   $_SESSION['msg_type'] = "-1";                           
+                }					
+            
+            }else{
+               $_SESSION['msg'] = "密碼不能為空";            
+               $_SESSION['msg_type'] = "-1";                           
+            }        
+        }else{
+           $_SESSION['msg'] = "確認密碼不相符";            
+           $_SESSION['msg_type'] = "-1";                           
+        
+        }
+    }
+}else{
+	header("location:login.html");
+}
+
+//初始化變數
+$self = 5;  //本頁標記 (選單用，首頁為1, 研究領域為2 如此類推)
+$lang = "TC"; // 語言
+
+if(isset($_GET['lang']) && $_GET['lang'] != ""){
+	$lang = $_GET['lang'];
+}
+
+// 統一使用header.html作為開始 
+include("header.html");
+
+// 統一使用menu.html作為選單
+include("menu.html"); 
+
+	// 這頁使用的程式碼 ---
+    
+	$lang_key_main = "";	// 圖片改變用    
+    $main_alt = "修改登入密碼";
+    $label_pass_old = "舊密碼";
+    $label_pass_new = "新密碼";
+    $label_pass_new_con = "確認新密碼";
+    
+    
+
+	 // 如果語系設定為英文，則顯示英文內容，中文為預設值.
+	if($lang == "EN"){
+    	$lang_key_main = "_eng";
+        $main_alt = "Modify Login Password";
+        $label_pass_old = "Old Password";
+        $label_pass_new = "New Password";
+        $label_pass_new_con = "Confirm New Password";     
+    }
+
+
+?>
+<link href="form.css" rel="stylesheet" type="text/css" />
+
+    
+        
+        <div id="main_content">
+       	  <div class="main_item">
+           	<img src="images/title<? echo $lang_key_main ?>_12.jpg" alt="<? echo $main_alt ?>" />
+                <div class="main_item_content">
+
+              	<form action="user_mod_pass.html" method="post" name="formx2" id="formx2" style="">
+                <table width="261" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+                  <tr>
+                    <td width="98"><div align="right"><? echo $label_pass_old ?>：</div></td>
+                    <td width="153"> <input name="old_pass" type="password" id="old_pass" size="15" /></td>
+                  </tr>                
+                  <tr>
+                    <td><div align="right"><? echo $label_pass_new ?>：</div></td>
+                    <td> <input name="new_pass" type="password" id="new_pass" size="15" /></td>
+                  </tr>
+                  <tr>
+                    <td><div align="right"><? echo $label_pass_new_con ?>：</div></td>
+                    <td><input name="con_new_pass" type="password" id="con_new_pass" size="15" />
+                    <input name="change_pass" type="hidden" id="change_pass" value="yes" /></td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td><input type="submit" name="submit" id="submit" value="修改"  class="button" /></td>
+                  </tr>
+                </table>
+             	  
+           	  </form>
+<?   if(isset($_SESSION['msg']) && $_SESSION['msg'] != ""){ ?>
+		<?   if($_SESSION['msg_type'] == 1){ ?>				
+				<img src="../pic/ok.jpg" alt="NOT ok" width="8" height="8" align="absmiddle" />
+        <?	}else{		?>
+				<img src="../pic/not_ok.jpg" alt="OK" width="8" height="8" align="absmiddle" />        
+        <?		}		?>                
+                <span class="small"><? echo $_SESSION['msg'] ?></span>
+<?
+		$_SESSION['msg'] = "";
+	 } ?>  
+
+                </div>
+          </div>
+    </div>
+        
+        
+<?
+// 統一使用footer.html作為結尾 
+include("footer.html");
+?>

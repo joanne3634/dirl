@@ -1,0 +1,79 @@
+<?
+session_start();
+
+$split_char = "&&&";
+
+// 初始化所有變數
+$id_doc = array();
+$get_id = array();
+$cate = array();
+$last_update_doc = array();
+$total_doc = 0;
+
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && $_SESSION['pos'] == "panel_9" ){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+
+		        // 抓取資料表 downloads 
+        		$sql = "select id, get_id, category, last_update from custom_page ORDER BY last_update ASC, category ASC";
+		        $result = mysql_query($sql);
+		        
+
+		        if($result){
+		            while($row = mysql_fetch_row($result)){
+                        $id_doc[$total_doc] = $row[0];
+                        $get_id[$total_doc] = $row[1];
+                        $cate[$total_doc] = $row[2];
+                        $last_update_doc[$total_doc] = $row[3]; 
+                        $total_doc++;                            
+		            }
+// 寫入內容
+?>
+
+<?
+	$i = 0;
+    while($i < $total_doc){
+?>    
+    <div id="p9_doc_item_<? echo $id_doc[$i] ?>" class="doc_item" onmousemove="toggle_bg(<? echo $id_doc[$i] ?>)" onmouseout="toggle_bg2(<? echo $id_doc[$i] ?>)" onclick="got_edit(<? echo $id_doc[$i] ?>)" title="類別：<? echo $cate[$i] ?>" >
+    	<div class="doc_title">
+			<? echo $get_id[$i] ?>
+        </div>
+
+    </div>   
+<?
+		$i++;
+     }
+?>
+        
+    <div style="width:60px;height:50px; float:left; text-align:center" >
+   	<a href="#new_document" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('p9_new_doc','','../pic/doc_new_rol.png',1)" onclick="p9_add_go();">   
+    <img id="p9_new_doc" src="../pic/doc_new.png" alt="新增文件" title="新增文件" border="0" /></a><br />
+
+    </div>
+
+
+<?
+
+
+
+
+				}else{
+					echo "3".$split_char;					//傳送錯誤碼，table失敗					
+				}
+
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+
+	}
+}
+?>

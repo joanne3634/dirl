@@ -1,0 +1,19 @@
+<?
+// 檔案：MGE/link.html
+// 說明：儲存 mysql 登入資訊
+
+$id = "mmnet_web";
+$pwd = "web123";
+$db = "MMNET_WEB";
+$db_selected = 0;
+
+// mmnet_web
+// web123
+
+$con = mysql_connect("localhost", $id, $pwd);
+
+if($con){
+	$db_selected = mysql_select_db($db);
+}
+
+?>

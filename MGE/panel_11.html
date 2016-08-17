@@ -1,0 +1,154 @@
+<?
+// 檔案：MGE/panel_11.html (MGE/collaborators.php)
+// 說明：共同研究者頁面內容
+session_start();
+
+// 如果沒有通過認直接存取，則送到登入頁
+if ($_SESSION['login_mmnet'] != "ok_mmnet") {
+    header('location: index.html');
+    die();
+}
+$_SESSION['pos'] = "panel_11";	// 讓server端確認目前的位置，避免在頁外被呼叫
+
+?>
+
+<img src="../images/title_14.jpg" />
+
+<form id="form_11">
+    <input type="hidden" name="p11_identity" />
+    <div style="padding-left:30px">
+        合作夥伴：<br />
+        <table width="700" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+            <tbody>
+                <tr>
+                    <!--<th width="75">語言版本</th>
+                    <td>
+                        <select name="p11_language">
+                            <option value="ch">中文</option>
+                            <option value="en">英文</option>
+                        </select>
+                    </td>-->
+                </tr>
+                <tr>
+                    <th width="75">圖片位置</th>
+                    <td><input type="text" name="p11_image_link" size="80" /></td>
+                </tr>
+                <tr>
+                    <th width="75">顯示圖片</th>
+                    <td>
+                        <label><input type="radio" name="p11_image_show" value="1" />是</label>
+                        <label><input type="radio" name="p11_image_show" value="0" checked />否</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="75">實驗室名稱</th>
+                    <td><input type="text" name="p11_lab_name" size="80" /></td>
+                </tr>
+                <tr>
+                    <th width="75">實驗室連結</th>
+                    <td><input type="text" name="p11_lab_link" size="80" /></td>
+                </tr>
+                <tr>
+                    <th width="75">單位名稱</th>
+                    <td><input type="text" name="p11_unit_name" size="80" /></td>
+                </tr>
+                <tr>
+                    <th width="75">單位連結</th>
+                    <td><input type="text" name="p11_unit_link" size="80" /></td>
+                </tr>
+                <tr>
+                    <th width="75">主持人名稱</th>
+                    <td><input type="text" name="p11_chair_name" size="80" /></td>
+                </tr>
+                <tr>
+                    <th width="75">主持人連結</th>
+                    <td><input type="text" name="p11_chair_link" size="80" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="button" onclick="sync_form_submit(this.form,'p11_');">新增／修改</button>
+                        <button type="reset">重置</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
+
+<table style="width:100%;">
+    <thead>
+        <tr>
+            <th style="background-color:#FFD193;width:40px;">顯示</th>
+            <!--<th style="background-color:#FFD193;width:40px;">排序</th>-->
+            <th style="background-color:#FFD193;width:150px;">主持人</th>
+            <th style="background-color:#FFD193;">實驗室或單位</th>
+            <th style="background-color:#FFD193;width:40px;">修改</th>
+            <th style="background-color:#FFD193;width:40px;">刪除</th>
+        </tr>
+    </thead>
+    <tbody class="list" style="text-align:center;">
+<?
+include("lib/link.html");
+if ($con)
+{
+    if ($db_selected)
+    {
+        $result = mysql_query('SELECT * FROM collaborators ORDER BY ordinal ASC');
+        while ( $row = mysql_fetch_row($result) )
+        {
+            $data = array(
+                'identity' => $row[0],
+                'image_link' => $row[1],
+                'image_show' => $row[2],
+                'language' => $row[3],
+                'order' => $row[5],
+                'lab_link' => $row[6],
+                'lab_name' => $row[7],
+                'unit_link' => $row[8],
+                'unit_name' => $row[9],
+                'chair_link' => $row[10],
+                'chair_name' => $row[11]
+            );
+            $jsondata = json_encode($data);
+            $show = ( intval($row[4]) == 0 ) ? '_n' : '';
+
+            $chair_name = explode('|',$row[11]);
+            $chair_href = explode('|',$row[10]);
+            $chair = array();
+            for($i=0;$i<count($chair_name);$i++)
+            {
+                $this_chair_href = ($i < count($chair_href)) ? $i : 0;
+                $chair[] = '<a href="'.$chair_href[$this_chair_href].'" target="_blank">'.$chair_name[$i].'</a>';
+            }
+
+            $lab_href = explode('|',$row[6]);
+            $lab_name = explode('|',$row[7]);
+            $unit_href = explode('|',$row[8]);
+            $unit_name = explode('|',$row[9]);
+            $lab = array();
+            for($i=0;$i<count($lab_name);$i++)
+            {
+                $this_lab_href = ($i < count($lab_href)) ? $i : 0;
+                $this_unit_href = ($i < count($unit_href)) ? $i : 0;
+                $lab[] = '<a href="'.$lab_href[$this_lab_href].'" target="_blank">'.$lab_name[$i].'</a>, '
+                    . '<a href="'.$unit_href[$this_unit_href].'" target="_blank">'.$unit_name[$i].'</a>.';
+            }
+?>
+        <tr data-dbid="<?=$data['identity']?>">
+            <td><a href="javascript:call_ajax('lib/trigger.php','db=collaborators&key=identity&value=<?=$data['identity']?>&field=ch_version','POST','panel_11');"><img src="../pic/show<?=$show?>.gif" /></a></td>
+            <!--
+            <td><a href="<?=$data['chair_link']?>"><?=$data['chair_name']?></a></td>
+            <td><a href="<?=$data['lab_link']?>"><?=$data['lab_name']?></a>, <a href="<?=$data['unit_link']?>"><?=$data['unit_name']?></a>.</td>
+            -->
+            <td><?=implode('<br/>',$chair)?></td>
+            <td><?=implode('<br/>',$lab)?></td>
+            <td><a href="javascript:kj_edit('form_11','p11_',<?=str_replace('"',"'",$jsondata)?>);"><img src="../pic/mod.gif" /><a></td>
+            <td><a href="javascript:call_ajax('lib/delete_11.php','db=collaborators&key=identity&name=<?=$data['identity']?>','POST','panel_11');"><img src="/_images/icon/remove.gif" /><a></td>
+        </tr>
+<?
+        }
+    } else {}
+}
+?>
+    </tbody>
+</table>

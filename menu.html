@@ -1,0 +1,103 @@
+<?
+// 檔案：menu.html
+// 說明：所以頁面的選單部分，透過php內部參數 "lang" 設定語系，php內部參數 "self" 設定當前選項.
+
+
+
+if(isset($lang)){
+	
+	$menu_alt = Array();	//選單選項的alt值
+    $menu_alt[1] = "首頁";
+    $menu_alt[2] = "研究方向";
+    $menu_alt[3] = "實驗室成員";
+    $menu_alt[4] = "研究著作";
+    $menu_alt[5] = "實驗室資源";
+    $menu_alt[6] = "下載";
+    $menu_alt[7] = "共同研究者";
+    $menu_alt[8] = "研究計劃";
+
+    
+    $lang_key_menu = "";	//圖片改變用
+    $get_string_menu = "";	//連結系用的get字串
+    
+    // 以免 self 值為空
+    if(!isset($self) || $self == ""){
+    	$self = 1;
+    }   
+    
+    
+    $menu_self = Array();	//記錄現在在那一頁, 給選單顯示
+    $i = 1;
+    while($i <= sizeof($menu_alt)){
+    	if($self == $i){
+        	$menu_self[$i] = "_now";
+        }else{
+			$menu_self[$i] = "";        
+        }
+        $i++;
+    }
+        
+    // 如果語系設定為英文，則顯示英文內容，中文為預設值.
+	if($lang == "EN"){
+    
+        $menu_alt[1] = "Home";
+        $menu_alt[2] = "Research";
+        $menu_alt[3] = "Members";
+        $menu_alt[4] = "Publications";
+        $menu_alt[5] = "Resources";
+        $menu_alt[6] = "Downloads";
+        $menu_alt[7] = "Collaborators";
+        $menu_alt[8] = "Projects";
+        
+	    $lang_key_menu = "_eng";
+	    $get_string_menu = "?lang=EN";	
+        
+    }
+    
+?>
+	<div id="menu">
+        	<div id="menu_content">
+            	<div id="menu_top"></div>
+            	<div id="menu_main">
+                	<a href="<? echo $gen_path ?>index.html<? echo $get_string_menu ?>" onmouseout="MM_swapImgRestore()" onblur="MM_swapImgRestore()" onmouseover="MM_swapImage('menu_item_1','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_01.jpg',1)" onfocus="MM_swapImage('menu_item_1','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_01.jpg',1)">
+                  <img src="<? echo $img_path ?>/menu_item<? echo $lang_key_menu.$menu_self[1] ?>_01.jpg" alt="<? echo $menu_alt[1] ?>" title="<? echo $menu_alt[1] ?>" name="menu_item_1" width="107" height="30" border="0" id="menu_item_1" /></a><br />
+
+                	<a href="<? echo $gen_path ?>research.html<? echo $get_string_menu ?>" onmouseout="MM_swapImgRestore()" onblur="MM_swapImgRestore()" onmouseover="MM_swapImage('menu_item_2','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_02.jpg',1)" onfocus="MM_swapImage('menu_item_2','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_02.jpg',1)">
+                    <img src="<? echo $img_path ?>/menu_item<? echo $lang_key_menu.$menu_self[2] ?>_02.jpg" alt="<? echo $menu_alt[2] ?>" title="<? echo $menu_alt[2] ?>" name="menu_item_2" width="107" height="30" border="0" id="menu_item_2" /></a><br />
+
+                	<a href="<? echo $gen_path ?>members.html<? echo $get_string_menu ?>" onmouseout="MM_swapImgRestore()" onblur="MM_swapImgRestore()" onmouseover="MM_swapImage('menu_item_3','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_03.jpg',1)" onfocus="MM_swapImage('menu_item_3','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_03.jpg',1)">
+                    <img src="<? echo $img_path ?>/menu_item<? echo $lang_key_menu.$menu_self[3] ?>_03.jpg" alt="<? echo $menu_alt[3] ?>" title="<? echo $menu_alt[3] ?>" name="menu_item_3" width="107" height="30" border="0" id="menu_item_3" /></a><br />
+
+                	<a href="<? echo $gen_path ?>project.html<? echo $get_string_menu ?>" onmouseout="MM_swapImgRestore()" onblur="MM_swapImgRestore()" onmouseover="MM_swapImage('menu_item_8','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_08.jpg',1)" onfocus="MM_swapImage('menu_item_8','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_08.jpg',1)">
+                    <img src="<? echo $img_path ?>/menu_item<? echo $lang_key_menu.$menu_self[8] ?>_08.jpg" alt="<? echo $menu_alt[8] ?>" title="<? echo $menu_alt[8] ?>" name="menu_item_8" width="107" height="30" border="0" id="menu_item_8" /></a><br />
+
+                	<a href="<? echo $gen_path ?>publication.html<? echo $get_string_menu ?>" onmouseout="MM_swapImgRestore()" onblur="MM_swapImgRestore()" onmouseover="MM_swapImage('menu_item_4','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_04.jpg',1)" onfocus="MM_swapImage('menu_item_4','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_04.jpg',1)">
+                    <img src="<? echo $img_path ?>/menu_item<? echo $lang_key_menu.$menu_self[4] ?>_04.jpg" alt="<? echo $menu_alt[4] ?>" title="<? echo $menu_alt[4] ?>" name="menu_item_4" width="107" height="30" border="0" id="menu_item_4" /></a><br />
+
+                	<a href="<? echo $gen_path ?>download.html<? echo $get_string_menu ?>" onmouseout="MM_swapImgRestore()" onblur="MM_swapImgRestore()" onmouseover="MM_swapImage('menu_item_6','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_06.jpg',1)" onfocus="MM_swapImage('menu_item_6','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_06.jpg',1)">
+                    <img src="<? echo $img_path ?>/menu_item<? echo $lang_key_menu.$menu_self[6] ?>_06.jpg" alt="<? echo $menu_alt[6] ?>" title="<? echo $menu_alt[6] ?>" name="menu_item_6" width="107" height="30" border="0" id="menu_item_6" /></a><br />
+
+
+                	<a href="<? echo $gen_path ?>collaborators.html<? echo $get_string_menu ?>" onmouseout="MM_swapImgRestore()" onblur="MM_swapImgRestore()" onmouseover="MM_swapImage('menu_item_7','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_07.jpg',1)" onfocus="MM_swapImage('menu_item_7','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_07.jpg',1)">
+                    <img src="<? echo $img_path ?>/menu_item<? echo $lang_key_menu.$menu_self[7] ?>_07.jpg" alt="<? echo $menu_alt[7] ?>" title="<? echo $menu_alt[7] ?>" name="menu_item_7" border="0" id="menu_item_7" /></a><br />
+
+                	<a href="<? echo $gen_path ?>resources.html<? echo $get_string_menu ?>" onmouseout="MM_swapImgRestore()" onblur="MM_swapImgRestore()" onmouseover="MM_swapImage('menu_item_5','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_05.jpg',1)" onfocus="MM_swapImage('menu_item_5','','<? echo $img_path ?>/menu_item<? echo $lang_key_menu ?>_rol_05.jpg',1)">
+                    <img src="<? echo $img_path ?>/menu_item<? echo $lang_key_menu.$menu_self[5] ?>_05.jpg" alt="<? echo $menu_alt[5] ?>" title="<? echo $menu_alt[5] ?>" name="menu_item_5" width="107" height="30" border="0" id="menu_item_5" /></a><br />
+
+
+                   <br />
+ 
+
+                </div>
+            	<div id="menu_bottom"></div>                
+            </div>
+        </div>
+
+<?
+
+}else{
+
+	//如果找不到 lang 這個值，代表這個頁面被獨立呼叫，把使用者送到首頁
+	header("location:index.html");	
+}
+?>        

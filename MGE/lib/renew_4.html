@@ -1,0 +1,216 @@
+<?
+session_start();
+
+$split_char = "&&&";
+
+// 初始化所有變數
+$user_id  = array();
+$name_tc = array();
+$last_name_en = array();
+$first_name_en = array();
+$aka_tc  = array();
+$aka_en = array();
+$type = array();
+$page_link = array();
+$blog_link = array();
+$email = array();
+$tel = array();
+$cell = array();
+$period_in_mon = array();
+$period_in_year = array();
+$period_out_mon = array();
+$period_out_year = array();
+$study_tc = array();
+$study_en = array();
+$work_tc = array();
+$work_en = array();
+$research = array();
+$iis_id = array();
+$msn = array();
+$skype = array();
+$google = array();
+$last_update = array();
+$total_members = 0;
+
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && $_SESSION['pos'] == "panel_4"){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+	
+				// 抓取資料表 news 
+				$sql = "select *  from members ORDER BY type ASC, period_in_year ASC, period_in_mon ASC, name_tc ASC";
+				$result = mysql_query($sql);
+        
+
+				if($result){
+					while($row = mysql_fetch_row($result)){
+						$user_id[$total_members] = $row[0];
+						$name_tc[$total_members] = $row[1];
+						$last_name_en[$total_members] = $row[2];
+						$first_name_en[$total_members] = $row[3];
+						$aka_tc[$total_members]  = $row[4];
+						$aka_en[$total_members] = $row[5];
+						$type[$total_members] = $row[6];
+						$page_link[$total_members] = $row[7];
+						$blog_link[$total_members] = $row[8];
+						$email[$total_members] = $row[9];
+						$tel[$total_members] = $row[10];
+						$cell[$total_members] = $row[11];
+						$period_in_mon[$total_members] = $row[12];
+						$period_in_year[$total_members] = $row[13];
+						$period_out_mon[$total_members] = $row[14];
+						$period_out_year[$total_members] = $row[15];
+						$study_tc[$total_members] = $row[16];
+						$study_en[$total_members] = $row[17];
+						$work_tc[$total_members] = $row[18];
+						$work_en[$total_members] = $row[19];
+						$research[$total_members] = $row[20];
+						$iis_id[$total_members] = $row[21];
+						$msn[$total_members] = $row[22];
+						$skype[$total_members] = $row[23];
+						$google[$total_members] = $row[24];
+						$last_update[$total_members] = $row[25];
+
+						$total_members++;                           
+					}
+// 寫入內容
+    
+?>
+
+            
+            <table width="600" border="0">
+              <tr>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">類型</div></td>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">中文姓名</div></td>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">英文姓名</div></td>
+                <td width="60" bgcolor="#FFD193"><div align="center" class="tbsx">加入時間</div></td>
+                <td width="60" bgcolor="#FFD193"><div align="center" class="tbsx">離開時間</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">修改</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>
+              </tr>
+              
+<? 
+	$i = 0;
+    while($i < $total_members){
+ 
+    
+    
+?>                  
+              <tr class="tbs" onmouseover="this.className = 'tbs2';show_div('p4_photo_<? echo $user_id[$i] ?>')" onmouseout="this.className = 'tbs';hide_div_x('p4_photo_<? echo $user_id[$i] ?>')">
+                <td><div align="center" >
+                <? 
+                	if($type[$i] == 0){
+?>
+					<img src="../pic/label_ld.jpg" alt="實驗室主持人" title="實驗室主持人" />
+<?                    
+                    }else if ($type[$i] == 1){
+?>
+					<img src="../pic/label_pd.jpg" alt="博士後研究員" title="博士後研究員" />
+<?                    
+                    }else if ($type[$i] == 2){
+?>
+					<img src="../pic/label_ra.jpg" alt="研究助理" title="研究助理" />
+<?                    
+                    }else if ($type[$i] == 3){
+?>
+					<img src="../pic/label_al.jpg" alt="Alumni" title="Alumni" />
+<?                    
+                    }
+                               
+                ?>             
+                 </div>
+                 <div id="p4_photo_<? echo $user_id[$i] ?>" align="center" style="display:none; position:absolute; padding-left:5px">
+<?
+					if(file_exists("../../photos/".$user_id[$i].".jpg")){
+?>                 
+	                 <img src="../photos/<? echo $user_id[$i] ?>.jpg" />
+ 
+<?
+					}else{
+?>
+	                 <img src="../photos/no_pic.jpg" /><br />
+					請建立照片：<br /> ../photos/<? echo $user_id[$i] ?>.jpg<br />
+					尺寸：100 x 118 px
+<?
+					}
+?>                     
+                 </div>
+                 </td>
+                <td><div align="center"><? echo $name_tc[$i] ?></div></td>
+                <td><div align="center"><? echo $first_name_en[$i]." ".$last_name_en[$i] ?></div></td>
+                <td><div align="center">
+                <?
+                		if( $period_in_year[$i] != 0 && $type[$i] != 0){
+	                		echo $period_in_year[$i]." 年 ".$period_in_mon[$i]." 月" ;
+                        }else{
+                        	echo "---";
+                        }
+                        
+                ?>                
+                </div></td>
+                <td><div align="center">
+                <?
+                		if( $period_out_year[$i] != 0 && $type[$i] != 0){
+	                		echo $period_out_year[$i]." 年 ".$period_out_mon[$i]." 月" ;
+                        }else{
+                        	echo "---";
+                        }
+                        
+                ?></div>               
+                </td>
+                <td><div align="center"><a href="#member_mod">
+                <img  id="p4_btn_mod_member_<? echo $user_id[$i] ?>" src="../pic/mod.gif" alt="修改詳細內容"  border="0" title="修改詳細內容" onclick="update_div('p4_mod_member', 'lib/mod_4.html?user_id=<? echo $user_id[$i] ?>', 17);show_div('p4_mod_member')"/></a></div>
+                </td>
+                <td><div align="center">
+<?
+					if($type[$i] != 0){
+?>                
+                		<a href="#member_del"><img id="p4_btn_del_member_<? echo $user_id[$i] ?>"  border="0" src="../pic/del.gif" alt="刪除成員" title="刪除成員" onclick="sync_delete(this.id, 'lib/update_4.html', 16,'<? echo $user_id[$i] ?>', 'p4_members')" /></a>
+<?
+					}else{
+?>                    
+                		<img src="../pic/del_n.gif" border="0" alt="無法刪除" title="無法刪除"/>
+                    	
+<?
+					}
+?>                    
+                    </div></td>
+              </tr>
+              
+<?
+		$i++;
+	}              
+ ?>              
+            </table>
+
+
+<?
+
+// 寫入完成
+
+
+
+
+				}else{
+					echo "3".$split_char;					//傳送錯誤碼，table失敗					
+				}
+
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+	}else{
+			echo "參數錯誤";
+	}
+		
+}else{
+	echo "發生錯誤";
+}
+?>

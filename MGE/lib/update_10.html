@@ -1,0 +1,92 @@
+<?
+require_once('/home/kj/mmnet-manager-2015/mod_database.php');
+$dba = new Accessor();
+session_start();
+
+$split_char = "&&&";
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && isset($_POST['id']) && isset($_POST['data'])){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+			
+				$data = $_POST['data'];
+            //    $data = str_replace("'", "\'", $data);
+            //    $data = str_replace("\"", "\\\"", $data);
+                
+			//	filter_var($data, FILTER_SANITIZE_STRING);
+
+				// 判別是哪一個panel (只允許指定傳送)
+				if($_SESSION['pos'] == "panel_10"){
+					
+					// 判別是那一個id需要更新
+					// 研究領域 - 中文
+					if($_POST['id'] == "p10_content_tc"){		
+
+						$sql = "update project set content='".$data."', last_update=NOW()  where lang='TC'";
+						$result = mysql_query($sql) or die(mysql_error());
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「研究領域」中文資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select content, last_update from project where lang='TC'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+				                $row[0] = str_replace("\'", "'",  $row[0]);
+				                $row[0] = str_replace("\\\"", "\"", $row[0]);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+
+
+					// 研究領域 - 英文
+					}else if($_POST['id'] == "p10_content_en"){
+						
+						$sql = "update project set content='".$data."', last_update=NOW()  where lang='EN'";
+						$result = mysql_query($sql);
+
+						if($result){
+$dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 更新「研究領域」英文資料。');
+							echo "0".$split_char;		// 傳送錯誤碼，成功
+							$sql = "select content, last_update from project where lang='EN'";
+							$result2 = mysql_query($sql);
+
+							if($result2){
+								$row = mysql_fetch_row($result2);
+				                $row[0] = str_replace("\'", "'",  $row[0]);
+				                $row[0] = str_replace("\\\"", "\"", $row[0]);
+								echo $row[0].$split_char." ( ".$row[1]." )";
+							}
+						
+						}else{
+							echo "3".$split_char;		//傳送錯誤碼，sql失敗
+						}
+					// 未知的 id
+
+					}else{
+						echo "6".$split_char;				//傳送錯誤碼，未定義的名稱				
+
+					}
+				}else{
+					echo "7".$split_char;				//傳送錯誤碼，使用不當				
+				}
+				
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+
+	}
+}
+?>						

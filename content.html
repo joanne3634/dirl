@@ -1,0 +1,110 @@
+<?
+/*-------------------------------------------------------------\
+ * 檔案：content.html
+ - 說明：一般內容
+ - modified by joanne 2016.07.27
+\-------------------------------------------------------------*/
+$subtitle = array(
+    'TC' => '一般內容',
+    'EN' => 'Contents',
+);
+
+include('_template/header.php');
+include('_template/menu.php'); 
+
+session_start();
+$get_id = "";
+
+if(isset($_GET['lang']) && $_GET['lang'] != ""){
+	$lang = $_GET['lang'];
+}
+
+if(isset($_GET['key']) && $_GET['key'] != ""){
+	$get_id = $_GET['key'];
+}else{
+	if($lang == "TC"){
+		header("location:index.html");
+	}else{		
+		header("location:index.html?lang=EN");
+	}
+}
+
+/*
+//初始化變數
+$self = 6;  //本頁標記 (選單用，首頁為1, 研究領域為2 如此類推)
+
+$ref =  $_SERVER['HTTP_REFERER'];
+
+//如果前一頁是 研究資源, 則使這一頁選單中的相應部分
+if(strstr($ref, "resources.html")){
+	$self = 5;
+}else if(strstr($ref, "index.html")){
+	$self = 1;
+}
+*/
+
+include("MGE/lib/link.html");
+
+$content = "";
+
+if($con){
+    if($db_selected){
+        
+        // 抓取資料表 research_area
+        $sql = "select html_tc, html_en  from custom_page where get_id='".$get_id."' ";
+        $result = mysql_query($sql);
+        
+        if($result){
+        	$row = mysql_fetch_row($result);
+        	$content = ($lang == "EN") ? $row[1]:$row[0];
+            if( $row[0]=="" && $row[1]=="" ){
+            	if($lang == "TC"){
+					header("Location:index.html");
+				}else{
+					header("Location:index.html?lang=EN");
+				}
+            }
+        }else{
+
+		}
+
+    }else{
+
+    }
+}
+
+?>
+<!-- wrap-content start -->
+<!-- ================ -->
+<div class="wrap-content">
+    <!-- banner start -->
+    <!-- ================ -->
+    <div class="banner">
+        <div class="container">
+            <div class="row bannerbg">
+                <div class="col-md-12 pagebannerbg"></div>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+    <section class="mtt-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- block 1 -->
+                    <div class="feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                        <div class="maintitle">
+                            <? echo $get_id ?>
+                        </div>
+                        <div class="pv-30 ph-20 mcontent">
+                            <? echo $content ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- section end -->
+</div>
+<!-- wrap-content end -->
+<? include('_template/footer.php'); ?>

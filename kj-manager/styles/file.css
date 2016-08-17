@@ -1,0 +1,42 @@
+.file-view {
+    display: block;
+    height: 500px;
+    border: 1px solid black;
+    margin: 10px;
+    padding: 4px 0px 0px 4px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    background-color: white;
+}
+
+.file-view .file-icon {
+    float: left;
+    position: relative;
+    display: block;
+    border: 1px solid lightgray;
+    width: 150px;
+    height: 100px;
+    margin: 2px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: auto;
+}
+.file-view .file-icon:hover { border-color: gray; }
+.file-view .file-icon.-full-image { background-size: contain; }
+
+.file-view .file-icon > .text
+{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    display: block;
+    padding: 2px;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 12px;
+    line-height: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

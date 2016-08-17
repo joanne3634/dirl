@@ -1,0 +1,24 @@
+
+/*-------------------------------------------------------------\
+ * Members
+\*------------------------------------------------------------*/
+div.category
+{
+    display: block;
+    margin: 2px;
+    padding: 5px 29px 5px 31px;
+    width: 400px;
+    height: 25px;
+    line-height: 24px;
+    font-size: 20px;
+    background-color: white;
+    background-image: url(/_images/member/category_bg.png);
+    background-position: left center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+div.category > .eng
+{
+    margin-left: 5px;
+}

@@ -1,0 +1,134 @@
+<?
+session_start();
+
+$split_char = "&&&";
+
+// 初始化所有變數
+$id = array();
+$lang_down = array();
+$subject = array();
+$link = array();
+$visible = array();
+$top = array();
+$post_time = array();
+$total_download = 0;
+
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && $_SESSION['pos'] == "panel_7" ){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+
+		        // 抓取資料表 downloads 
+		        $sql = "select * from downloads ORDER BY post_time DESC, top DESC";
+		        $result = mysql_query($sql);
+		        
+
+		        if($result){
+		            while($row = mysql_fetch_row($result)){
+		                    $id[$total_download] = $row[0];
+		                    $lang_down[$total_download] = $row[1];
+		                    $subject[$total_download] = $row[2];
+		                    $link[$total_download] = $row[3];
+		                    $visible[$total_download] = $row[4];
+		                    $top[$total_download] = $row[5];
+		                    $post_time[$total_download] = $row[6];
+		                    $total_download++;                          
+		            }
+// 寫入內容
+?>
+
+<? 
+	if($total_download > 0){
+?>			
+            <table width="700" border="0">
+              <tr>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">顯示</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">置頂</div></td>
+                <td width="257" bgcolor="#FFD193"><div align="center" class="tbsx">名稱</div></td>
+                <td width="252" bgcolor="#FFD193"><div align="center" class="tbsx">連結</div></td>
+                <td width="83" bgcolor="#FFD193"><div align="center" class="tbsx">顯示語示</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>
+
+              </tr>
+<? 
+	$i = 0;
+    while($i < $total_download){
+?>             
+              <tr  class="tbs" onmouseover="this.className = 'tbs2'" onmouseout="this.className = 'tbs'">
+                <td align="center">
+                    <? if($visible[$i] == 1){ ?>
+                    <a href="#download_toggle_show"><img id="p7_btn_toggle_show_<? echo $id[$i] ?>"  border="0" src="../pic/show.gif"  onclick="sync_toggle(this.id,'lib/update_7.html',27,<? echo $id[$i] ?>, '../pic/show')"  alt="是否顯示" title="是否顯示" /></a>
+                    <? }else{ ?>                
+                    <a href="#download_toggle_show"><img id="p7_btn_toggle_show_<? echo $id[$i] ?>" border="0" src="../pic/show_n.gif" onclick="sync_toggle(this.id,'lib/update_7.html',27,<? echo $id[$i] ?>,  '../pic/show')" alt="是否顯示" title="是否顯示" /></a>
+                    <? }?>                  
+                </td>
+                <td align="center">
+                    <? if($top[$i] == 1){ ?>
+                    <a href="#download_toggle_top"><img id="p7_btn_toggle_top_<? echo $id[$i] ?>" border="0" src="../pic/top.gif" onclick="sync_toggle(this.id,'lib/update_7.html',11,<? echo $id[$i] ?>, '../pic/top')" alt="是否置頂" title="是否置頂" /></a>
+                    <? }else{ ?>                
+                    <a href="#download_toggle_top"><img id="p7_btn_toggle_top_<? echo $id[$i] ?>" border="0" src="../pic/top_n.gif" onclick="sync_toggle(this.id,'lib/update_7.html',11,<? echo $id[$i] ?>, '../pic/top')" alt="是否置頂" title="是否置頂" /></a>
+                    <? }?>                                
+                </td>                
+                <td align="center" onclick="toggle_edit('p7_subject_<? echo $id[$i] ?>', 'p7_subject_mod_<? echo $id[$i] ?>');">
+                	<div id="p7_subject_<? echo $id[$i] ?>">
+                    	<? echo $subject[$i] ?>
+                    </div>
+                	<div id="p7_subject_mod_<? echo $id[$i] ?>" style="display:none">
+	                    <input name="p7_subject_mod_<? echo $id[$i] ?>_field" type="text" id="p7_subject_mod_<? echo $id[$i] ?>_field" size="40"  value="<? echo $subject[$i] ?>"  onblur="toggle_edit( 'p7_subject_mod_<? echo $id[$i] ?>','p7_subject_<? echo $id[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_7.html',29, '', 'p7_subject_<? echo $id[$i] ?>')" />
+                    </div>
+                
+                </td>
+                
+                <td align="center" onclick="toggle_edit('p7_link_<? echo $id[$i] ?>', 'p7_link_mod_<? echo $id[$i] ?>');">
+                	<div id="p7_link_<? echo $id[$i] ?>">
+                    	<? echo $link[$i] ?>
+                    </div>
+                	<div id="p7_link_mod_<? echo $id[$i] ?>" style="display:none">
+	                    <input name="p7_link_mod_<? echo $id[$i] ?>_field" type="text" id="p7_link_mod_<? echo $id[$i] ?>_field" size="40"  value="<? echo $link[$i] ?>"  onblur="toggle_edit( 'p7_link_mod_<? echo $id[$i] ?>','p7_link_<? echo $id[$i] ?>');" onchange="sync_input(this.id, 'lib/update_7.html',9, '', 'p7_link_<? echo $id[$i] ?>')" />
+                    </div>
+                
+                </td>
+                <td align="center">
+                <a href="#toggle_lang"><img id="p7_btn_toggle_lang_<? echo $id[$i] ?>"  border="0" src="../pic/<? echo $lang_down[$i]?>.gif"    alt="顯示語系 (中 > 英 > 中英)" title="顯示語系 (中 > 英 > 中英)" onclick="sync_toggle(this.id,'lib/update_7.html',31,<? echo $id[$i] ?>, '../pic/')" /></a>
+              </td>
+                <td align="center"><a href="#download_del"><img id="p7_btn_del_<? echo $id[$i] ?>"  border="0" src="../pic/del.gif" width="15" height="15" onclick="sync_delete(this.id, 'lib/update_7.html', 8,'<? echo $id[$i] ?>', 'p7_news')"  alt="刪除此筆下載" title="刪除此筆下載"/></a></td>
+                
+              </tr>
+<?
+		$i++;
+	}              
+ ?>
+            </table>
+<?
+}else{
+?>
+			<br /> - 沒有任何下載。
+<?
+}
+?>
+
+
+<?
+
+
+
+
+				}else{
+					echo "3".$split_char;					//傳送錯誤碼，table失敗					
+				}
+
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+
+	}
+}
+?>

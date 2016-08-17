@@ -1,0 +1,81 @@
+#main-content.manual ul
+{
+    margin: 5px 0px;
+}
+
+#main-content.manual > aside.tree
+{
+    float: right;
+    width: 25%;
+    margin-top: 10px;
+}
+
+#main-content.manual > aside.tree > div.title
+{
+    display: block;
+    padding: 5px 10px;
+    background-color: rgb(220,220,220);
+    border-bottom: 5px solid rgb(150,150,150);
+    font-size: 16px;
+}
+
+#main-content.manual > article
+{
+    position: relative;
+    width: 75%;
+    font-size: 14px;
+    font-family: "微軟正黑體", "Arial";
+}
+
+#main-content.manual > article.editable:hover
+{
+    outline: 1px dotted lightgray;
+}
+
+#main-content.manual > article.editable > div.edit-button
+{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: none;
+    margin: 0px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 4px;
+    background-color: white;
+    cursor: pointer;
+    transition: width 0.1s;
+    overflow: hidden;
+    text-align: center;
+}
+#main-content.manual > article.editable:hover > div.edit-button
+{
+    display: block;
+}
+#main-content.manual > article.editable:hover > div.edit-button:hover
+{
+    border: 1px solid white;
+    background-color: rgb(120,200,255);
+    color: rgb(200,250,255);
+}
+
+#main-content.manual > article > h1,
+#main-content.manual > article > h2,
+#main-content.manual > article > h3
+{
+    display: block;
+    margin: 0.5em auto 0px 0px;
+    max-width: 75%;
+    min-width: 250px;
+    padding: 5px;
+    border-bottom: 1px solid black;
+    color: black;
+}
+#main-content.manual > article > h1 { font-size: 3em; }
+#main-content.manual > article > h2 { font-size: 2em; }
+#main-content.manual > article > h3 { font-size: 1.5em; }
+
+#main-content.manual > article p
+{
+    margin: 0.5em 0px 0px;
+}

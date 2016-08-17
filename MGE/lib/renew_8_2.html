@@ -1,0 +1,110 @@
+<?
+session_start();
+
+$split_char = "&&&";
+
+// 初始化所有變數
+	$idu = array();    
+	$user_id = array();
+	$password = array();
+	$activated = array();
+    $total_user = 0;
+
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && $_SESSION['pos'] == "panel_8" ){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+
+		        // 抓取資料表 downloads 
+       			 $sql = "select * from mmnet_user ORDER BY user_id";
+		        $result = mysql_query($sql);
+		        
+
+		        if($result){
+		            while($row = mysql_fetch_row($result)){
+                        $idu[$total_user] = $row[0];
+                        $user_id[$total_user] = $row[1];
+                        $password[$total_user] = $row[2];
+                        $activated[$total_user] = $row[3];
+                        $total_user++;                           
+		            }
+// 寫入內容
+?>
+
+            <table width="300" border="0">
+              <tr>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">啟用</div></td>
+                <td width="120" bgcolor="#FFD193"><div align="center" class="tbsx">帳號</div></td>
+                <td width="120" bgcolor="#FFD193"><div align="center" class="tbsx">密碼</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>
+              </tr>
+              
+
+<? 
+	$i = 0;
+    while($i < $total_user){
+?>             
+              <tr  class="tbs" onmouseover="this.className = 'tbs2'" onmouseout="this.className = 'tbs'">
+                <td align="center">
+                    <? if($activated[$i] == 1){ ?>
+                    <a href="#download_toggle_show"><img id="p8_btn_toggle_show_<? echo $idu[$i] ?>"  border="0" src="../pic/show.gif"  onclick="sync_toggle(this.id,'lib/update_8.html',37,<? echo $idu[$i] ?>, '../pic/show')"  alt="是否啟用" title="是否啟用" /></a>
+                    <? }else{ ?>                
+                    <a href="#download_toggle_show"><img id="p8_btn_toggle_show_<? echo $idu[$i] ?>" border="0" src="../pic/show_n.gif" onclick="sync_toggle(this.id,'lib/update_8.html',37,<? echo $idu[$i] ?>,  '../pic/show')" alt="是否啟用" title="是否啟用" /></a>
+                    <? }?>                  
+                </td>
+                <td align="center" onclick="toggle_edit('p8_user_id_<? echo $idu[$i] ?>', 'p8_user_id_mod_<? echo $idu[$i] ?>');">
+                	<div id="p8_user_id_<? echo $idu[$i] ?>">
+                    	<? echo $user_id[$i] ?>
+                    </div>
+                	<div id="p8_user_id_mod_<? echo $idu[$i] ?>" style="display:none">
+	                    <input name="p8_user_id_mod_<? echo $idu[$i] ?>_field" type="text" id="p8_user_id_mod_<? echo $idu[$i] ?>_field" size="15"  value="<? echo $user_id[$i] ?>"  onblur="toggle_edit( 'p8_user_id_mod_<? echo $idu[$i] ?>','p8_user_id_<? echo $idu[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_8.html',38, '', 'p8_user_id_<? echo $idu[$i] ?>')" />
+                    </div>
+                
+                </td>
+
+                <td align="center" onclick="toggle_edit('p8_password_<? echo $idu[$i] ?>', 'p8_password_mod_<? echo $idu[$i] ?>');">
+                	<div id="p8_password_<? echo $idu[$i] ?>">
+                    	<img src="../pic/mod_pas.gif"  alt="修改密碼" title="修改密碼" align="absmiddle"/>
+                    </div>
+                	<div id="p8_password_mod_<? echo $idu[$i] ?>" style="display:none">
+	                    <input name="p8_password_mod_<? echo $idu[$i] ?>_field" type="password" id="p8_password_mod_<? echo $idu[$i] ?>_field" size="15"  value="<? echo $password[$i] ?>"  onblur="toggle_edit( 'p8_password_mod_<? echo $idu[$i] ?>','p8_password_<? echo $idu[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_8.html',39, '', '')" />
+                    </div>
+                
+                </td>                
+
+                <td align="center"><a href="#download_del"><img id="p8_btn_del_<? echo $idu[$i] ?>"  border="0" src="../pic/del.gif" width="15" height="15" onclick="sync_delete(this.id, 'lib/update_8.html', 40,'<? echo $idu[$i] ?>', 'p8_users')"  alt="刪除此使用者" title="刪除此使用者"/></a></td>
+                
+              </tr>
+<?
+		$i++;
+	}              
+ ?>
+              
+
+</table>
+
+
+<?
+
+
+
+
+				}else{
+					echo "3".$split_char;					//傳送錯誤碼，table失敗					
+				}
+
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+
+	}
+}
+?>

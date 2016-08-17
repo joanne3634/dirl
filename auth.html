@@ -1,0 +1,62 @@
+<?
+session_start();
+if(isset($_POST['user_id']) && $_POST['user_id'] != "" && isset($_POST['password']) && $_POST['password'] != ""){
+
+$refer = "http://mmnet.iis.sinica.edu.tw/index.html";
+if(isset($_SESSION['refer'])){
+	$tmp = $_SESSION['refer'];
+	if(strpos($tmp, "http://mmnet.iis.sinica.edu.tw/") === 0){
+		$refer = $_SESSION['refer'];
+	}
+}
+
+// 初始化頁面內容
+include("MGE/lib/link.html");
+
+    if($con){
+        if($db_selected){
+            
+            // 抓取資料表 research_area
+            $sql = "select user_id, activated from mmnet_user where user_id='".$_POST['user_id']."' and password='".$_POST['password']."' ";
+            $result = mysql_query($sql);
+            
+            if($result){
+                $row = mysql_fetch_row($result);
+                if($row[1] == ""){
+                     $_SESSION['msg'] = "使用者名稱或密碼錯誤。";
+                    header("location:login.html");
+                    //die();
+                }else if($row[1] == 1){
+                    $_SESSION['login'] = "ok_mmnet";
+                    $_SESSION['login_user'] = $row[0];
+                    header("location:".$refer);
+                    //die();
+                }else if($row[1] == 0){
+                    $_SESSION['msg'] = "使用者並未啟用";
+                    header("location:login.html");
+                    //die();
+                }
+            }else{            
+                $_SESSION['msg'] = "使用者名稱或密碼錯誤。";
+                header("location:login.html");
+                //die();
+            }  
+    
+        }else{
+            $_SESSION['msg'] = "資料表連接錯誤。";	
+            header("location:login.html");
+    
+        }
+    }else{
+        $_SESSION['msg'] = "資料庫連接錯誤。";
+        header("location:login.html");
+    
+    }
+
+    
+}else{
+    $_SESSION['msg'] = "使用者名稱或密碼錯誤。";
+    header("location:login.html");
+    
+}
+?>

@@ -1,0 +1,3 @@
+deny from all
+allow from 140.109.20.151
+allow from 140.109.22.

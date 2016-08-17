@@ -1,0 +1,79 @@
+﻿<?
+// 檔案：footer.html
+// 說明：所有頁面的結尾部分，透過php內部參數 "lang" 設定語系
+
+if(isset($lang)){
+	
+	$com_name = "多媒體網路與系統實驗室";	//實驗室名字及網址
+    $com_link = "index.html";
+    
+    $dep_name = "資訊科學研究所";			//所名字及網址
+    $dep_link = "http://www.iis.sinica.edu.tw/";
+    
+    $lab_name = "中央研究院";				//院名字及網址
+    $lab_link = "http://www.sinica.edu.tw/";
+    
+    // 如果語系設定為英文，則顯示英文內容，中文為預設值.
+	if($lang == "EN"){
+    
+        $lab_name = "Multimedia Networking and Systems Lab,";	
+        $lab_link = "/index.html?lang=".$lang;
+        
+        $dep_name = "Institute of Information Science,";	
+        $dep_link = "http://www.iis.sinica.edu.tw/index_en.html";
+        
+        $com_name = "Academia Sinica";	
+        $com_link = "http://www.sinica.edu.tw/main_e.shtml";
+        
+    }
+    
+?>
+  </div> <!-- Main END -->
+  <div id="footer">
+    	<img src="<? echo $img_path ?>/index_04.jpg" alt="Footer" />
+  </div>
+</div>
+<div id="copyright">
+	<div align="center" class="small"><a href="<? echo $lab_link ?>" target="_self"><? echo $lab_name ?></a> <a href="<? echo $dep_link ?>"> <? echo $dep_name ?></a> <a href="<? echo $com_link ?>" target="_blank"> <? echo $com_name ?></a>    </div>
+</div>
+</div><br />
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-13103029-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+<!-- Start of StatCounter Code -->
+<script type="text/javascript">
+var sc_project=5623085; 
+var sc_invisible=1; 
+var sc_partition=60; 
+var sc_click_stat=1; 
+var sc_security="a6d468ae"; 
+</script>
+
+<script type="text/javascript"
+src="http://www.statcounter.com/counter/counter.js"></script><noscript><div
+class="statcounter"><a title="wordpress counter"
+href="http://www.statcounter.com/wordpress.com/"
+target="_blank"><img class="statcounter"
+src="http://c.statcounter.com/5623085/0/a6d468ae/1/"
+alt="wordpress counter" ></a></div></noscript>
+<!-- End of StatCounter Code -->
+
+</body>
+</html>
+
+<?
+
+}else{
+
+	//如果找不到 lang 這個值，代表這個頁面被獨立呼叫，把使用者送到首頁
+	header("location:index.html");	
+}
+?>

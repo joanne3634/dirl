@@ -1,0 +1,376 @@
+<?
+session_start();
+
+function print_select_month($selected_month) {
+	$i = 1;
+	while($i <= 12){
+		echo "<option value=\"".$i."\" ";
+		if($selected_month == $i){
+			echo " selected=\"selected\"";
+		}
+		echo ">".$i."</option>";
+		$i++;
+	}
+}
+
+$split_char = "&&&";
+
+// 初始化所有變數
+$user_id  = array();
+$name_tc = array();
+$last_name_en = array();
+$first_name_en = array();
+$aka_tc  = array();
+$aka_en = array();
+$type = array();
+$page_link = array();
+$blog_link = array();
+$email = array();
+$email_stable = array();
+$tel = array();
+$cell = array();
+$period_in_mon = array();
+$period_in_year = array();
+$period_out_mon = array();
+$period_out_year = array();
+$study_tc = array();
+$study_en = array();
+$work_tc = array();
+$work_en = array();
+$research = array();
+$iis_id = array();
+$msn = array();
+$skype = array();
+$google = array();
+$last_update = array();
+$title_tc = array();
+$title_en = array();
+$birthday  = array();
+$page_link_en  = array();
+
+$total_members = 0;
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && $_SESSION['pos'] == "panel_4" && isset($_GET['user_id'])){
+		include("link.html");
+		if($con){
+			if($db_selected){
+
+				// 抓取資料表 news 
+				//echo $_GET['user_id'];
+				$sql = "select *  from members where user_id='".$_GET['user_id']."'";
+				$result = mysql_query($sql);
+        
+				if($result){
+					while($row = mysql_fetch_row($result)){
+						$user_id[$total_members] = $row[0];
+						$name_tc[$total_members] = $row[1];
+						$last_name_en[$total_members] = $row[2];
+						$first_name_en[$total_members] = $row[3];
+						$aka_tc[$total_members]  = $row[4];
+						$aka_en[$total_members] = $row[5];
+						$type[$total_members] = $row[6];
+						$page_link[$total_members] = $row[7];
+						$blog_link[$total_members] = $row[8];
+						$email[$total_members] = $row[9];
+						$tel[$total_members] = $row[10];
+						$cell[$total_members] = $row[11];
+						$period_in_mon[$total_members] = $row[12];
+						$period_in_year[$total_members] = $row[13];
+						$period_out_mon[$total_members] = $row[14];
+						$period_out_year[$total_members] = $row[15];
+						$study_tc[$total_members] = $row[16];
+						$study_en[$total_members] = $row[17];
+						$work_tc[$total_members] = $row[18];
+						$work_en[$total_members] = $row[19];
+						$research[$total_members] = $row[20];
+						$iis_id[$total_members] = $row[21];
+						$msn[$total_members] = $row[22];
+						$skype[$total_members] = $row[23];
+						$google[$total_members] = $row[24];
+						$last_update[$total_members] = $row[25];
+						$title_tc[$total_members] = $row[26];
+						$title_en[$total_members] = $row[27];
+						$birthday[$total_members] = $row[28]; 
+						$page_link_en[$total_members] = $row[29]; 
+                        $email_stable[$total_members] = $row[30]; 
+
+						$total_members++;                           
+					}
+// 寫入內容
+	if($type[0] == 2 || $type[0] == 1 || $type[0] == 0){	
+	// 輸出研究助理的表格
+?>
+	<form action="" method="post" >   
+    <table width="436" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+      <tr bgcolor="#FFD78C">
+       	<td colspan="2" style="padding:3px; color:#AA5500; font-size:13px; ">
+          <strong>修改實驗室成員： </strong> <span style="font-size:11px">[ 上次更新 - <? echo $last_update[0] ?> ]</span> <input type="button" name="p4_cancel" id="p4_cancel" class="button" value="取消修改" onclick="switch_add('p4_mod_member')" />
+          </td>
+      </tr>
+      <tr>
+        <td width="153"><div align="right">資訊所帳號：</div></td>
+            <input name="p4_mod_ra_full_user_id" id="p4_mod_ra_full_user_id" type="hidden" value="<? echo $user_id[0] ?>" />
+
+        <td><input name="p4_mod_ra_full_iis_id" type="text" id="p4_mod_ra_full_iis_id" size="15"  value="<? echo $user_id[0] ?>" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">中文姓名：</div></td>
+        <td><input name="p4_mod_ra_full_name_tc" type="text" id="p4_mod_ra_full_name_tc" size="15"  value="<? echo $name_tc[0] ?>" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td height="40"><div align="right">英文姓名：</div></td>
+        <td><input name="p4_mod_ra_full_name_en" type="text" id="p4_mod_ra_full_name_en" size="15"  value="<? echo $first_name_en[0]." ".$last_name_en[0] ?>" class="need_input" /> 
+          ( 格式: first-first last )</td>
+      </tr>
+      <tr>
+        <td><div align="right">中文暱稱 (或別名)：</div></td>
+        <td width="271"><input name="p4_mod_ra_full_aka_tc" type="text" id="p4_mod_ra_full_aka_tc" size="15"  value="<? echo $aka_tc[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">英文暱稱 (或別名)：</div></td>
+        <td><input name="p4_mod_ra_full_aka_en" type="text" id="p4_mod_ra_full_aka_en" size="15"  value="<? echo $aka_en[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">生日：</div></td>
+        <td><input name="p4_mod_ra_full_birthday" type="text" id="p4_mod_ra_full_birthday" size="15"  value="<? echo $birthday[0] ?>" /> (格式: YYYY-MM-DD)</td>
+      </tr>        
+      <tr>
+        <td><div align="right">職稱 (中文)：</div></td>
+        <td width="271"><input name="p4_mod_ra_full_title_tc" type="text" id="p4_mod_ra_full_title_tc" size="15"  value="<? echo $title_tc[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">職稱 (英文)：</div></td>
+        <td><input name="p4_mod_ra_full_title_en" type="text" id="p4_mod_ra_full_title_en" size="15"  value="<? echo $title_en[0] ?>" /></td>
+      </tr> 
+	  <tr>
+		<td><div align="right">種類：</div></td>
+		<td>
+<?
+		if($type[0] == 0){
+?>
+		<select name="p4_mod_ra_full_type" id="p4_mod_ra_full_type">
+		  <option value="0" selected="selected" >實驗室主持人</option>
+		</select> 
+<?
+		}else if($type[0] == 1){
+?>
+		<select name="p4_mod_ra_full_type" id="p4_mod_ra_full_type">
+		  <option value="1" selected="selected">博士後研究員</option>
+		  <option value="2" >研究助理</option>
+		  <option value="3" >Alumni</option>
+		</select>
+<?
+		}else if($type[0] == 2){
+?>
+		 <select name="p4_mod_ra_full_type" id="p4_mod_ra_full_type">
+		  <option value="1" >博士後研究員</option>
+		  <option value="2" selected="selected">研究助理</option>
+		  <option value="3" >Alumni</option>
+		  <option value="4" >Summer Intern</option>
+		</select>
+<?
+		}
+?>
+		</td>
+		</tr>
+	  <tr>
+      <td><div align="right">個人網頁：</div></td>
+        <td><input name="p4_mod_ra_full_page_link" type="text" id="p4_mod_ra_full_page_link" size="40"  value="<? echo $page_link[0] ?>" /></td>
+                </tr>
+      <tr>     
+      	<td><div align="right">個人網頁(英文)：</div></td>
+        <td><input name="p4_mod_ra_full_page_link_en" type="text" id="p4_mod_ra_full_page_link_en" size="40"  value="<? echo $page_link_en[0] ?>" /></td>
+       </tr>                  
+      <tr>
+        <td><div align="right">個人部落格：</div></td>
+        <td><input name="p4_mod_ra_full_blog_link" type="text" id="p4_mod_ra_full_blog_link" size="40"  value="<? echo $blog_link[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">電子郵件：</div></td>
+        <td><input name="p4_mod_ra_full_email" type="text" id="p4_mod_ra_full_email" size="30"  value="<? echo $email[0] ?>" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">永久電子郵件：</div></td>
+        <td><input name="p4_mod_ra_full_email_stable" type="text" id="p4_mod_ra_full_email_stable" size="30"  value="<? echo $email_stable[0] ?>" class="need_input" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">電話：</div></td>
+        <td><input name="p4_mod_ra_full_tel" type="text" id="p4_mod_ra_full_tel" size="30"  value="<? echo $tel[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">手機：</div></td>
+        <td><input name="p4_mod_ra_full_cell" type="text" id="p4_mod_ra_full_cell" size="30"  value="<? echo $cell[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">加入時間：</div></td>
+        <td><input name="p4_mod_ra_full_period_in_year" type="text" id="p4_mod_ra_full_period_in_year"  value="<? echo $period_in_year[0] ?>" size="4" maxlength="4" class="need_input" />
+          年 
+          <select name="p4_mod_ra_full_period_in_mon" id="p4_mod_ra_full_period_in_mon" class="need_input"><? print_select_month($period_in_mon[0]); ?></select>
+          月</td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (中文)：</div></td>
+        <td><input name="p4_mod_ra_full_study_tc" type="text" id="p4_mod_ra_full_study_tc" size="40"  value="<? echo $study_tc[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">現在就讀 (英文)：</div></td>
+        <td><input name="p4_mod_ra_full_study_en" type="text" id="p4_mod_ra_full_study_en" size="40"  value="<? echo $study_en[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">研究主題 (英文)：</div></td>
+        <td><textarea name="p4_mod_ra_full_research" cols="40" rows="5" id="p4_mod_ra_full_research" class="need_input"><? echo $research[0] ?></textarea>
+          <br />
+        (一行一個主題)</td>
+      </tr>
+      <tr>
+        <td><div align="right">MSN 帳號：</div></td>
+        <td><input name="p4_mod_ra_full_msn" type="text" id="p4_mod_ra_full_msn" size="30"  value="<? echo $msn[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">Skype 帳號：</div></td>
+        <td><input name="p4_mod_ra_full_skype" type="text" id="p4_mod_ra_full_skype" size="30"  value="<? echo $skype[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td><div align="right">Google 帳號：</div></td>
+        <td><input name="p4_mod_ra_full_google" type="text" id="p4_mod_ra_full_google" size="30"  value="<? echo $google[0] ?>" /></td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td><input type="button" name="p4_submit_mod" id="p4_submit_mod" value="更新成員"  class="button"  onclick="sync_input_group('p4_mod_ra_full', 'lib/update_4.html',17)" /> <input type="reset" name="Reset" id="button" class="button" value="重填" /></td>
+      </tr>
+    </table>
+</form>
+<?
+	}else if($type[0] == 3 || $type[0] == 4){
+	// 輸出alumni的表格
+?>
+	<form action="" method="post" >   
+              <table width="436" border="0" style="border: #71BA03 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
+              <tr bgcolor="#DBFF88">
+              	<td colspan="2" style="padding:3px; color:#336600; font-size:13px">
+              <strong>修改Alumni/Summer Intern： </strong><span style="font-size:11px">[ 上次更新 - <? echo $last_update[0] ?> ]</span>   <input type="button" name="p4_cancel" id="p4_cancel" class="button" value="取消修改" onclick="switch_add('p4_mod_member')" />              </td>
+              </tr>
+              <tr>
+                <td width="153"><div align="right">資訊所帳號：</div></td>
+	              <input name="p4_mod_al_full_user_id" id="p4_mod_al_full_user_id" type="hidden" value="<? echo $user_id[0] ?>" />
+
+                <td><input name="p4_mod_al_full_iis_id" type="text" id="p4_mod_al_full_iis_id" size="15"  value="<? echo $user_id[0] ?>" class="need_input2" /></td>
+                </tr>
+              <tr>
+                <td><div align="right">中文姓名：</div></td>
+                <td><input name="p4_mod_al_full_name_tc" type="text" id="p4_mod_al_full_name_tc" size="15"  value="<? echo $name_tc[0] ?>" class="need_input2" /></td>
+                </tr>
+              <tr>
+                <td height="40"><div align="right">英文姓名：</div></td>
+                <td><input name="p4_mod_al_full_name_en" type="text" id="p4_mod_al_full_name_en" size="15"  value="<? echo $first_name_en[0]." ".$last_name_en[0] ?>" class="need_input2" /> 
+                  ( 格式: first-first last )</td>
+                </tr>
+              <tr>
+                <td><div align="right">中文暱稱 (或別名)：</div></td>
+                <td width="271"><input name="p4_mod_al_full_aka_tc" type="text" id="p4_mod_al_full_aka_tc" size="15"  value="<? echo $aka_tc[0] ?>" /></td>
+                </tr>
+              <tr>
+                <td><div align="right">英文暱稱 (或別名)：</div></td>
+                <td><input name="p4_mod_al_full_aka_en" type="text" id="p4_mod_al_full_aka_en" size="15"  value="<? echo $aka_en[0] ?>" /></td>
+                </tr>
+          <tr>
+            <td><div align="right">生日：</div></td>
+            <td><input name="p4_mod_al_full_birthday" type="text" id="p4_mod_al_full_birthday" size="15"  value="<? echo $birthday[0] ?>" /> (格式: YYYY-MM-DD)</td>
+          </tr>                  
+	  <tr>
+		<td><div align="right">種類：</div></td>
+		<td>
+		<select name="p4_mod_al_full_type" id="p4_mod_al_full_type">
+		  <option value="1" >博士後研究員</option>
+		  <option value="2" >研究助理</option>
+		  <option value="3" <? if ($type[0] == 3) {echo "selected=\"selected\" ";}?>>Alumni</option>
+		  <option value="4" <? if ($type[0] == 4) {echo "selected=\"selected\" ";}?>>Summer Intern</option>
+		</select> 
+		</td>
+		</tr>
+              <tr>
+                <td><div align="right">電子郵件：</div></td>
+                <td><input name="p4_mod_al_full_email" type="text" id="p4_mod_al_full_email" size="30"  value="<? echo $email[0] ?>" class="need_input2" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">永久電子郵件：</div></td>
+                <td><input name="p4_mod_al_full_email_stable" type="text" id="p4_mod_al_full_email_stable" size="30"  value="<? echo $email_stable[0] ?>" class="need_input2" /></td>
+              </tr>			  
+              <tr>
+                <td><div align="right">電話：</div></td>
+                <td><input name="p4_mod_al_full_tel" type="text" id="p4_mod_al_full_tel" size="30"  value="<? echo $tel[0] ?>" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">手機：</div></td>
+                <td><input name="p4_mod_al_full_cell" type="text" id="p4_mod_al_full_cell" size="30"  value="<? echo $cell[0] ?>" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">加入時間：</div></td>
+                <td><input name="p4_mod_al_full_period_in_year" type="text" id="p4_mod_al_full_period_in_year"  value="<? echo $period_in_year[0] ?>" size="4" maxlength="4" class="need_input2" />
+                 年 
+                  <select name="p4_mod_al_full_period_in_mon" id="p4_mod_al_full_period_in_mon" class="need_input2"><? print_select_month($period_in_mon[0]); ?></select>
+                  月</td>
+              </tr>
+              <tr>
+                <td><div align="right">離職時間：</div></td>
+                <td><input name="p4_mod_al_full_period_out_year" type="text" id="p4_mod_al_full_period_out_year"  value="<? echo $period_out_year[0] ?>" size="4" maxlength="4" class="need_input2" />
+                  年
+                  <select name="p4_mod_al_full_period_out_mon" id="p4_mod_al_full_period_out_mon" class="need_input2">
+<?
+			$i = 1;
+			while($i <= 12){
+				if($period_out_mon[0] == $i){
+?>
+            <option value="<? echo $i ?>" selected="selected"><? echo $i ?></option>
+<?
+				}else{
+?>
+            <option value="<? echo $i ?>"><? echo $i ?></option>
+<?
+				}
+				$i++;
+			}
+?>
+				  </select>
+				  月</td>
+              </tr>
+              <tr>
+                <td><div align="right">現在工作 (中文)：</div></td>
+                <td><input name="p4_mod_al_full_work_tc" type="text" id="p4_mod_al_full_work_tc" size="40"  value="<? echo $work_tc[0] ?>" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">現在工作 (英文)：</div></td>
+                <td><input name="p4_mod_al_full_work_en" type="text" id="p4_mod_al_full_work_en" size="40"  value="<? echo $work_en[0] ?>" /></td>
+              </tr>
+              <tr>
+                <td><div align="right">研究主題 (英文)：</div></td>
+                <td><textarea name="p4_mod_al_full_research" cols="40" rows="5" id="p4_mod_al_full_research" ><? echo $research[0] ?></textarea>
+                <br />
+                (一行一個主題)</td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td><input type="button" name="p4_submit_mod" id="p4_submit_mod" value="更新成員"  class="button"  onclick="sync_input_group('p4_mod_al_full', 'lib/update_4.html',17)" /> <input type="reset" name="Reset" id="button" class="button" value="重填" /></td>
+              </tr>
+            </table>
+</form>
+<?
+	}
+// 寫入完成
+				}else{
+					echo "3".$split_char;					//傳送錯誤碼，table失敗					
+				}
+			}else{
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+	}else{
+			echo "參數錯誤";
+	}
+}else{
+	echo "發生錯誤";
+}
+?>

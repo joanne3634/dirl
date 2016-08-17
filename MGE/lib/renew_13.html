@@ -1,0 +1,104 @@
+<?
+session_start();
+
+$split_char = "&&&";
+
+// 初始化所有變數
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if( isset($_SESSION['pos']) && $_SESSION['pos'] == "panel_13"){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+
+				// 抓取資料表 main_slogan 
+                $sql = "select * from main_slogan ORDER BY post_time DESC";
+                $result = mysql_query($sql);
+                
+                $id = array();
+                $subject = array();
+                $visible = array();
+                $post_time = array();
+                $total = 0;
+                
+                if($result){
+                    while($row = mysql_fetch_row($result)){
+                        //echo $row[0].$row[1].$row[2].$row[3];
+                        $id[$total] = $row[0];
+                        $subject[$total] = $row[1];
+                        $visible[$total] = $row[2];
+                        $post_time[$total] = $row[3];
+                        $total++;
+                    }
+                
+            if($total > 0){
+            ?>			
+            <table width="700" border="0">
+              <tr>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">顯示</div></td>
+                <td width="250" bgcolor="#FFD193"><div align="center" class="tbsx">內容</div></td>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">建立日期</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>
+
+              </tr>
+                <? 
+                	$i = 0;
+                    while($i < $total){
+                ?>             
+              <tr  class="tbs" onmouseover="this.className = 'tbs2'" onmouseout="this.className = 'tbs'">
+                <td align="center">
+                    <? if($visible[$i] == 1){ ?>
+                    <a href="#main_slogan_toggle_show"><img id="p13_btn_toggle_show_<? echo $id[$i] ?>"  border="0" src="../pic/show.gif"  onclick="sync_toggle(this.id,'lib/update_13.html',47,<? echo $id[$i] ?>, '../pic/show')"  alt="是否顯示" title="是否顯示" /></a>
+                    <? }else{ ?>                
+                    <a href="#main_slogan_toggle_show"><img id="p13_btn_toggle_show_<? echo $id[$i] ?>" border="0" src="../pic/show_n.gif" onclick="sync_toggle(this.id,'lib/update_13.html',47,<? echo $id[$i] ?>,  '../pic/show')" alt="是否顯示" title="是否顯示" /></a>
+                    <? }?>                  
+                </td>              
+                <td align="center" onclick="toggle_edit('p13_subject_<? echo $id[$i] ?>', 'p13_subject_mod_<? echo $id[$i] ?>');">
+                    <div id="p13_subject_<? echo $id[$i] ?>">
+                        <? echo $subject[$i] ?>
+                    </div>
+                    <div id="p13_subject_mod_<? echo $id[$i] ?>" style="display:none">
+                        <input name="p13_subject_mod_<? echo $id[$i] ?>_field" type="text" id="p13_subject_mod_<? echo $id[$i] ?>_field" size="40"  value="<? echo $subject[$i] ?>"  onblur="toggle_edit( 'p13_subject_mod_<? echo $id[$i] ?>','p13_subject_<? echo $id[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_13.html',46, '', 'p13_subject_<? echo $id[$i] ?>')" />
+                    </div>
+                
+                </td>
+                
+                <td align="center" onclick="toggle_edit('p13_date_<? echo $id[$i] ?>', 'p13_date_mod_<? echo $id[$i] ?>')";>
+                    <div id="p13_date_<? echo $id[$i] ?>">
+                    <? echo date("Y-m-d", strtotime($post_time[$i])) ?>
+                    </div>
+                    <div id="p13_date_mod_<? echo $id[$i] ?>" style="display:none">
+                        <input name="p13_date_mod_<? echo $id[$i] ?>_field" type="text" id="p13_date_mod_<? echo $id[$i] ?>_field" size="10"  value="<? echo date("Y-m-d", strtotime($post_time[$i])) ?>"  onblur="toggle_edit( 'p13_date_mod_<? echo $id[$i] ?>','p13_date_<? echo $id[$i] ?>');" onchange="sync_input(this.id, 'lib/update_13.html',44, '', 'p13_date_<? echo $id[$i] ?>')" />
+                    </div>
+                    
+                    </td>
+                <td align="center"><a href="#main_slogan_del"><img id="p13_btn_del_<? echo $id[$i] ?>"  border="0" src="../pic/del.gif" width="15" height="15" onclick="sync_delete(this.id, 'lib/update_13.html', 46,'<? echo $id[$i] ?>', 'p13_main_slogan')"  alt="刪除此筆消息" title="刪除此筆消息"/></a></td>
+                
+              </tr>
+            <?
+            		$i++;
+            	}              
+             ?>
+            </table>
+            <?
+            }else{
+            ?>
+                <br /> - 沒有任何最新消息。
+            <?
+            }
+
+				}else{
+					echo "3".$split_char;					//傳送錯誤碼，table失敗					
+				}
+
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+	}
+}
+?>

@@ -1,0 +1,230 @@
+<?
+session_start();
+
+$split_char = "&&&";
+
+// 初始化所有變數
+$id_tc = array();
+$subject_tc = array();
+$link_tc = array();
+$visible_tc = array();
+$top_tc = array();
+$post_time_tc = array();
+$total_tc = 0;
+
+$id_en = array();
+$subject_en = array();
+$link_en = array();
+$visible_en = array();
+$top_en = array();
+$post_time_en = array();
+$total_en = 0;
+
+
+if($_SESSION['login_mmnet'] == "ok_mmnet"){
+	if(isset($_SESSION['pos']) && $_SESSION['pos'] == "panel_2" && isset($_GET['lang'])){
+
+		include("link.html");
+		if($con){
+			if($db_selected){
+
+				// 抓取資料表 news 
+				$sql = "select * from news  ORDER BY post_time DESC, top DESC";
+				$result = mysql_query($sql);
+				
+
+				if($result){
+					while($row = mysql_fetch_row($result)){
+						if($row[1] == "TC"){
+							$id_tc[$total_tc] = $row[0];
+							$subject_tc[$total_tc] = $row[2];
+							$link_tc[$total_tc] = $row[3];
+							$visible_tc[$total_tc] = $row[4];
+							$top_tc[$total_tc] = $row[5];
+							$post_time_tc[$total_tc] = $row[6];
+							$total_tc++;
+
+						}else if($row[1] == "EN"){
+							$id_en[$total_en] = $row[0];
+							$subject_en[$total_en] = $row[2];
+							$link_en[$total_en] = $row[3];
+							$visible_en[$total_en] = $row[4];
+							$top_en[$total_en] = $row[5];
+							$post_time_en[$total_en] = $row[6];
+							$total_en++;
+						}                    
+				  
+					}
+
+// 寫入內容
+
+if($_GET['lang'] == "TC"){
+?>
+
+<? 
+	if($total_tc > 0){
+?>			
+            <table width="700" border="0">
+              <tr>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">顯示</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">置頂</div></td>
+                <td width="250" bgcolor="#FFD193"><div align="center" class="tbsx">內容</div></td>
+                <td width="280" bgcolor="#FFD193"><div align="center" class="tbsx">連結</div></td>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">建立日期</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>
+
+              </tr>
+<? 
+	$i = 0;
+    while($i < $total_tc){
+?>             
+              <tr  class="tbs" onmouseover="this.className = 'tbs2'" onmouseout="this.className = 'tbs'">
+                <td align="center">
+                    <? if($visible_tc[$i] == 1){ ?>
+                    <a href="#news_toggle_show"><img id="p2_btn_toggle_show_tc_<? echo $id_tc[$i] ?>"  border="0" src="../pic/show.gif"  onclick="sync_toggle(this.id,'lib/update_2.html',10,<? echo $id_tc[$i] ?>, '../pic/show')"  alt="是否顯示" title="是否顯示" /></a>
+                    <? }else{ ?>                
+                    <a href="#news_toggle_show"><img id="p2_btn_toggle_show_tc_<? echo $id_tc[$i] ?>" border="0" src="../pic/show_n.gif" onclick="sync_toggle(this.id,'lib/update_2.html',10,<? echo $id_tc[$i] ?>,  '../pic/show')" alt="是否顯示" title="是否顯示" /></a>
+                    <? }?>                  
+                </td>
+                <td align="center">
+                    <? if($top_tc[$i] == 1){ ?>
+                    <a href="#news_toggle_top"><img id="p2_btn_toggle_top_tc_<? echo $id_tc[$i] ?>" border="0" src="../pic/top.gif" onclick="sync_toggle(this.id,'lib/update_2.html',11,<? echo $id_tc[$i] ?>, '../pic/top')" alt="是否置頂" title="是否置頂" /></a>
+                    <? }else{ ?>                
+                    <a href="#news_toggle_top"><img id="p2_btn_toggle_top_tc_<? echo $id_tc[$i] ?>" border="0" src="../pic/top_n.gif" onclick="sync_toggle(this.id,'lib/update_2.html',11,<? echo $id_tc[$i] ?>, '../pic/top')" alt="是否置頂" title="是否置頂" /></a>
+                    <? }?>                                
+                </td>                
+                <td align="center" onclick="toggle_edit('p2_subject_tc_<? echo $id_tc[$i] ?>', 'p2_subject_mod_tc_<? echo $id_tc[$i] ?>');">
+                	<div id="p2_subject_tc_<? echo $id_tc[$i] ?>">
+                    	<? echo $subject_tc[$i] ?>
+                    </div>
+                	<div id="p2_subject_mod_tc_<? echo $id_tc[$i] ?>" style="display:none">
+	                    <input name="p2_subject_mod_tc_<? echo $id_tc[$i] ?>_field" type="text" id="p2_subject_mod_tc_<? echo $id_tc[$i] ?>_field" size="40"  value="<? echo $subject_tc[$i] ?>"  onblur="toggle_edit( 'p2_subject_mod_tc_<? echo $id_tc[$i] ?>','p2_subject_tc_<? echo $id_tc[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_2.html',8, '', 'p2_subject_tc_<? echo $id_tc[$i] ?>')" />
+                    </div>
+                
+                </td>
+                
+                <td align="center" onclick="toggle_edit('p2_link_tc_<? echo $id_tc[$i] ?>', 'p2_link_mod_tc_<? echo $id_tc[$i] ?>');">
+                	<div id="p2_link_tc_<? echo $id_tc[$i] ?>">
+                    	<? echo $link_tc[$i] ?>
+                    </div>
+                	<div id="p2_link_mod_tc_<? echo $id_tc[$i] ?>" style="display:none">
+	                    <input name="p2_link_mod_tc_<? echo $id_tc[$i] ?>_field" type="text" id="p2_link_mod_tc_<? echo $id_tc[$i] ?>_field" size="40"  value="<? echo $link_tc[$i] ?>"  onblur="toggle_edit( 'p2_link_mod_tc_<? echo $id_tc[$i] ?>','p2_link_tc_<? echo $id_tc[$i] ?>');" onchange="sync_input(this.id, 'lib/update_2.html',9, '', 'p2_link_tc_<? echo $id_tc[$i] ?>')" />
+                    </div>
+                
+                </td>
+                <td align="center"><? echo date("Y-m-d", strtotime($post_time_tc[$i])) ?></td>
+                <td align="center"><a href="#news_del"><img id="p2_btn_del_tc_<? echo $id_tc[$i] ?>"  border="0" src="../pic/del.gif" width="15" height="15" onclick="sync_delete(this.id, 'lib/update_2.html', 8,'<? echo $id_tc[$i] ?>', 'p2_news_tc')"  alt="刪除此筆消息" title="刪除此筆消息"/></a></td>
+                
+              </tr>
+<?
+		$i++;
+	}              
+ ?>
+            </table>
+<?
+}else{
+?>
+			<br /> - 沒有任何最新消息。
+<?
+}
+?>
+
+
+
+
+<?
+
+}else if($_GET['lang'] == "EN"){
+
+?>
+
+<? 
+	if($total_en > 0){
+?>			
+            <table width="700" border="0">
+              <tr>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">顯示</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">置頂</div></td>
+                <td width="250" bgcolor="#FFD193"><div align="center" class="tbsx">內容</div></td>
+                <td width="280" bgcolor="#FFD193"><div align="center" class="tbsx">連結</div></td>
+                <td width="80" bgcolor="#FFD193"><div align="center" class="tbsx">建立日期</div></td>
+                <td width="30" bgcolor="#FFD193"><div align="center" class="tbsx">刪除</div></td>
+
+              </tr>
+<? 
+	$i = 0;
+    while($i < $total_en){
+?>             
+              <tr  class="tbs" onmouseover="this.className = 'tbs2'" onmouseout="this.className = 'tbs'">
+                <td align="center">
+                    <? if($visible_en[$i] == 1){ ?>
+                    <a href="#news_toggle_show"><img id="p2_btn_toggle_show_en_<? echo $id_en[$i] ?>"  border="0" src="../pic/show.gif"  onclick="sync_toggle(this.id,'lib/update_2.html',10,<? echo $id_en[$i] ?>, '../pic/show')"  alt="是否顯示" title="是否顯示" /></a>
+                    <? }else{ ?>                
+                    <a href="#news_toggle_show"><img id="p2_btn_toggle_show_en_<? echo $id_en[$i] ?>" border="0" src="../pic/show_n.gif" onclick="sync_toggle(this.id,'lib/update_2.html',10,<? echo $id_en[$i] ?>,  '../pic/show')" alt="是否顯示" title="是否顯示" /></a>
+                    <? }?>                  
+                </td>
+                <td align="center">
+                    <? if($top_en[$i] == 1){ ?>
+                    <a href="#news_toggle_top"><img id="p2_btn_toggle_top_en_<? echo $id_en[$i] ?>" border="0" src="../pic/top.gif" onclick="sync_toggle(this.id,'lib/update_2.html',11,<? echo $id_en[$i] ?>, '../pic/top')" alt="是否置頂" title="是否置頂" /></a>
+                    <? }else{ ?>                
+                    <a href="#news_toggle_top"><img id="p2_btn_toggle_top_en_<? echo $id_en[$i] ?>" border="0" src="../pic/top_n.gif" onclick="sync_toggle(this.id,'lib/update_2.html',11,<? echo $id_en[$i] ?>, '../pic/top')" alt="是否置頂" title="是否置頂" /></a>
+                    <? }?>                                
+                </td>                
+                <td align="center" onclick="toggle_edit('p2_subject_en_<? echo $id_en[$i] ?>', 'p2_subject_mod_en_<? echo $id_en[$i] ?>');">
+                	<div id="p2_subject_en_<? echo $id_en[$i] ?>">
+                    	<? echo $subject_en[$i] ?>
+                    </div>
+                	<div id="p2_subject_mod_en_<? echo $id_en[$i] ?>" style="display:none">
+	                    <input name="p2_subject_mod_en_<? echo $id_en[$i] ?>_field" type="text" id="p2_subject_mod_en_<? echo $id_en[$i] ?>_field" size="40"  value="<? echo $subject_en[$i] ?>"  onblur="toggle_edit( 'p2_subject_mod_en_<? echo $id_en[$i] ?>','p2_subject_en_<? echo $id_en[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_2.html',8, '', 'p2_subject_en_<? echo $id_en[$i] ?>')" />
+                    </div>
+                
+                </td>
+                
+                <td align="center" onclick="toggle_edit('p2_link_en_<? echo $id_en[$i] ?>', 'p2_link_mod_en_<? echo $id_en[$i] ?>');">
+                	<div id="p2_link_en_<? echo $id_en[$i] ?>">
+                    	<? echo $link_en[$i] ?>
+                    </div>
+                	<div id="p2_link_mod_en_<? echo $id_en[$i] ?>" style="display:none">
+	                    <input name="p2_link_mod_en_<? echo $id_en[$i] ?>_field" type="text" id="p2_link_mod_en_<? echo $id_en[$i] ?>_field" size="40"  value="<? echo $link_en[$i] ?>"  onblur="toggle_edit( 'p2_link_mod_en_<? echo $id_en[$i] ?>','p2_link_en_<? echo $id_en[$i] ?>');" onchange="sync_input(this.id, 'lib/update_2.html',9, '', 'p2_link_en_<? echo $id_en[$i] ?>')" />
+                    </div>
+                
+                </td>
+                <td align="center"><? echo date("Y-m-d", strtotime($post_time_en[$i])) ?></td>
+                <td align="center"><a href="#news_del"><img id="p2_btn_del_en_<? echo $id_en[$i] ?>"  border="0" src="../pic/del.gif" width="15" height="15" onclick="sync_delete(this.id, 'lib/update_2.html', 8,'<? echo $id_en[$i] ?>', 'p2_news_en')"  alt="刪除此筆消息" title="刪除此筆消息"/></a></td>
+                
+              </tr>
+<?
+		$i++;
+	}              
+ ?>
+            </table>
+<?
+}else{
+?>
+			<br /> - 沒有任何最新消息。
+<?
+}
+?>
+
+
+<?
+
+}
+
+
+				}else{
+					echo "3".$split_char;					//傳送錯誤碼，table失敗					
+				}
+
+			}else{
+				
+				echo "2".$split_char;					//傳送錯誤碼，table失敗	
+			}
+		}else{
+				echo "1".$split_char;					//傳送錯誤碼，connect失敗
+		}
+
+
+	}
+}
+?>

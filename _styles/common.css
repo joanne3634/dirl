@@ -1,0 +1,346 @@
+body {
+    padding: 0px;
+    margin: 0px;
+    background-color: rgb(255,255,255);
+    background-image: url(../images/bg.jpg);
+
+    /*color: rgb(102,102,102);*/
+    color: rgb(80,80,80);
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/*-------------------------------------------------------------\
+ * Container
+\-------------------------------------------------------------*/
+#container{
+    position: relative;
+	display: block;
+	width: 903px;
+	border: 1px solid rgb(201,201,201);
+	margin: 0px auto;
+	padding: 0px;
+	background-color: rgb(255,255,255);
+}
+
+/*-------------------------------------------------------------\
+ * Header
+\-------------------------------------------------------------*/
+#header_top {
+    background-image: url(../images/top_bgx.jpg);
+    padding: 2px 5px 0px;
+    text-align: right;
+    font-size: 11px;
+}
+
+#header {
+    position: relative;
+	height: 80px;
+	background-image: url(../images/top_bg.jpg);
+	background-repeat: repeat-x;
+    overflow: hidden;
+}
+
+#header > #banner{
+    float: left;
+    display: block;
+	width: 700px;
+    height: 80px;
+    background-image: url(../);
+    background-repeat: no-repeat;
+}
+
+#header > #controller{
+	position: absolute;
+    top: 38px;
+    right: 15px;
+    bottom: 0px;
+}
+
+#header > #controller .no_text { font-size: 0px; }
+
+#header > #controller a {
+    float: right;
+    display: block;
+    width: 65px;
+    height: 22px;
+}
+
+#header > #controller a.btn-login { background-image: url(/_images/menu/login.jpg); }
+#header > #controller a.btn-login:hover { background-image: url(/_images/menu/login_hover.jpg); }
+
+#header > #controller a.btn-logout { background-image: url(/_images/menu/logout.jpg); }
+#header > #controller a.btn-logout:hover { background-image: url(/_images/menu/logout_hover.jpg); }
+
+#header > #controller a.btn-TC { background-image: url(/_images/menu/TC.jpg); }
+#header > #controller a.btn-TC:hover { background-image: url(/_images/menu/TC_hover.jpg); }
+
+#header > #controller a.btn-EN { background-image: url(/_images/menu/EN.jpg); }
+#header > #controller a.btn-EN:hover { background-image: url(/_images/menu/EN_hover.jpg); }
+
+
+/*-------------------------------------------------------------\
+ * Footer
+\-------------------------------------------------------------*/
+#footer {
+	height: 39px;
+	clear: both;
+	background-image: url(../images/index_04.jpg);
+}
+
+#copyright { padding-top: 5px; }
+
+/*-------------------------------------------------------------\
+ * Menu
+\-------------------------------------------------------------*/
+#menu {
+    float: left;
+    display: block;
+    width: 107px;
+    border-radius: 0px 12px 0px 0px;
+    border: 1px solid lightgray;
+    margin: 3px;
+    padding: 17px 6px 28px 1px;
+    box-shadow: 2px 3px 1px rgba(150,150,150,0.1);
+}
+
+#menu > a {
+    display: block;
+    width: 107px;
+    height: 30px;
+    background-color: transparent;
+    background-position: center 0px;
+    background-repeat: no-repeat;
+}
+
+#menu > a[href]:hover { background-position: center -30px; }
+#menu > a.active { background-position: center -60px; }
+
+/*-------------------------------------------------------------\
+ * Main Content
+\-------------------------------------------------------------*/
+#main_content{
+    display: block;
+    padding-top: 10px;
+    padding-left: 145px;
+    margin-right: 10px;
+}
+
+.main_item {
+    margin-bottom: 1.5em;
+}
+.main_item:last-child {
+    margin-bottom: 0.5em;
+}
+
+.main_item_content {
+    padding-left: 32px;
+    font-size: 13px;
+    width: 670px;
+    line-height: 18px;
+}
+
+.main_item_content p {
+    margin: 0px 0px 1px;
+    padding-left: 12px;
+    background-image: url(../pic/icon2.jpg);
+    background-position: 0px 4px;
+    background-repeat: no-repeat;
+    line-height: 18px;
+}
+.main_item_content p::before
+{
+}
+
+#main_content td > a {
+    text-decoration: none;
+}
+
+/*-------------------------------------------------------------\
+ * Publication
+\-------------------------------------------------------------*/
+.year {
+	font-size: 20px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-weight: bold;
+	color: #CC6600;
+	padding-bottom: 5px;
+	padding-top: 5px;
+    margin-bottom: 5px;
+	cursor: pointer;
+}
+
+.year:hover { color:#E17100; }
+
+ul.publication {
+    margin-top: 5px;
+}
+
+.year:hover + ul.publication { outline: 1px dashed #dddddd; }
+
+ul.publication > li {
+    line-height: 1.4em;
+    padding-bottom: 0.2em;
+}
+
+iframe.slideshare {
+    max-width: 100%;
+    width: 600px;
+    height: 490px;
+    border: 1px solid #CCC;
+    border-width: 1px 1px 0px;
+    margin-bottom: 5px;
+}
+
+/*-------------------------------------------------------------\
+ * UnSort 2014.10.20
+\-------------------------------------------------------------*/
+ul {
+	list-style-type: none;
+	padding-left: 0px;
+	margin-left: 0px;
+	margin-bottom:0px;
+	padding-bottom:0px;
+	padding-top:5px;
+	margin-top:0px;
+}
+
+li {
+	background-image:url(../pic/icon.jpg);
+	background-repeat:no-repeat;
+	background-position:0px 3px;
+	padding-left: 15px;
+	padding-bottom: 5px;
+}
+
+.lix{
+	background-image:none;
+	background-repeat:no-repeat;
+	padding-left: 0px;
+	padding-bottom: 5px;
+}
+
+a:link { color:#444444; }
+a:hover { color: #E37B09 !important; }
+a:visited { color:#999999; }
+
+
+
+.table_member{
+	border:#CCCCCC 1px solid;
+	
+}
+
+.table_member_desc{
+	border-left: #DDDDDD 1px solid;
+	padding:5px;
+	vertical-align:top;
+	
+}
+
+.table_member_field{
+	border-left: #DDDDDD 1px solid;
+	border-bottom: #DDDDDD 1px solid;
+	padding-left:5px;
+	padding-bottom:5px;
+	padding-top:5px;
+	
+}
+
+.table_member_one{
+	border-left: #DDDDDD 1px solid;
+	padding:5px;
+	
+}
+
+.table_member_photo{
+	text-align:center;
+	vertical-align:top;
+	background-repeat:no-repeat;
+	background-image:url(../photos/bgx.jpg);
+	background-position:0px 120px;
+	
+}
+
+.small {
+	font-size: 11px !important;
+	color: #999999;
+}
+
+.small a:link{
+	text-decoration:none !important;
+
+}
+
+.small a:hover{
+	text-decoration:none !important;
+
+}
+
+.small a:visited{
+	text-decoration:none !important;
+
+}
+
+
+.dat {
+	color: #E37B09;
+	font-weight: bold;
+}
+
+.paper_title{
+	font-weight:bold;
+}
+
+.paper_title A:link{
+	color:#000000 !important;
+	text-decoration:none !important;
+	
+}
+
+
+
+.paper_title A:visited{
+	color:#444444 !important;
+	text-decoration:none !important;
+	
+}
+
+.paper_title A:hover{
+	color:#FE9901 !important;
+	text-decoration:underline !important;
+	
+}
+
+.pub_big_title{
+	padding-bottom:10px;
+	font-weight:bold;
+	font-size:18px;
+}
+
+
+.paper_author{
+	
+}
+
+.paper_publish{
+	font-style:italic;
+}
+
+.bibtex{
+	font-size:12px;
+	font-family:"Courier New", Courier, monospace;
+	color:#555555;
+
+}
+
+.table_title{
+	background-color:#FFF2E1;
+	color:#CE6700;
+	
+}
+
+img.-icon32 {
+    max-width: 32px;
+    max-height: 32px;
+}

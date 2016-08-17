@@ -1,0 +1,109 @@
+<?php
+require_once('/home/kj/mmnet-manager-2015/mod_database.php');
+$dba = new Accessor();
+
+session_start();
+if( !isset($_POST['user_id']) OR !isset($_POST['password']) )
+{
+	$_SESSION['login_mmnet'] = "die_mmnet";
+    $_SESSION['msg_mmnet'] = "請輸入使用者名稱及密碼。";
+    $dba->writeLog(0,'MGE::Error','登入失敗。');
+    header("location:/MGE/");
+    die();
+}
+
+if( $_POST['user_id'] == 'mmnet' AND $_POST['password'] == 'mmnet407' )
+{
+	$_SESSION['login_mmnet'] = 'die_mmnet';
+    $_SESSION['msg_mmnet'] = "使用者名稱錯誤。";
+    $dba->writeLog(0,'MGE::Expired','使用舊帳號登入。');
+    header("location:/MGE/");
+    die();
+}
+//else
+//{
+    //include('lib/link.html');
+$member = $dba->query(
+    'member_list',
+    array(
+        'v_state' => array( 'value' => 'working' ),
+        'iis_user' => array( 'value' => $_POST['user_id'] ),
+        'limit' => 1
+    ),
+    array(
+        'password' => 'string',
+        'level' => 'number'
+    )
+);
+if( empty($member) )
+{
+    $_SESSION['login_mmnet'] = 'die_mmnet';
+    $_SESSION['msg_mmnet'] = '使用者名稱錯誤。';
+    $dba->writeLog(0,'MGE::Error','不正確的使用者名稱: '.$_POST['user_id'].'。');
+    header("location:/MGE/");
+    die();
+}
+
+if( $member['level'] < 5 )
+{
+    $_SESSION['login_mmnet'] = 'die_mmnet';
+    $_SESSION['msg_mmnet'] = '使用者權限不足。';
+    $dba->writeLog(0,'MGE::Error','權限不足的使用者 '.$_POST['user_id'].' 嘗試登入。');
+    header("location:/MGE/");
+    die();
+}
+
+$md5_pwd = md5($_POST['user_id'].$_POST['password']);
+if( $member['password'] == $md5_pwd )
+{
+    $_SESSION['login_mmnet'] = 'ok_mmnet';
+    $_SESSION['user_mmnet'] = $_POST['user_id'];
+    $dba->writeLog(0,'MGE::Login',$_POST['user_id'].' 登入。');
+    header("location:main.html");
+    die();
+}
+/*else
+{
+}*/
+$_SESSION['login_mmnet'] = 'die_mmnet';
+$_SESSION['msg_mmnet'] = '密碼錯誤。';
+$dba->writeLog(0,'MGE::Error',$_POST['user_id'].' 輸入錯誤密碼。');
+header("location:/MGE/");
+die();
+/*
+    if( isset($con) AND $db_selected )
+    {
+        $user_query = mysql_query("SELECT * FROM mmnet_user WHERE user_id='{$_POST['user_id']}' LIMIT 1");
+        if( $user = mysql_fetch_array($user_query) )
+        {
+            if( intval($user['activated']) > 0 AND $_POST['password'] == $user['password'] )
+            {
+                $_SESSION['login_mmnet'] = 'ok_mmnet';
+                $_SESSION['user_mmnet'] = $_POST['user_id'];
+                $dba->writeLog(0,'MGE::Login',$_POST['user_id'].' 登入。');
+                header("location:main.html");
+                die();
+            }
+            else
+            {
+                $_SESSION['login_mmnet'] = 'die_mmnet';
+                $_SESSION['msg_mmnet'] = '密碼錯誤。';
+                $dba->writeLog(0,'MGE::Error',$_POST['user_id'].' 輸入錯誤密碼。');
+                header("location:/MGE/");
+                die();
+            }
+        }
+        else
+        {
+        }
+    }
+    else
+    {
+        $_SESSION['login_mmnet'] = 'die_mmnet';
+        $_SESSION['msg_mmnet'] = '連線錯誤錯誤。';
+        $dba->writeLog(0,'MGE::Error','連線錯誤錯誤。');
+        header("location:/MGE/");
+        die();
+    }
+*/
+//}

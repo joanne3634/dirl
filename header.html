@@ -1,0 +1,125 @@
+<?
+// 檔案：header.html
+// 說明：所有頁面的開始及banner部分內容，透過php內部參數 "lang" 設定語系
+
+if(!isset($img_path)){
+	$img_path = "images";
+	$css_path = "";
+	$gen_path = "";
+	$js_path = "js-lib";
+}
+
+$login_user = "";
+
+if(isset($_SESSION['login']) && $_SESSION['login'] == "ok_mmnet"){
+	$login = "logout";
+    $login_process = "logout.html";
+    $login_user = $_SESSION['login_user']." - ";
+}else{
+	$login = "login";
+    $login_process = "login.html";
+    
+}
+
+if(isset($lang)){
+	
+    $lang_key = "";	//圖片改變用
+    $conv = "eng";	//語系轉換用
+    $title = "多媒體網路與系統實驗室";	 	//頁面標題
+    $alt_conv = "English Version"; 		//轉語系按鈕的文字
+	$alt_login = $login_user."實驗室成員登入/登出";    	//登入按鈕的文字
+    $get_string = "?lang=EN";			//轉換語系用的get字串
+    $home_string = "";					//連到首頁用到的get字串
+  	$get_follow = "";			//接get字串用
+
+	$com_name = "多媒體網路與系統實驗室";	//實驗室名字及網址
+    $com_link = "index.html";
+    
+    $dep_name = "資訊科學研究所";			//所名字及網址
+    $dep_link = "http://www.iis.sinica.edu.tw/";
+    
+    $lab_name = "中央研究院";				//院名字及網址
+    $lab_link = "http://www.sinica.edu.tw/";
+
+  
+    if(isset($_GET['key']) && $_GET['key'] != ""){
+    		$get_string = "?lang=EN&key=".$_GET['key'];
+    }  
+    
+    // 如果語系設定為英文，則顯示英文內容，中文為預設值.
+	if($lang == "EN"){
+    	$lang_key = "_eng";
+        $conv = "chi";
+        $title = "Multimedia Networking and Systems Lab";
+        $alt_conv = "Traditional Chinese";
+	    $get_string = "";
+		$alt_login = $login_user."Lab Members Login/Logout";   
+
+        $lab_name = "Multimedia Networking and Systems Lab";	
+        $lab_link = "/index.html?lang=".$lang;
+        
+        $dep_name = "Institute of Information Science";	
+        $dep_link = "http://www.iis.sinica.edu.tw/index_en.html";
+        
+        $com_name = "Academia Sinica";	
+        $com_link = "http://www.sinica.edu.tw/main_e.shtml";
+        
+		if(isset($_GET['auto']) && $_GET['auto'] == 1){
+		    $get_string = "?lang=TC";
+        }
+        $home_string = "?lang=EN";
+		$get_follow = "&lang=EN";
+        
+        if(isset($_GET['key']) && $_GET['key'] != ""){
+                $get_string .= "?key=".$_GET['key'];
+        } 
+        
+    }
+
+
+    
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><? echo $title ?></title>
+<link href="<? echo $css_path ?>style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<? echo $gen_path ?>general.js"></script>
+<script type="text/javascript" src="<? echo $js_path ?>/awstats_misc_tracker.js"></script>
+
+</head>
+
+<body topmargin="0" marginwidth="0" marginheight="0" onload="MM_preloadImages('<? echo $img_path ?>/menu_item_rol_01.jpg','<? echo $img_path ?>/<? echo $conv ?>_rol.jpg')">
+<div id="container">
+
+            <div align="right" class="small" style="padding-top:2px; background:url(<? echo $img_path ?>/top_bgx.jpg) repeat-x "><a href="<? echo $lab_link ?>" target="_self" title="<? echo $lab_name ?>"><? echo $lab_name ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="<? echo $dep_link ?>" target="_blank" title="<? echo $dep_name ?>" > <? echo $dep_name ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="<? echo $com_link ?>" target="_blank" title="<? echo $com_name ?>"> <? echo $com_name ?></a>&nbsp;
+            <br />
+    
+            </div>
+
+	<div id="header">
+    	<div id="banner">
+        	<img src="<? echo $img_path ?>/index_01<? echo $lang_key ?>.jpg"  border="0" alt="Multimedia Networking and Systems Laboratory" usemap="#Map" />
+<map name="Map" id="Map" alt="Multimedia Networking and Systems Laboratory"><area shape="rect" coords="1,1,125,32" alt="Multimedia Networking and Systems Laboratory" href="<? echo $gen_path ?>index.html<? echo $home_string ?>" /></map>
+         </div>
+<div id="lang">
+
+            <a href="<? echo "../../".$login_process.$home_string ?>" onmouseout="MM_swapImgRestore()" onblur="MM_swapImgRestore()" onmouseover="MM_swapImage('conv_login','','<? echo $img_path ?>/<? echo $login ?>_rol.jpg',1)" onfocus="MM_swapImage('conv_login','','<? echo $img_path ?>/<? echo $login ?>_rol.jpg',1)">
+            <img src="<? echo $img_path ?>/<? echo $login ?>.jpg" alt="<? echo $alt_login ?>" title="<? echo $alt_login ?>" name="conv_login" width="65" height="22" border="0" id="conv_login" /></a> 
+            
+            <a href="<? echo $_SERVER['PHP_SELF'].$get_string ?>" onmouseout="MM_swapImgRestore()" onblur="MM_swapImgRestore()" onmouseover="MM_swapImage('conv_lang','','<? echo $img_path ?>/<? echo $conv ?>_rol.jpg',1)" onfocus="MM_swapImage('conv_lang','','<? echo $img_path ?>/<? echo $conv ?>_rol.jpg',1)">
+            <img src="<? echo $img_path ?>/<? echo $conv ?>.jpg" alt="<? echo $alt_conv ?>" title="<? echo $alt_conv ?>" name="conv_lang" width="65" height="22" border="0" id="conv_lang" /></a>            
+        </div>        
+
+    </div>
+    <div id="main"> <!-- Main Start -->
+    
+<?
+
+}else{
+
+	//如果找不到 lang 這個值，代表這個頁面被獨立呼叫，把使用者送到首頁
+	header("location:index.html");	
+}
+?>

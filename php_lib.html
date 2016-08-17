@@ -1,0 +1,34 @@
+<?
+// 檔名：php_lib.html
+// 說明：放置一般php函式的檔
+
+
+// 把email address 轉換成部分圖片
+function pro_email($address){
+	if(strpos($address, "@iis.sinica.edu.tw") > 0){   
+    	$p = strpos($address, "@iis.sinica.edu.tw");
+        $h = substr($address, 0, $p);
+        return $h."<img src=\"pic/at.jpg\" alt=\"AT\" align=\"absmiddle\" />";        
+    }else if(strpos($address, "@gmail.com") > 0){
+    	$p = strpos($address, "@gmail.com");
+        $h = substr($address, 0, $p);
+        return $h."<img src=\"pic/at_gmail.jpg\" alt=\"AT\"  align=\"absmiddle\" />";
+    }else if(strpos($address, "@hotmail.com") > 0){
+    	$p = strpos($address, "@hotmail.com");
+        $h = substr($address, 0, $p);
+        return $h."<img src=\"pic/at_hot.jpg\" alt=\"AT\"  align=\"absmiddle\" />";
+    }else if(strpos($address, "@yahoo.com.tw") > 0){
+    	$p = strpos($address, "@yahoo.com.tw");
+        $h = substr($address, 0, $p);
+        return $h."<img src=\"pic/at_yahoo.jpg\" alt=\"AT\" align=\"absmiddle\" />";
+    }else if(strpos($address, "@") > 0){
+    	$p = strpos($address, "@");
+        $h = substr($address, 0, $p);
+        $h2 = substr($address, $p+1, strlen($address));
+        
+        return $h."<img src=\"pic/at_non.jpg\" alt=\"AT\"  align=\"absmiddle\" />".$h2;
+
+    }
+} 
+
+?>

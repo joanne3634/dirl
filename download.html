@@ -1,0 +1,135 @@
+<?php
+/*-------------------------------------------------------------\
+ * 檔案：download.html
+ - 說明：檔案下載
+ - modified by kj 2014.10.20
+\-------------------------------------------------------------*/
+$subtitle = array(
+    'TC' => '檔案下載',
+    'EN' => 'Downloads'
+);
+
+include('_template/header.php');
+include('_template/menu.php'); 
+
+// 初始化頁面內容
+include("MGE/lib/link.html");
+
+$msg = array();
+$msg_link = array();
+$total_msg = 0;
+
+if($con){
+    if($db_selected){
+        
+        // 抓取資料表 downloads
+        $sql = "select subject, link from downloads where (lang='".$lang."' or lang='BOTH') and visible = 1 ORDER BY top DESC, post_time DESC";
+        $result = mysql_query($sql);
+        
+        if($result){
+            while($row = mysql_fetch_row($result)){
+                $msg[$total_msg] = $row[0];
+				if($lang == "EN"){
+	                $msg_link[$total_msg] = $row[1]."&lang=EN";
+				}else{
+	                $msg_link[$total_msg] = $row[1];
+				}
+                $total_msg++;
+            }
+        }     
+
+    }else{
+
+    }
+}
+
+?>
+
+<!-- wrap-content start -->
+<!-- ================ -->
+<div class="wrap-content">
+    <!-- banner start -->
+    <!-- ================ -->
+    <div class="banner">
+        <div class="container">
+            <div class="row bannerbg">
+                <div class="col-md-12 pagebannerbg"></div>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+    <section class="mtt-30">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- block 1 -->
+                    <div class="feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
+                        <div class="maintitle">
+                            <? echo $subtitle[$lang] ?>
+                        </div>
+                        <div class="pv-30 ph-20 mcontent"><ul class="downloadList">
+                            <?
+                                $i = 0;
+                                while($i < $total_msg)
+                                {
+                                    $msgx = explode("|", $msg[$i]);
+                                    ?>
+                                        <li>
+                        				<a href="<?=$msg_link[$i]?>" <?=( (strpos($msg_link[$i], "http:") === 0) ? ' target="_blank"' : '')?>><?=$msgx[0]?></a>
+                                    <?
+                                        $file = explode(".", $msg_link[$i]);
+                                    ?>
+
+                                    <?
+                                        if($file[sizeof($file) -1]  == "pdf")
+                                        {
+                                    ?>  					 
+                                        <img src="pic/pdf_s.jpg" alt="PDF" align="absmiddle" title="PDF File"/>
+                                    <?
+                                        }
+                                        else if (strtolower($file[sizeof($file) -1]) == "ppt")
+                                        {
+                                    ?>
+                                        <img src="pic/ppt.jpg" alt="Powerpoint Slides" align="absmiddle" title="Power Point File"/>
+                                    <?
+                                        }
+                                        else if (strtolower($file[sizeof($file) -1]) == "doc")
+                                        {
+                                    ?>
+                                        <img src="pic/doc.jpg" alt="Word Document" align="absmiddle" title="Word File"/>
+                                    <?
+                                        }
+                                        else if (strtolower($file[sizeof($file) -1]) == "zip")
+                                        {
+                                    ?>
+                                        <img src="pic/zip.jpg"  alt="ZIP file" align="absmiddle" title="Zip File"/>
+                                    <?
+                                        }
+                                        else if (strtolower($file[sizeof($file) -1]) == "rar")
+                                        {
+                                    ?>
+                                        <img src="pic/rar.jpg"  alt="RAR file" align="absmiddle" title="RAR File"/>
+                                    <?
+                                        }
+                                        else if (strtolower($file[sizeof($file) -1]) == "xls")
+                                        {
+                                    ?>
+                                        <img src="pic/xls.jpg"  alt="Excel Spreadsheet" align="absmiddle"/>
+                                    <?
+                                        }
+                                    ?>
+                                        <p><?=$msgx[1]?></p></li>
+                                    <?
+                                    $i++;
+                                }
+                            ?>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- section end -->
+</div>
+<!-- wrap-content end -->
+<? include('_template/footer.php'); ?>
