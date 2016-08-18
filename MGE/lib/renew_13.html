@@ -59,7 +59,7 @@ if($_SESSION['login_mmnet'] == "ok_mmnet"){
                         <? echo $subject[$i] ?>
                     </div>
                     <div id="p13_subject_mod_<? echo $id[$i] ?>" style="display:none">
-                        <input name="p13_subject_mod_<? echo $id[$i] ?>_field" type="text" id="p13_subject_mod_<? echo $id[$i] ?>_field" size="40"  value="<? echo $subject[$i] ?>"  onblur="toggle_edit( 'p13_subject_mod_<? echo $id[$i] ?>','p13_subject_<? echo $id[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_13.html',46, '', 'p13_subject_<? echo $id[$i] ?>')" />
+                        <input name="p13_subject_mod_<? echo $id[$i] ?>_field" type="text" id="p13_subject_mod_<? echo $id[$i] ?>_field" size="40"  value="<? echo add_quote($subject[$i]) ?>"  onblur="toggle_edit( 'p13_subject_mod_<? echo $id[$i] ?>','p13_subject_<? echo $id[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_13.html',46, '', 'p13_subject_<? echo $id[$i] ?>')" />
                     </div>
                 
                 </td>
@@ -100,5 +100,8 @@ if($_SESSION['login_mmnet'] == "ok_mmnet"){
 				echo "1".$split_char;					//傳送錯誤碼，connect失敗
 		}
 	}
+}
+function add_quote( $string ){
+    return str_replace('"','&quot;',$string);
 }
 ?>

@@ -25,8 +25,11 @@ if($_SESSION['login_mmnet'] == "ok_mmnet"){
 						
 						// 必須有四個參數
 						if(sizeof($data_token) == 2){
-							$_sub = mysql_real_escape_string($data_token[0]);
+
+							$_sub = escape_quote($data_token[0]);
+
 							$sql = "insert into main_slogan values(null, '".$_sub."', '".$data_token[1]."', null)";
+							//echo $sql;
 							$result = mysql_query($sql);
 
 							if($result && mysql_affected_rows() == 1){
@@ -47,7 +50,7 @@ $dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 新增「最新消息�
 
 						$main_slogan_id = explode("_", $_POST['id']);
 						
-						$sql = "update main_slogan set subject='".$data."' where id='".$main_slogan_id[3]."'";
+						$sql = "update main_slogan set subject='". escape_quote($data) ."' where id='".$main_slogan_id[3]."'";
 						//echo($_POST['id'].",".$main_slogan_id[3]);
 						$result = mysql_query($sql);
 
@@ -90,7 +93,7 @@ $dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 刪除「最新消息�
 					}else if(strpos($_POST['id'], "p13_btn_toggle_show") === 0 ){
 
 						$data_token = explode("||", $data);
-						$_sub = mysql_real_escape_string($data_token[0]);
+						$_sub = escape_quote($data_token[0]);
 						if(sizeof($data_token) == 2){
 
 							$sql = "update main_slogan set visible='".$data_token[1]."' where id='".$_sub."'";
@@ -157,5 +160,13 @@ $dba->writeLog(0,'MGE::Report',$_SESSION['user_mmnet'].' 修改「最新消息�
 
 
 	}
+}
+
+function escape_quote( $string ){
+	$_string = str_replace('&quot;','"',$string);
+	return mysql_real_escape_string($_string);
+}
+function add_quote( $string ){
+	return str_replace('"','&quot;',$string);
 }
 ?>

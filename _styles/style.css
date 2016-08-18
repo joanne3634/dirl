@@ -7762,7 +7762,7 @@ h6.media-heading {
 .mainbannerbg { background: url("../_images/element/banner.png") center top; min-height:390px; position:relative;}
 .pagebannerbg { background: url("../_images/element/banner2.png") center top; min-height:160px; position:relative;}
 .qline {width:50%;position:absolute; top:42%; left:26%;}
-.qline .name{ text-align: right; }
+.qline .author{ display: block;  text-align: right; }
 .maintitle {color:#3e3a41;padding: 11px 6px 10px 58px; background-image:url("../_images/element/icon.png"); background-color:#d3d8da; background-repeat: no-repeat; background-position:16px 10px;min-height:36px; font-size:26px;font-weight:bold;}
 .aboutsty p {line-height: 31px;}
 .mr-20 {margin-right:20px;}

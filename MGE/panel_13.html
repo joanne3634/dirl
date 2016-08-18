@@ -1,6 +1,6 @@
 <?
 // 檔案：MGE/panel13.html
-// 說明：管理首頁佳句 (新增移除修改)
+// 說明：管理首頁內容，最新消息部分 (新增移除修改)
 session_start();
 
 // 如果沒有通過認直接存取，則送到登入頁
@@ -54,14 +54,14 @@ if($con){
       建立新佳句：<br />
       <table width="568" border="0" style="border:#FFCC00 1px  dotted; padding:3px; margin:2px; background-color:#FFF5EC">
       <tr>
-        <td width="50"><div align="right">內容：</div></td>
-        <td colspan="3"><textarea name="p13_subject_add" type="text" id="p13_subject_add" value=""></textarea></td>
+        <td ><div align="right">內容：</div></td>
+        <td colspan="2"><textarea name="p13_subject_add" type="text" id="p13_subject_add" value=""></textarea></td>
         </tr>
       <tr>
-        <td height="40"><div align="right">選項：</div></td>
-        <td width="58"><input name="p13_visible_add" type="checkbox" id="p13_visible_add" value="1" checked="checked" />
+        <td><div align="right">選項：</div></td>
+        <td><input name="p13_visible_add" type="checkbox" id="p13_visible_add" value="1" checked="checked" />
           顯示</td>
-        <td width="68">
+        <td style="text-align: right;">
         <input type="button" name="p13_submit_add" id="p13_submit_add" value="新增佳句"  class="button"  onclick="sync_input_group('p13_main_slogan_group', 'lib/update_13.html',45)" />                </td>
       </tr>
     </table>
@@ -100,7 +100,7 @@ if($con){
                         <? echo $subject[$i] ?>
                     </div>
                     <div id="p13_subject_mod_<? echo $id[$i] ?>" style="display:none">
-                        <input name="p13_subject_mod_<? echo $id[$i] ?>_field" type="text" id="p13_subject_mod_<? echo $id[$i] ?>_field" size="40"  value="<? echo $subject[$i] ?>"  onblur="toggle_edit( 'p13_subject_mod_<? echo $id[$i] ?>','p13_subject_<? echo $id[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_13.html',46, '', 'p13_subject_<? echo $id[$i] ?>')" />
+                        <input name="p13_subject_mod_<? echo $id[$i] ?>_field" type="text" id="p13_subject_mod_<? echo $id[$i] ?>_field" size="40"  value="<? echo str_replace('"','&quot;',$subject[$i]) ?>"  onblur="toggle_edit( 'p13_subject_mod_<? echo $id[$i] ?>','p13_subject_<? echo $id[$i] ?>');"  onchange="sync_input(this.id, 'lib/update_13.html',46, '', 'p13_subject_<? echo $id[$i] ?>')" />
                     </div>
                 
                 </td>
