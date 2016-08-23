@@ -224,7 +224,7 @@ $dba = new Accessor();
                                                     {
                                                         if( $m_type['id'] === 1 )
                                                         {
-                                                            if( $lang != 'TC' ) { echo '<br/>'; }
+                                                            //if( $lang != 'TC' ) { echo '<br/>'; }
                                                             echo ' ('.$member['alias'][$lang].') ';
                                                         }
                                                     }
@@ -357,6 +357,7 @@ $dba = new Accessor();
                                             foreach( $alumnis as $alumni )
                                             {
                                                 $period = sscanf($alumni['period'],'%d/%d~%d/%d');
+                                                if( $period[2] == '-1' ){ continue; }
                                                 $out_year = $period[2];
                                                 if( !isset($alumni_year[$out_year]) ) { $alumni_year[$out_year] = array(); }
                                                 $alumni_year[$out_year][] = $alumni['name'][$lang];

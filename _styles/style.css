@@ -7764,6 +7764,11 @@ h6.media-heading {
 .qline {width:50%;position:absolute; top:42%; left:26%;}
 .qline .author{ display: block;  text-align: right; }
 .maintitle {color:#3e3a41;padding: 11px 6px 10px 58px; background-image:url("../_images/element/icon.png"); background-color:#d3d8da; background-repeat: no-repeat; background-position:16px 10px;min-height:36px; font-size:26px;font-weight:bold;}
+.title small {
+    display: block;
+    padding-top: 5px;
+}
+
 .aboutsty p {line-height: 31px;}
 .mr-20 {margin-right:20px;}
 .fbox {padding-top:3em;}
@@ -7809,7 +7814,7 @@ ul.publicationList .paper_publish {font-style: italic;display: inline-block;/*pa
     /*text-decoration: none;*/
 }
 .paper_title a:visited {
-    color: #959496;
+    color: #3e3a41;
     /*text-decoration: none;*/
 }
 .panel-title {    font-size: 26px;font-weight: bold;color: #000;}
