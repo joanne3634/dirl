@@ -40,121 +40,146 @@ $dba = new Accessor();
                     <!-- block 1 -->
                     <div class="feature-box bordered shadow object-non-visible" data-animation-effect="fadeInDownSmall" data-effect-delay="300">
                         <div class="maintitle"><?=$subtitle[$lang]?></div>
-<?
-$members = $dba->query(
-    'member_list',
-    array( 'v_state' => array( 'value' => 'working' ) ),
-    array(
-        'name' => 'json:language',
-        'iis_user' => 'string',
-        'contact' => 'json',
-        'others' => 'json'
-    )
-);
-?>
-        <table class="table table-striped address-table table-hover">
-            <caption></caption>
-            <thead>
-                <tr>
-                    <td>中文姓名</td>
-                    <td>生日</td>
-                    <td>IIS帳號</td>
-                    <td>手機</td>
-                    <td>Skype</td>
-                    <td>E-Mail</td>
-                </tr>
-            </thead>
-            <tbody>
-<?
-foreach( $members as $i => $member )
-{
-    $ocn = ($i % 2) ? 'tbs' : 'tbs3';
-    //$hcn = 'tbs2';
-    $bdays = preg_split('/[-\/]/',$member['others']['birthday']);
-    $bday = ( $bdays[0] == '0000' ) ? '未公開' : sprintf('%d 月 %d 日',intval($bdays[1]),intval($bdays[2]));
-    $cellphone = isset($member['contact']['cellphone']) ? $member['contact']['cellphone'] : 'N/A';
-    if( count($cellphone) > 1 ) { $cellphone = implode('<br/>',$cellphone); }
-    $email = $member['contact']['email'];
-    if( count($email) > 1 ) { $email = implode('<br/>',$email); }
-?>
-                <tr>
-                    <td><?=$member['name']['TC']?></td>
-                    <td><?=$bday?></td>
-                    <td><?=$member['iis_user']?></td>
-                    <td><?=$cellphone?></td>
-                    <td><?=isset($member['contact']['skype'])?$member['contact']['skype']:''?></td>
-                    <td><?=$email?></td>
-                </tr>
-<?
-}
-?>
-            </tbody>
-<?
-$alumni = $dba->query(
-    'member_list',
-    array(
-        'v_state' => array( 'type' => 'NOT', 'value' => 'working' )
-    ),
-    array(
-        'name' => 'json:language',
-        'iis_user' => 'string',
-        'contact' => 'json',
-        'others' => 'json'
-    )
-);
-?>
-            <tbody><tr><td colspan="6">Alumni</td></tr></tbody>
-            <tbody>
-<?
-require_once('kj-manager/plugins/big5_func/big5_func.inc');
-function ncmp($s1, $s2)
-{
-    $n1 = iconv('UTF-8','big5',$s1['name']['TC']);
-    $n2 = iconv('UTF-8','big5',$s2['name']['TC']);
-    //$fn1 = substr($n1,0,1);
-    //$fn2 = substr($n2,0,1);
-    $on1 = big5_stroke($n1);
-    $on2 = big5_stroke($n2);
+                        <table class="table address-table table-hover">
+                            <caption></caption>
+                            <thead>
+                                <tr>
+                                    <td>中文姓名</td>
+                                    <td>生日</td>
+                                    <td>IIS帳號</td>
+                                    <td>手機</td>
+                                    <td>Skype</td>
+                                    <td>E-Mail</td>
+                                </tr>
+                            </thead>
+                            <?
+                            $member_type = $dba->query(
+                                'member_type',
+                                array(
+                                    'v_state' => array( 'value' => 'working' ),
+                                    'id' => array( 'type' => 'NOT', 'value' => 5 )
+                                ),
+                                array(
+                                    'id' => 'number',
+                                    'name' => 'json:language',
+                                    'image' => 'string'
+                                )
+                            );
+                            foreach( $member_type as $m_type )
+                            {
+                                $category_title = $m_type['name'][$lang];
 
-    if( $on1 == $on2 )
-    {
-        return ( $n1 < $n2 ) ? -1 : 1;
-    }
-    return ($on1 < $on2) ? -1 : 1; 
-} 
-uasort($alumni,'ncmp');
-foreach( $alumni as $i => $member )
-{
-    $ocn = ($i % 2) ? 'tbs' : 'tbs3';
-    //$hcn = 'tbs2';
-    $bdays = preg_split('/[-\/]/',$member['others']['birthday']);
-    $bday = ( $bdays[0] == '0000' ) ? '未公開' : sprintf('%d 月 %d 日',intval($bdays[1]),intval($bdays[2]));
-    $cellphone = isset($member['contact']['cellphone']) ? $member['contact']['cellphone'] : 'N/A';
-    if( count($cellphone) > 1 ) { $cellphone = implode('<br/>',$cellphone); }
-    $email = $member['contact']['email'];
-    if( count($email) > 1 ) { $email = implode('<br/>',$email); }
-?>
-                <tr>
-                    <td><?=$member['name']['TC']?></td>
-                    <td><?=$bday?></td>
-                    <td><?=$member['iis_user']?></td>
-                    <td><?=$cellphone?></td>
-                    <td><?=isset($member['contact']['skype'])?$member['contact']['skype']:''?></td>
-                    <td><?=$email?></td>
-                </tr>
-<?
-}
-?>
-            </tbody>
-        </table>
-    </div>
+                                if( $lang != 'EN' ) { $category_title .= ' <small> ' . $m_type['name']['EN'] . '</small>'; }
+                                
+                                $members = $dba->query(
+                                    'member_list',
+                                    array(
+                                        'v_state' => array('value'=>'working'),
+                                        'type'=>array('value'=>$m_type['id'])
+                                    ),
+                                    array(
+                                        'name' => 'json:language',
+                                        'iis_user' => 'string',
+                                        'email' => 'string',
+                                        'contact' => 'json',
+                                        'others' => 'json'
+                                    )
+                                );
+
+
+                                if( count( $members ) > 0 ){
+                            ?>
+                                <tbody><tr><td colspan="6"><?=$category_title?></td></tr></tbody>
+                                <tbody>
+                                    <?
+                                    foreach( $members as $member )
+                                    {
+                                        $ocn = ($i % 2) ? 'tbs' : 'tbs3';
+                                        //$hcn = 'tbs2';
+                                        $bdays = preg_split('/[-\/]/',$member['others']['birthday']);
+                                        $bday = ( $bdays[0] == '0000' ) ? '未公開' : sprintf('%d 年 %d 月 %d 日',intval($bdays[0]) ,intval($bdays[1]),intval($bdays[2]));
+                                        $cellphone = isset($member['contact']['cellphone']) ? $member['contact']['cellphone'] : 'N/A';
+                                        if( count($cellphone) > 1 ) { $cellphone = implode('<br/>',$cellphone); }
+                                        $email = $member['contact']['email'];
+                                        if( count($email) > 1 ) { $email = implode('<br/>',$email); }
+                                    ?>
+                                        <tr>
+                                            <td><?=$member['name']['TC']?></td>
+                                            <td><?=$bday?></td>
+                                            <td><?=$member['iis_user']?></td>
+                                            <td><?=$cellphone?></td>
+                                            <td><?=isset($member['contact']['skype'])?$member['contact']['skype']:''?></td>
+                                            <td><?=$email?></td>
+                                        </tr>
+                                    <?
+                                    }
+                                }
+                            }
+                            ?>
+                                </tbody>
+                                <tbody><tr><td colspan="6">Alumni</td></tr></tbody>
+                                <?
+                                $alumnis = $dba->query(
+                                    'member_list',
+                                    array(
+                                        'v_state' => array( 'type' => 'not', 'value' => 'hidden' ),
+                                        'v_state' => array( 'type' => 'not', 'value' => 'removed' ),
+                                        'type' => array('value'=>5)
+                                    ),
+                                    array(
+                                        'name' => 'json:language',
+                                        'period' => 'string',
+                                        'iis_user' => 'string',
+                                        'email' => 'string',
+                                        'contact' => 'json',
+                                        'others' => 'json'
+                                    )
+                                );
+                                $alumni_year = array();
+                                foreach( $alumnis as $alumni )
+                                {
+                                    $period = sscanf($alumni['period'],'%d/%d~%d/%d');
+                                    if( $period[2] == '-1' ){ continue; }
+                                    $out_year = $period[2];
+                                    if( !isset($alumni_year[$out_year]) ) { $alumni_year[$out_year] = array(); }
+                                    $alumni_year[$out_year][] = $alumni; //$alumni['name'][$lang];
+                                }
+                                krsort($alumni_year);
+                                $year_row_count = 0;
+                                foreach( $alumni_year as $year => $members )
+                                {
+                                    foreach( $members as $member ){
+                                        $ocn = ($i % 2) ? 'tbs' : 'tbs3';
+                                        //$hcn = 'tbs2';
+                                        $bdays = preg_split('/[-\/]/',$member['others']['birthday']);
+                                        $bday = ( $bdays[0] == '0000' ) ? '未公開' : sprintf('%d 年 %d 月 %d 日',intval($bdays[0]) ,intval($bdays[1]),intval($bdays[2]));
+                                        $cellphone = isset($member['contact']['cellphone']) ? $member['contact']['cellphone'] : 'N/A';
+                                        if( count($cellphone) > 1 ) { $cellphone = implode('<br/>',$cellphone); }
+                                        $email = $member['contact']['email'];
+                                        if( count($email) > 1 ) { $email = implode('<br/>',$email); }
+                                ?>
+                                    <tr>
+                                        <td><?=$member['name']['TC']?></td>
+                                        <td><?=$bday?></td>
+                                        <td><?=$member['iis_user']?></td>
+                                        <td><?=$cellphone?></td>
+                                        <td><?=isset($member['contact']['skype'])?$member['contact']['skype']:''?></td>
+                                        <td><?=$email?></td>
+                                    </tr>
+                                <?
+                                    }
+                                }
+                                ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- section end -->
-</div>
-<!-- wrap-content end -->
-<?
+        </section>
+        <!-- section end -->
+    </div>
+    <!-- wrap-content end -->
+    <?
 // 統一使用footer.html作為結尾 
 include('_template/footer.php');

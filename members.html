@@ -346,11 +346,16 @@ $dba = new Accessor();
                                                 'member_list',
                                                 array(
                                                     'v_state' => array( 'type' => 'not', 'value' => 'hidden' ),
+                                                    'v_state' => array( 'type' => 'not', 'value' => 'removed' ),
                                                     'type' => array('value'=>5)
                                                 ),
                                                 array(
                                                     'name' => 'json:language',
-                                                    'period' => 'string'
+                                                    'period' => 'string',
+                                                    'iis_user' => 'string',
+                                                    'email' => 'string',
+                                                    'contact' => 'json',
+                                                    'others' => 'json'
                                                 )
                                             );
                                             $alumni_year = array();
@@ -363,6 +368,7 @@ $dba = new Accessor();
                                                 $alumni_year[$out_year][] = $alumni['name'][$lang];
                                             }
                                             krsort($alumni_year);
+                                            
                                             $year_row_count = 0;
                                             foreach( $alumni_year as $year => $members )
                                             {

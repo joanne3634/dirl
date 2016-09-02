@@ -47,7 +47,7 @@ class CustomRowPainter implements AccessorTablePainter
             if( $required ) { $value .= ' required'; }
             echo '<tr>';
             echo '<th title="'.$row['hint'].'">'.$row['name'].'</th>';
-            echo '<td><input type="text" name="'.$this->type.'['.$row['id'].']"'.$value.' /></td>';
+            echo '<td><input type="text" placeholder="'.($row['name']=='生日'?'yyyy-mm-dd':'').'"name="'.$this->type.'['.$row['id'].']"'.$value.' /></td>';
             echo '</tr>';
         }
     }
