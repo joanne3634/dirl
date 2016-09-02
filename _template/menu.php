@@ -45,20 +45,20 @@ $menulinks = array(
         ),
         'href' => '/publication.html'
     ),
-    'downloads' => array(
-        'name' => array(
-            'TC' => '下載',
-            'EN' => 'Downloads'
-        ),
-        'href' => '/download.html'
-    ),
-    'partners' => array(
-        'name' => array(
-            'TC' => '合作夥伴',
-            'EN' => 'Partners'
-        ),
-        'href' => '/partners.html'
-    ),
+    // 'downloads' => array(
+    //     'name' => array(
+    //         'TC' => '下載',
+    //         'EN' => 'Downloads'
+    //     ),
+    //     'href' => '/download.html'
+    // ),
+    // 'partners' => array(
+    //     'name' => array(
+    //         'TC' => '合作夥伴',
+    //         'EN' => 'Partners'
+    //     ),
+    //     'href' => '/partners.html'
+    // ),
     'resources' => array(
         'name' => array(
             'TC' => '實驗室資源',

@@ -7761,7 +7761,7 @@ h6.media-heading {
 .mainnav { background-color:#7f7f7f;}
 .mainbannerbg { background: url("../_images/element/banner.png") center top; min-height:390px; position:relative;}
 .pagebannerbg { background: url("../_images/element/banner2.png") center top; min-height:160px; position:relative;}
-.qline {width:50%;position:absolute; top:42%; left:26%;}
+.qline {width:50%;position:absolute; top:42%; left:26%; font-size: 1.4em;}
 .qline .author{ display: block;  text-align: right; }
 .maintitle {color:#3e3a41;padding: 11px 6px 10px 58px; background-image:url("../_images/element/icon.png"); background-color:#d3d8da; background-repeat: no-repeat; background-position:16px 10px;min-height:36px; font-size:26px;font-weight:bold;}
 .title small {

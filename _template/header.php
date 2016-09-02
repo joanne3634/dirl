@@ -72,6 +72,11 @@ $languages = array(
         <meta charset="utf-8" />
         <title><?=$languages[$lang]['title']?> | <?=$subtitle[$lang]?></title>
         <meta name="description" content="<?=$languages[$lang]['title']?>">
+        <meta content="<?=$languages[$lang]['title']?>" property="og:title">
+        <meta content="website" property="og:type">
+        <meta content="<?=$languages[$lang]['title']?>" property="og:description">
+        <meta content="http://dirl.iis.sinica.edu.tw/" property="og:url">
+        <meta content="<?=$languages[$lang]['title']?>" property="og:site_name">
         <!-- Mobile Meta -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Favicon -->
