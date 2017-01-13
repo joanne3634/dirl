@@ -7788,7 +7788,7 @@ h6.media-heading {
 }
 .rslist { list-style-type:none; padding: 0 0 0 44px; line-height: 26px;}
 .mmlist { list-style-type:none;}
-.mmlist li {min-width: 30%; display:inline-block;}
+.mmlist li {min-width: 30%; padding-right: 3%; display:inline-block;}
 .mmlist li.english{ display: list-item; }
 .btn-top {
     color: #ffffff;

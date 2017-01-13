@@ -89,7 +89,7 @@ $languages = array(
         <link href="/_styles/animations.css" rel="stylesheet">
         <!-- The core CSS file -->
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu" />
-        <link href="/_styles/style.css" rel="stylesheet">
+        <link href="/_styles/style.css?<?=rand()?>" rel="stylesheet">
 
         <script type="text/javascript" src="/_scripts/mmnet.js"></script>
     </head>
